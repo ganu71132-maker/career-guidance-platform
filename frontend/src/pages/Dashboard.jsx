@@ -134,24 +134,29 @@ export default function Dashboard() {
         <FeatureHighlightPopup />
 
         {/* Mobile header */}
-        <div className="md:hidden flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
-          <Link to="/" className="text-base font-bold text-slate-800 flex items-center gap-1.5 shrink-0">
-            <Compass className="text-emerald-500 h-5 w-5" /> NaviCareer
-          </Link>
-          <div className="flex items-center gap-1">
-            <Link to="/explorer" title="Explore Careers" className="p-2 text-slate-500 hover:text-emerald-600 hover:bg-slate-50 rounded-xl transition-all">
-              <Compass className="h-5 w-5" />
+        <div className="md:hidden flex flex-col gap-3 mb-6 pb-4 border-b border-slate-100">
+          {/* Row 1: Brand Logo & Notification Bell */}
+          <div className="flex items-center justify-between">
+            <Link to="/" className="text-base font-bold text-slate-800 flex items-center gap-1.5 shrink-0">
+              <Compass className="text-emerald-500 h-5 w-5" /> NaviCareer
             </Link>
-            <Link to="/resume" title="Resume Builder" className="p-2 text-slate-500 hover:text-emerald-600 hover:bg-slate-50 rounded-xl transition-all relative">
-              <FileText className="h-5 w-5" />
-              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-emerald-500 rounded-full" />
+            <NotificationBell />
+          </div>
+
+          {/* Row 2: Segmented Navigation Tabs */}
+          <div className="flex items-center justify-between bg-slate-100/80 p-1 rounded-xl border border-slate-200/20">
+            <Link to="/dashboard" className="flex-1 text-center bg-white text-emerald-600 text-[11px] font-bold py-1.5 rounded-lg shadow-sm border border-slate-200/40 transition-all">
+              Dashboard
             </Link>
-            <Link to="/profile" title="Profile Settings" className="p-2 text-slate-500 hover:text-emerald-600 hover:bg-slate-50 rounded-xl transition-all">
-              <User className="h-5 w-5" />
+            <Link to="/explorer" className="flex-1 text-center text-slate-500 hover:text-slate-800 text-[11px] font-semibold py-1.5 transition-colors">
+              Explore
             </Link>
-            <div className="pl-1 border-l border-slate-150 ml-1 flex items-center">
-              <NotificationBell />
-            </div>
+            <Link to="/resume" className="flex-1 text-center text-slate-500 hover:text-slate-800 text-[11px] font-semibold py-1.5 transition-colors flex items-center justify-center gap-0.5">
+              Resume <span className="text-[9px]">✨</span>
+            </Link>
+            <Link to="/profile" className="flex-1 text-center text-slate-500 hover:text-slate-800 text-[11px] font-semibold py-1.5 transition-colors">
+              Profile
+            </Link>
           </div>
         </div>
 

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useData } from '../contexts/DataContext';
 import { useAuth } from '../contexts/AuthContext';
 import { Search, Briefcase, TrendingUp, IndianRupee, Compass, ArrowLeft, Map, GraduationCap } from 'lucide-react';
+import NotificationBell from '../components/NotificationBell';
 
 export default function CareerExplorer() {
   const { careers: careersData } = useData();
@@ -48,7 +49,8 @@ export default function CareerExplorer() {
 
       {/* Top Bar */}
       <nav className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+        {/* Desktop Header & Logged Out Mobile Header */}
+        <div className={`max-w-7xl mx-auto px-4 sm:px-6 h-16 items-center justify-between ${user ? 'hidden md:flex' : 'flex'}`}>
           <Link to="/" className="flex items-center gap-2 text-base sm:text-lg font-bold text-slate-800">
             <Compass className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-500" /> NaviCareer
           </Link>
@@ -66,6 +68,35 @@ export default function CareerExplorer() {
             )}
           </div>
         </div>
+
+        {/* Logged In Mobile Header */}
+        {user && (
+          <div className="md:hidden flex flex-col gap-3 px-4 py-3">
+            {/* Row 1: Brand Logo & Notification Bell */}
+            <div className="flex items-center justify-between">
+              <Link to="/" className="text-base font-bold text-slate-800 flex items-center gap-1.5 shrink-0">
+                <Compass className="text-emerald-500 h-5 w-5" /> NaviCareer
+              </Link>
+              <NotificationBell />
+            </div>
+
+            {/* Row 2: Segmented Navigation Tabs */}
+            <div className="flex items-center justify-between bg-slate-100/80 p-1 rounded-xl border border-slate-200/20">
+              <Link to="/dashboard" className="flex-1 text-center text-slate-500 hover:text-slate-800 text-[11px] font-semibold py-1.5 transition-colors">
+                Dashboard
+              </Link>
+              <Link to="/explorer" className="flex-1 text-center bg-white text-emerald-600 text-[11px] font-bold py-1.5 rounded-lg shadow-sm border border-slate-200/40 transition-all">
+                Explore
+              </Link>
+              <Link to="/resume" className="flex-1 text-center text-slate-500 hover:text-slate-800 text-[11px] font-semibold py-1.5 transition-colors flex items-center justify-center gap-0.5">
+                Resume <span className="text-[9px]">✨</span>
+              </Link>
+              <Link to="/profile" className="flex-1 text-center text-slate-500 hover:text-slate-800 text-[11px] font-semibold py-1.5 transition-colors">
+                Profile
+              </Link>
+            </div>
+          </div>
+        )}
       </nav>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">

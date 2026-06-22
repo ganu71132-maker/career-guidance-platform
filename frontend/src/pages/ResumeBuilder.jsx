@@ -533,10 +533,10 @@ export default function ResumeBuilder() {
           <div className="flex items-center gap-3">
             <Link to="/dashboard" className="md:hidden p-2 bg-slate-100 hover:bg-slate-200 rounded-xl text-slate-600"><ArrowLeft className="h-5 w-5" /></Link>
             <div>
-              <h1 className="font-extrabold text-slate-800 text-lg sm:text-xl flex items-center gap-2">
-                <FileText className="text-emerald-500 h-5 w-5" /> ATS Resume Builder
+              <h1 className="font-extrabold text-slate-800 text-sm sm:text-lg md:text-xl flex items-center gap-1.5 sm:gap-2">
+                <FileText className="text-emerald-500 h-4 w-4 sm:h-5 sm:w-5" /> ATS Resume Builder
               </h1>
-              <p className="text-xs text-slate-400">Pre-populate details from your roadmap progress</p>
+              <p className="text-xs text-slate-400 hidden sm:block">Pre-populate details from your roadmap progress</p>
             </div>
           </div>
           
@@ -544,17 +544,20 @@ export default function ResumeBuilder() {
             <button 
               onClick={handleSaveResume}
               disabled={loading}
-              className="flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-sm cursor-pointer transition-all duration-300"
+              className="flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 px-2.5 sm:px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-sm cursor-pointer transition-all duration-300"
+              title="Save Draft"
             >
               <Save className="h-4 w-4 text-emerald-600" />
-              <span>{loading ? 'Saving...' : 'Save Draft'}</span>
+              <span className="hidden sm:inline">{loading ? 'Saving...' : 'Save Draft'}</span>
+              {loading && <span className="sm:hidden text-[10px]">...</span>}
             </button>
             <button 
               onClick={handlePrint}
-              className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-emerald-500/20 cursor-pointer transition-all duration-300"
+              className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 sm:px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-emerald-500/20 cursor-pointer transition-all duration-300"
+              title="Download PDF"
             >
               <Download className="h-4 w-4" />
-              <span>Download PDF</span>
+              <span className="hidden sm:inline">Download PDF</span>
             </button>
           </div>
         </header>
