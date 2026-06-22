@@ -138,13 +138,20 @@ export default function Dashboard() {
           <Link to="/" className="text-base font-bold text-slate-800 flex items-center gap-1.5 shrink-0">
             <Compass className="text-emerald-500 h-5 w-5" /> NaviCareer
           </Link>
-          <div className="flex items-center gap-2.5">
-            <Link to="/explorer" className="text-slate-550 text-xs font-semibold hover:text-emerald-600 transition-colors">Explore</Link>
-            <Link to="/resume" className="text-[11px] bg-emerald-50 text-emerald-700 border border-emerald-200/60 px-2.5 py-0.5 rounded-full font-bold hover:bg-emerald-100 hover:text-emerald-800 transition-all shrink-0">
-              Resume ✨
+          <div className="flex items-center gap-1">
+            <Link to="/explorer" title="Explore Careers" className="p-2 text-slate-500 hover:text-emerald-600 hover:bg-slate-50 rounded-xl transition-all">
+              <Compass className="h-5 w-5" />
             </Link>
-            <Link to="/profile" className="text-slate-550 text-xs font-semibold hover:text-emerald-600 transition-colors">Profile</Link>
-            <NotificationBell />
+            <Link to="/resume" title="Resume Builder" className="p-2 text-slate-500 hover:text-emerald-600 hover:bg-slate-50 rounded-xl transition-all relative">
+              <FileText className="h-5 w-5" />
+              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-emerald-500 rounded-full" />
+            </Link>
+            <Link to="/profile" title="Profile Settings" className="p-2 text-slate-500 hover:text-emerald-600 hover:bg-slate-50 rounded-xl transition-all">
+              <User className="h-5 w-5" />
+            </Link>
+            <div className="pl-1 border-l border-slate-150 ml-1 flex items-center">
+              <NotificationBell />
+            </div>
           </div>
         </div>
 
