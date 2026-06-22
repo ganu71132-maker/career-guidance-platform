@@ -23,6 +23,8 @@ export default function WelcomePopup() {
     if (user) {
       const storageKey = `navicompany_welcome_shown_${user.id}`;
       localStorage.setItem(storageKey, 'true');
+      const sessionRedirectKey = `navicompany_welcome_redirected_${user.id}`;
+      sessionStorage.setItem(sessionRedirectKey, 'true');
     }
     setShow(false);
   };

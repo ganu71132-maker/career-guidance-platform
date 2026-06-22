@@ -30,6 +30,20 @@ export default function Dashboard() {
     fetchRecent();
   }, [user]);
 
+  // Redirect old users to /explorer on initial login/dashboard mount
+  useEffect(() => {
+    if (!user) return;
+    const storageKey = `navicompany_welcome_shown_${user.id}`;
+    const alreadyShown = localStorage.getItem(storageKey);
+    const sessionRedirectKey = `navicompany_welcome_redirected_${user.id}`;
+    const alreadyRedirected = sessionStorage.getItem(sessionRedirectKey);
+
+    if (alreadyShown === 'true' && !alreadyRedirected) {
+      sessionStorage.setItem(sessionRedirectKey, 'true');
+      navigate('/explorer', { replace: true });
+    }
+  }, [user, navigate]);
+
   const handleSignOut = async () => {
     await signOut();
     navigate('/');
