@@ -196,7 +196,7 @@ export default function Profile() {
               <button onClick={() => setShowDeleteModal(false)} className="flex-1 py-2.5 bg-slate-100 text-slate-700 rounded-xl font-medium hover:bg-slate-200 transition-colors text-sm">Cancel</button>
               <button
                 onClick={handleDeleteAccount}
-                disabled={deleteConfirmText.toLowerCase() !== 'delete my account' || loading}
+                disabled={deleteConfirmText.trim().toLowerCase() !== 'delete my account' || loading}
                 className="flex-1 py-2.5 bg-red-600 text-white rounded-xl font-medium hover:bg-red-500 disabled:opacity-30 disabled:hover:bg-red-600 disabled:cursor-not-allowed transition-colors text-sm"
               >
                 {loading ? <Loader className="animate-spin h-5 w-5 mx-auto" /> : 'Delete'}
