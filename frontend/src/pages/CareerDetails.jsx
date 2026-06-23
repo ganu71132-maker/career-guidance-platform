@@ -24,7 +24,7 @@ export default function CareerDetails() {
   const { id } = useParams();
   const { user } = useAuth();
   const isAuthenticated = !!user;
-  const { careers: careersData, getCareerResources, savedCareers, completedSteps, toggleSaveCareer, toggleStepCompletion } = useData();
+  const { careers: careersData, loading, getCareerResources, savedCareers, completedSteps, toggleSaveCareer, toggleStepCompletion } = useData();
   const career = careersData.find(c => c.id === id);
   const [activeTab, setActiveTab] = useState('overview');
   const [expandedStep, setExpandedStep] = useState(null);
@@ -87,6 +87,93 @@ export default function CareerDetails() {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen relative pb-20" style={{ background: '#f8fafc' }}>
+        <div className="fixed top-0 right-0 w-[40vw] h-[40vw] rounded-full bg-blue-100/30 blur-[120px] -z-10" />
+        <div className="fixed bottom-0 left-0 w-[30vw] h-[30vw] rounded-full bg-purple-100/30 blur-[120px] -z-10" />
+
+        {/* Top Bar */}
+        <nav className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100 shadow-sm">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <div className="flex items-center gap-2 text-base sm:text-lg font-bold text-slate-800">
+              <Compass className="h-5 w-5 text-emerald-500" /> NaviCareer
+            </div>
+            <div className="w-28 h-4 rounded shimmer" />
+          </div>
+        </nav>
+
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-6 sm:space-y-8">
+          {/* Header Skeleton */}
+          <div className="bg-white p-5 sm:p-8 rounded-3xl border border-slate-100 shadow-sm relative overflow-hidden">
+            <div className="w-16 h-5 rounded mb-4 shimmer" />
+            <div className="w-2/3 h-10 rounded mb-4 shimmer" />
+            <div className="w-full h-4 rounded mb-2 shimmer" />
+            <div className="w-5/6 h-4 rounded mb-6 shimmer" />
+            <div className="flex flex-wrap gap-3">
+              <div className="w-28 h-8 rounded-xl shimmer" />
+              <div className="w-28 h-8 rounded-xl shimmer" />
+              <div className="w-28 h-8 rounded-xl shimmer" />
+            </div>
+          </div>
+
+          {/* Tabs Skeleton */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center">
+                <div className="w-10 h-10 rounded-xl mb-2.5 shimmer" />
+                <div className="w-16 h-3 rounded shimmer" />
+              </div>
+            ))}
+          </div>
+
+          {/* Main Sections Skeletons */}
+          <div className="space-y-6 sm:space-y-8">
+            {/* Overview / Qualifications Skeleton */}
+            <div className="bg-white p-5 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+              <div className="w-40 h-7 rounded border-b border-slate-100 pb-3 mb-4 shimmer" />
+              <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
+                <div className="h-24 rounded-2xl shimmer" />
+                <div className="h-24 rounded-2xl shimmer" />
+              </div>
+              <div className="space-y-2 pt-4">
+                <div className="w-32 h-5 rounded shimmer" />
+                <div className="w-full h-4 rounded shimmer" />
+                <div className="w-5/6 h-4 rounded shimmer" />
+              </div>
+            </div>
+
+            {/* Skills Skeleton */}
+            <div className="bg-white p-5 sm:p-8 rounded-3xl border border-slate-100 shadow-sm">
+              <div className="w-36 h-7 rounded border-b border-slate-100 pb-3 mb-6 shimmer" />
+              <div className="grid sm:grid-cols-2 gap-4">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="h-16 rounded-xl shimmer" />
+                ))}
+              </div>
+            </div>
+
+            {/* Roadmap Skeleton */}
+            <div className="bg-white p-5 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+              <div className="w-44 h-7 rounded border-b border-slate-100 pb-3 mb-4 shimmer" />
+              <div className="space-y-6 relative">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="flex gap-4 items-start relative">
+                    <div className="w-12 h-12 rounded-xl shrink-0 shimmer" />
+                    <div className="flex-1 space-y-2 pt-1">
+                      <div className="w-1/2 h-5 rounded shimmer" />
+                      <div className="w-5/6 h-4 rounded shimmer" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!career) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: '#f8fafc' }}>
@@ -106,7 +193,7 @@ export default function CareerDetails() {
   ];
 
   return (
-    <div className="min-h-screen relative pb-20" style={{ background: '#f8fafc' }}>
+    <div className="min-h-screen relative pb-20 animate-fade-in" style={{ background: '#f8fafc' }}>
       <div className="fixed top-0 right-0 w-[40vw] h-[40vw] rounded-full bg-blue-100/30 blur-[120px] -z-10" />
       <div className="fixed bottom-0 left-0 w-[30vw] h-[30vw] rounded-full bg-purple-100/30 blur-[120px] -z-10" />
 

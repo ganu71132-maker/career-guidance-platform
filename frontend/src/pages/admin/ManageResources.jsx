@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import AdminLayout from '../../components/AdminLayout';
 import { useData } from '../../contexts/DataContext';
-import { Plus, Pencil, Trash2, X, Save, ExternalLink, Video, BookText, FileText, Code, Lightbulb, Star } from 'lucide-react';
+import { Plus, Pencil, Trash2, X, Save, ExternalLink, Video, BookText, FileText, Code, Lightbulb, Star, Loader } from 'lucide-react';
 
 const typeOptions = [
   { value: 'video', label: 'Video', icon: <Video className="h-4 w-4" /> },
@@ -27,6 +27,9 @@ export default function ManageResources() {
   const [editingIndex, setEditingIndex] = useState(null);
   const [form, setForm] = useState({ title: '', type: 'video', url: '', platform: '', recommended: false });
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [successMsg, setSuccessMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
 
   const career = careers.find(c => c.id === selectedCareer);
   const step = career?.roadmap.find(s => s.id === selectedStep);
@@ -39,21 +42,40 @@ export default function ManageResources() {
 
   function openAdd() {
     setForm({ title: '', type: 'video', url: '', platform: '', recommended: false }); setEditingIndex(null); setShowForm(true);
+    setSuccessMsg(''); setErrorMsg(''); setSubmitting(false);
   }
 
   function openEdit(resource, index) {
     setForm({ title: resource.title, type: resource.type, url: resource.url, platform: resource.platform, recommended: resource.recommended || false });
     setEditingIndex(index); setShowForm(true);
+    setSuccessMsg(''); setErrorMsg(''); setSubmitting(false);
   }
 
-  function handleSave() {
+  async function handleSave() {
     if (!form.title) return;
-    if (editingIndex !== null) {
-      updateResource(selectedCareer, selectedStep, editingIndex, form);
-    } else {
-      addResource(selectedCareer, selectedStep, form);
+    setSubmitting(true);
+    setSuccessMsg('');
+    setErrorMsg('');
+    try {
+      let res;
+      if (editingIndex !== null) {
+        res = await updateResource(selectedCareer, selectedStep, editingIndex, form);
+      } else {
+        res = await addResource(selectedCareer, selectedStep, form);
+      }
+      if (res && res.success) {
+        setSuccessMsg(editingIndex !== null ? 'Resource updated successfully!' : 'Resource added successfully!');
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        setShowForm(false);
+        setEditingIndex(null);
+      } else {
+        setErrorMsg(res?.error?.message || 'An error occurred while saving.');
+      }
+    } catch (err) {
+      setErrorMsg(err.message || 'An unexpected error occurred.');
+    } finally {
+      setSubmitting(false);
     }
-    setShowForm(false); setEditingIndex(null);
   }
 
   function handleDelete(index) {
@@ -175,6 +197,17 @@ export default function ManageResources() {
               <h3 className="text-xl font-bold text-slate-800">{editingIndex !== null ? 'Edit Resource' : 'Add New Resource'}</h3>
               <button onClick={() => setShowForm(false)} className="p-2 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-650 transition-colors"><X className="h-5 w-5" /></button>
             </div>
+
+            {successMsg && (
+              <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-xl mb-6 text-sm font-medium animate-fade-in">
+                {successMsg}
+              </div>
+            )}
+            {errorMsg && (
+              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-6 text-sm font-medium animate-fade-in">
+                {errorMsg}
+              </div>
+            )}
             <div className="space-y-4">
               <div>
                 <label className="text-sm font-medium text-slate-700 mb-1 block">Resource Title *</label>
@@ -222,9 +255,13 @@ export default function ManageResources() {
               </div>
             </div>
             <div className="flex gap-3 mt-6 pt-4 border-t border-slate-100">
-              <button onClick={() => setShowForm(false)} className="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-medium transition-colors">Cancel</button>
-              <button onClick={handleSave} className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-medium hover:bg-emerald-500 transition-colors flex items-center justify-center gap-2">
-                <Save className="h-4 w-4" /> {editingIndex !== null ? 'Save' : 'Add Resource'}
+              <button onClick={() => setShowForm(false)} disabled={submitting} className="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-medium transition-colors disabled:opacity-50">Cancel</button>
+              <button onClick={handleSave} disabled={submitting} className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-medium hover:bg-emerald-500 transition-colors flex items-center justify-center gap-2 disabled:opacity-70">
+                {submitting ? (
+                  <><Loader className="animate-spin h-4 w-4" /> Saving...</>
+                ) : (
+                  <><Save className="h-4 w-4" /> {editingIndex !== null ? 'Save Changes' : 'Add Resource'}</>
+                )}
               </button>
             </div>
           </div>

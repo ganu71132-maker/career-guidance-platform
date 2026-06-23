@@ -142,7 +142,7 @@ export default function Profile() {
             </div>
             <button disabled={loading} type="submit"
               className="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2.5 px-6 rounded-xl flex items-center gap-2 transition-all disabled:opacity-70 shadow-sm text-sm sm:text-base">
-              {loading ? <Loader className="animate-spin h-4 w-4" /> : <Save className="h-4 w-4" />} Save Changes
+              {loading ? <><Loader className="animate-spin h-4 w-4" /> Saving Changes...</> : <><Save className="h-4 w-4" /> Save Changes</>}
             </button>
           </form>
         </div>
@@ -162,7 +162,7 @@ export default function Profile() {
             </div>
             <button disabled={loading} type="submit"
               className="bg-purple-600 hover:bg-purple-500 text-white font-semibold py-2.5 px-6 rounded-xl flex items-center gap-2 transition-all disabled:opacity-70 shadow-sm text-sm sm:text-base">
-              {loading ? <Loader className="animate-spin h-4 w-4" /> : <Lock className="h-4 w-4" />} Update Password
+              {loading ? <><Loader className="animate-spin h-4 w-4" /> Updating Password...</> : <><Lock className="h-4 w-4" /> Update Password</>}
             </button>
           </form>
         </div>

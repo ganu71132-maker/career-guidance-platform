@@ -10,7 +10,7 @@ import FeatureHighlightPopup from '../components/FeatureHighlightPopup';
 
 export default function Dashboard() {
   const { user, signOut } = useAuth();
-  const { careers: careersData, savedCareers, completedSteps, completionsList = [] } = useData();
+  const { careers: careersData, loading, savedCareers, completedSteps, completionsList = [] } = useData();
   const navigate = useNavigate();
   const [recentAnnouncements, setRecentAnnouncements] = useState([]);
 
@@ -116,6 +116,113 @@ export default function Dashboard() {
       toLocalISO(new Date(comp.completedAt)) === todayStr
     );
   });
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex animate-fade-in" style={{ background: '#f8fafc' }}>
+        {/* Sidebar */}
+        <aside className="w-64 bg-white border-r border-slate-100 hidden md:flex flex-col shrink-0 shadow-sm animate-fade-in">
+          <div className="h-20 flex items-center px-6 border-b border-slate-100">
+            <div className="text-xl font-bold text-slate-800 flex items-center gap-2">
+              <Compass className="text-emerald-500 h-6 w-6" /> NaviCareer
+            </div>
+          </div>
+          <div className="flex-1 py-6 px-4 space-y-1">
+            <div className="px-4 py-3 bg-emerald-50 text-emerald-700 rounded-xl font-medium text-sm border border-emerald-100">Dashboard</div>
+            <div className="block px-4 py-3 text-slate-400 rounded-xl text-sm font-medium">Explore Careers</div>
+            <div className="block px-4 py-3 text-slate-400 rounded-xl text-sm font-medium">Resume Builder</div>
+            <div className="block px-4 py-3 text-slate-400 rounded-xl text-sm font-medium">Profile</div>
+          </div>
+        </aside>
+
+        {/* Main */}
+        <main className="flex-1 p-4 sm:p-6 md:p-10 overflow-y-auto relative animate-fade-in">
+          <div className="fixed top-0 right-0 w-[40vw] h-[40vw] rounded-full bg-emerald-100/20 blur-[100px] -z-10" />
+
+          {/* Mobile header */}
+          <div className="md:hidden flex flex-col gap-3 mb-6 pb-4 border-b border-slate-100">
+            <div className="flex items-center justify-between">
+              <div className="text-base font-bold text-slate-800 flex items-center gap-1.5 shrink-0">
+                <Compass className="text-emerald-500 h-5 w-5" /> NaviCareer
+              </div>
+            </div>
+            <div className="flex items-center justify-between bg-slate-100/80 p-1 rounded-xl border border-slate-200/20">
+              <div className="flex-1 text-center bg-white text-emerald-600 text-[11px] font-bold py-1.5 rounded-lg shadow-sm border border-slate-200/40">Dashboard</div>
+              <div className="flex-1 text-center text-slate-400 text-[11px] py-1.5">Explore</div>
+              <div className="flex-1 text-center text-slate-400 text-[11px] py-1.5">Resume</div>
+              <div className="flex-1 text-center text-slate-400 text-[11px] py-1.5">Profile</div>
+            </div>
+          </div>
+
+          <header className="mb-8 sm:mb-10">
+            <div className="h-8 w-64 bg-slate-200 rounded-xl shimmer mb-2" />
+            <div className="h-4 w-48 bg-slate-200 rounded-lg shimmer" />
+          </header>
+
+          {/* Stats Cards Skeleton */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8 sm:mb-10">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col">
+                <div className="w-10 h-10 bg-slate-100 rounded-lg shimmer mb-3" />
+                <div className="h-6 w-12 bg-slate-200 rounded-lg shimmer mb-1.5" />
+                <div className="h-3.5 w-24 bg-slate-100 rounded shimmer" />
+              </div>
+            ))}
+          </div>
+
+          {/* Streak Skeleton */}
+          <div className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-100 shadow-sm mb-8 sm:mb-10">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div className="space-y-3">
+                <div className="h-6 w-36 bg-slate-200 rounded-lg shimmer" />
+                <div className="h-4 w-64 bg-slate-100 rounded shimmer" />
+                <div className="h-10 w-24 bg-slate-200 rounded-xl shimmer mt-2" />
+              </div>
+              <div className="flex-1 max-w-md w-full">
+                <div className="h-4 w-28 bg-slate-150 rounded shimmer mb-3.5" />
+                <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
+                  {[...Array(7)].map((_, i) => (
+                    <div key={i} className="flex flex-col items-center">
+                      <div className="h-3 w-4 bg-slate-100 rounded shimmer mb-2" />
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 bg-slate-100 rounded-xl border border-slate-100/50 shimmer" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Careers Section Skeleton */}
+          <div className="mb-8 sm:mb-10">
+            <div className="flex items-center justify-between mb-4 sm:mb-6">
+              <div className="h-6 w-48 bg-slate-200 rounded-xl shimmer" />
+              <div className="h-4 w-16 bg-slate-200 rounded shimmer" />
+            </div>
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col gap-3">
+                  <div className="h-5 w-3/4 bg-slate-200 rounded-lg shimmer" />
+                  <div className="space-y-1.5">
+                    <div className="h-3 w-full bg-slate-100 rounded shimmer" />
+                    <div className="h-3 w-5/6 bg-slate-100 rounded shimmer" />
+                  </div>
+                  <div className="mt-auto space-y-2 pt-2">
+                    <div className="flex justify-between">
+                      <div className="h-3 w-20 bg-slate-100 rounded shimmer" />
+                      <div className="h-3 w-8 bg-slate-150 rounded shimmer" />
+                    </div>
+                    <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                      <div className="h-full w-1/3 bg-slate-200 shimmer" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex" style={{ background: '#f8fafc' }}>

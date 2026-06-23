@@ -229,9 +229,12 @@ export function DataProvider({ children }) {
       .insert(careerToDb(career))
       .select()
       .single();
-    if (error) { console.error('Error adding career:', error); return null; }
+    if (error) { 
+      console.error('Error adding career:', error); 
+      return { success: false, error }; 
+    }
     await fetchCareers();
-    return data;
+    return { success: true, data };
   }
 
   async function updateCareer(id, updates) {
@@ -239,8 +242,12 @@ export function DataProvider({ children }) {
       .from('careers')
       .update(careerToDb(updates))
       .eq('id', id);
-    if (error) { console.error('Error updating career:', error); return; }
+    if (error) { 
+      console.error('Error updating career:', error); 
+      return { success: false, error }; 
+    }
     await fetchCareers();
+    return { success: true };
   }
 
   async function deleteCareer(id) {
@@ -262,8 +269,12 @@ export function DataProvider({ children }) {
       description: step.description,
       step_order: maxOrder + 1,
     });
-    if (error) { console.error('Error adding step:', error); return; }
+    if (error) { 
+      console.error('Error adding step:', error); 
+      return { success: false, error }; 
+    }
     await fetchCareers();
+    return { success: true };
   }
 
   async function updateRoadmapStep(careerId, stepId, updates) {
@@ -272,8 +283,12 @@ export function DataProvider({ children }) {
     if (updates.description !== undefined) dbUpdates.description = updates.description;
 
     const { error } = await supabase.from('roadmaps').update(dbUpdates).eq('id', stepId);
-    if (error) { console.error('Error updating step:', error); return; }
+    if (error) { 
+      console.error('Error updating step:', error); 
+      return { success: false, error }; 
+    }
     await fetchCareers();
+    return { success: true };
   }
 
   async function deleteRoadmapStep(careerId, stepId) {
@@ -316,8 +331,12 @@ export function DataProvider({ children }) {
       platform: resource.platform,
       recommended: resource.recommended || false,
     });
-    if (error) { console.error('Error adding resource:', error); return; }
+    if (error) { 
+      console.error('Error adding resource:', error); 
+      return { success: false, error }; 
+    }
     await fetchCareers();
+    return { success: true };
   }
 
   async function updateResource(careerId, stepId, resourceIndex, updates) {
@@ -325,7 +344,7 @@ export function DataProvider({ children }) {
     const career = careers.find(c => c.id === careerId);
     const step = career?.roadmap.find(s => s.id === stepId);
     const resource = step?.resources[resourceIndex];
-    if (!resource) return;
+    if (!resource) return { success: false, error: new Error('Resource not found') };
 
     const dbUpdates = {};
     if (updates.title !== undefined) dbUpdates.title = updates.title;
@@ -335,8 +354,12 @@ export function DataProvider({ children }) {
     if (updates.recommended !== undefined) dbUpdates.recommended = updates.recommended;
 
     const { error } = await supabase.from('step_resources').update(dbUpdates).eq('id', resource.id);
-    if (error) { console.error('Error updating resource:', error); return; }
+    if (error) { 
+      console.error('Error updating resource:', error); 
+      return { success: false, error }; 
+    }
     await fetchCareers();
+    return { success: true };
   }
 
   async function deleteResource(careerId, stepId, resourceIndex) {
@@ -365,14 +388,18 @@ export function DataProvider({ children }) {
       platform: resource.platform,
       recommended: resource.recommended || false,
     });
-    if (error) { console.error('Error adding career resource:', error); return; }
+    if (error) { 
+      console.error('Error adding career resource:', error); 
+      return { success: false, error }; 
+    }
     await fetchCareerResources();
+    return { success: true };
   }
 
   async function updateCareerResource(careerId, resourceIndex, updates) {
     const resources = careerResources[careerId] || [];
     const resource = resources[resourceIndex];
-    if (!resource) return;
+    if (!resource) return { success: false, error: new Error('Resource not found') };
 
     const dbUpdates = {};
     if (updates.title !== undefined) dbUpdates.title = updates.title;
@@ -383,8 +410,12 @@ export function DataProvider({ children }) {
     if (updates.recommended !== undefined) dbUpdates.recommended = updates.recommended;
 
     const { error } = await supabase.from('career_resources').update(dbUpdates).eq('id', resource.id);
-    if (error) { console.error('Error updating career resource:', error); return; }
+    if (error) { 
+      console.error('Error updating career resource:', error); 
+      return { success: false, error }; 
+    }
     await fetchCareerResources();
+    return { success: true };
   }
 
   async function deleteCareerResource(careerId, resourceIndex) {
@@ -426,7 +457,7 @@ export function DataProvider({ children }) {
 
   return (
     <DataContext.Provider value={value}>
-      {!loading && children}
+      {children}
     </DataContext.Provider>
   );
 }

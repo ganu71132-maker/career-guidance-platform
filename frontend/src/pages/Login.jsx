@@ -128,7 +128,7 @@ export default function Login() {
           </div>
           <button disabled={loading} type="submit"
             className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 rounded-xl flex items-center justify-center transition-all disabled:opacity-70 shadow-md shadow-emerald-600/20 text-sm sm:text-base">
-            {loading ? <Loader className="animate-spin h-5 w-5" /> : <><LogIn className="mr-2 h-5 w-5" /> Log In</>}
+            {loading ? <><Loader className="animate-spin h-5 w-5 mr-2" /> Logging in...</> : <><LogIn className="mr-2 h-5 w-5" /> Log In</>}
           </button>
         </form>
 

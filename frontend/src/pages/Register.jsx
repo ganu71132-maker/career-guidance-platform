@@ -130,7 +130,7 @@ export default function Register() {
           </div>
           <button disabled={loading} type="submit"
             className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 rounded-xl flex items-center justify-center transition-all disabled:opacity-70 mt-2 shadow-md shadow-emerald-600/20 text-sm sm:text-base">
-            {loading ? <Loader className="animate-spin h-5 w-5" /> : <><UserPlus className="mr-2 h-5 w-5" /> Sign Up</>}
+            {loading ? <><Loader className="animate-spin h-5 w-5 mr-2" /> Creating Account...</> : <><UserPlus className="mr-2 h-5 w-5" /> Sign Up</>}
           </button>
         </form>
 

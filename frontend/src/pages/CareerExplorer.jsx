@@ -2,17 +2,15 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '../contexts/DataContext';
 import { useAuth } from '../contexts/AuthContext';
-import { Search, Briefcase, TrendingUp, IndianRupee, Compass, ArrowLeft, Map, GraduationCap } from 'lucide-react';
+import { Search, Briefcase, TrendingUp, IndianRupee, Compass, ArrowLeft, Map, GraduationCap, ChevronDown } from 'lucide-react';
 import NotificationBell from '../components/NotificationBell';
 
 export default function CareerExplorer() {
-  const { careers: careersData } = useData();
+  const { careers: careersData, loading } = useData();
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedField, setSelectedField] = useState('All');
-
-  const categories = ['All', ...new Set(careersData.map(c => c.category))];
+  const [isFieldDropdownOpen, setIsFieldDropdownOpen] = useState(false);
   
   // Extract all unique fields from all careers, normalized to UPPERCASE and trimmed
   const fields = ['All', ...new Set(careersData.flatMap(c => (c.field || []).map(f => f.trim().toUpperCase())))].filter(Boolean);
@@ -20,25 +18,28 @@ export default function CareerExplorer() {
   const filtered = careersData.filter(career => {
     const matchesSearch = career.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           career.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCat = selectedCategory === 'All' || career.category === selectedCategory;
     const matchesField = selectedField === 'All' || 
       (career.field || []).some(f => f.trim().toUpperCase() === selectedField.trim().toUpperCase());
-    return matchesSearch && matchesCat && matchesField;
+    return matchesSearch && matchesField;
   });
 
   // Full names for field badges (UPPERCASE keys)
   const fieldFullNames = {
-    'CSE': 'Computer Science',
-    'IT': 'Information Technology',
-    'ECE': 'Electronics & Communication',
-    'EEE': 'Electrical Engineering',
-    'ME': 'Mechanical Engineering',
-    'CE': 'Civil Engineering',
-    'BIOTECH': 'Biotechnology',
+    'CSE': 'Computer Science (CSE)',
+    'IT': 'Information Technology (IT)',
+    'ECE': 'Electronics & Communication (ECE)',
+    'EEE': 'Electrical Engineering (EEE)',
+    'ME': 'Mechanical Engineering (ME)',
+    'CE': 'Civil Engineering (CE)',
+    'BIOTECH': 'Biotechnology (BioTech)',
     'MATHEMATICS': 'Mathematics',
     'DESIGN': 'Design',
     'COMMERCE': 'Commerce',
     'SCIENCE': 'General Science',
+    'BBA': 'Business Administration (BBA)',
+    'MBA': 'Business Administration (MBA)',
+    'BCA': 'Computer Applications (BCA)',
+    'MCA': 'Computer Applications (MCA)',
   };
 
   return (
@@ -124,61 +125,92 @@ export default function CareerExplorer() {
               />
             </div>
 
-            {/* Field Filter (Branch) */}
+            {/* Field Filter (Branch Dropdown Selector) */}
             {fields.length > 1 && (
-              <div>
+              <div className="relative">
                 <div className="flex items-center gap-1.5 mb-2">
                   <GraduationCap className="h-3.5 w-3.5 text-blue-500" />
                   <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Your Branch / Field</span>
                 </div>
-                <div className="flex gap-2 flex-wrap">
-                  {fields.map(field => (
-                    <button
-                      key={field}
-                      onClick={() => setSelectedField(field)}
-                      className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all ${
-                        selectedField === field
-                          ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20'
-                          : 'bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-100'
-                      }`}
-                      title={fieldFullNames[field] || field}
-                    >
-                      {field === 'All' ? '🎯 All Fields' : field}
-                    </button>
-                  ))}
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setIsFieldDropdownOpen(!isFieldDropdownOpen)}
+                    className="w-full sm:w-72 bg-slate-50 border border-slate-200 hover:bg-slate-100/50 rounded-xl py-2.5 px-4 flex items-center justify-between text-slate-700 text-sm font-medium transition-all focus:outline-none focus:ring-2 focus:ring-blue-500/20 cursor-pointer"
+                  >
+                    <span className="flex items-center gap-2">
+                      <span>🎓</span>
+                      <span>{selectedField === 'All' ? 'All Fields / Branches' : (fieldFullNames[selectedField] || selectedField)}</span>
+                    </span>
+                    <ChevronDown className={`h-4 w-4 text-slate-400 transition-transform duration-200 ${isFieldDropdownOpen ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  {isFieldDropdownOpen && (
+                    <>
+                      {/* Overlay to close on click outside */}
+                      <div className="fixed inset-0 z-10" onClick={() => setIsFieldDropdownOpen(false)} />
+                      
+                      {/* Dropdown Card */}
+                      <div className="absolute left-0 mt-2 w-full sm:w-80 bg-white border border-slate-150 rounded-2xl shadow-xl z-20 py-2 max-h-72 overflow-y-auto animate-fade-in no-scrollbar">
+                        {fields.map(field => {
+                          const isSelected = selectedField === field;
+                          return (
+                            <button
+                              key={field}
+                              type="button"
+                              onClick={() => {
+                                setSelectedField(field);
+                                setIsFieldDropdownOpen(false);
+                              }}
+                              className={`w-full text-left px-4 py-2.5 text-xs sm:text-sm font-medium transition-colors flex items-center justify-between cursor-pointer ${
+                                isSelected
+                                  ? 'bg-blue-50 text-blue-600 font-bold'
+                                  : 'text-slate-600 hover:bg-slate-50'
+                              }`}
+                            >
+                              <span>{field === 'All' ? '🎯 All Fields' : fieldFullNames[field] || field}</span>
+                              {isSelected && <span className="text-blue-600 font-bold">✓</span>}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             )}
 
-            {/* Category Filter */}
-            <div>
-              <div className="flex items-center gap-1.5 mb-2">
-                <Briefcase className="h-3.5 w-3.5 text-emerald-500" />
-                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Category</span>
-              </div>
-              <div className="flex gap-2 flex-wrap">
-                {categories.map(cat => (
-                  <button
-                    key={cat}
-                    onClick={() => setSelectedCategory(cat)}
-                    className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all ${
-                      selectedCategory === cat
-                        ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20'
-                        : 'bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-700'
-                    }`}
-                  >
-                    {cat}
-                  </button>
-                ))}
-              </div>
-            </div>
+
           </div>
         </div>
 
 
         {/* Careers Grid */}
-        {filtered.length > 0 ? (
+        {loading ? (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col h-[300px]">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="w-12 h-12 rounded-xl shimmer" />
+                  <div className="w-20 h-5 rounded-full shimmer" />
+                </div>
+                <div className="w-3/4 h-6 rounded mb-3.5 shimmer" />
+                <div className="w-full h-4 rounded mb-2 shimmer" />
+                <div className="w-5/6 h-4 rounded mb-5 shimmer" />
+                <div className="flex gap-4 mb-4">
+                  <div className="w-24 h-4 rounded shimmer" />
+                  <div className="w-20 h-4 rounded shimmer" />
+                </div>
+                <div className="flex gap-2 mb-4">
+                  <div className="w-12 h-4 rounded shimmer" />
+                  <div className="w-12 h-4 rounded shimmer" />
+                </div>
+                <div className="w-full h-11 rounded-xl mt-auto shimmer" />
+              </div>
+            ))}
+          </div>
+        ) : filtered.length > 0 ? (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 animate-fade-in">
             {filtered.map((career) => (
               <div key={career.id} className="bg-white p-5 sm:p-6 rounded-2xl border border-emerald-200 shadow-sm hover:shadow-md hover:border-emerald-300 hover:-translate-y-1 transition-all duration-300 group">
                 <div className="flex justify-between items-start mb-3 sm:mb-4">
