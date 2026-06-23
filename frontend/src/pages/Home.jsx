@@ -115,7 +115,7 @@ export default function Home() {
                 <span className="flex items-center gap-1 text-[9px] sm:text-[10px] uppercase font-bold tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-100/50 px-2.5 py-1 rounded-full">
                   <Sparkles className="h-3 w-3 animate-spin" /> Active Roadmap
                 </span>
-                <span className="text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase">Inside the App</span>
+                <span className="text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase">Features</span>
               </div>
 
               {/* Card Title */}
