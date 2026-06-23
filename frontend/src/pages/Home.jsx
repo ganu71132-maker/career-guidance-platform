@@ -1,10 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '../contexts/DataContext';
-import { ArrowRight, Compass, Map, BookOpen, Target, Briefcase, TrendingUp, IndianRupee, Star } from 'lucide-react';
+import { ArrowRight, Compass, Map, BookOpen, Target, Briefcase, TrendingUp, IndianRupee, Star, Sparkles, CheckCircle2, CircleDot, ChevronRight } from 'lucide-react';
 
 export default function Home() {
   const { careers: careersData } = useData();
+  const [tiltStyle, setTiltStyle] = useState({ transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)' });
+  const [glareStyle, setGlareStyle] = useState({ opacity: 0, left: '0px', top: '0px' });
+
+  function handleMouseMove(e) {
+    const card = e.currentTarget;
+    const box = card.getBoundingClientRect();
+    const x = e.clientX - box.left;
+    const y = e.clientY - box.top;
+    
+    // Calculate rotation angles
+    const xc = box.width / 2;
+    const yc = box.height / 2;
+    const rotateX = (yc - y) / 16; // Max tilt 10 degrees
+    const rotateY = (x - xc) / 16;
+    
+    setTiltStyle({
+      transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`,
+      transition: 'none'
+    });
+    
+    setGlareStyle({
+      opacity: 0.15,
+      left: `${x}px`,
+      top: `${y}px`,
+      background: 'radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 80%)'
+    });
+  }
+
+  function handleMouseLeave() {
+    setTiltStyle({
+      transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)',
+      transition: 'all 0.5s ease'
+    });
+    setGlareStyle({
+      opacity: 0,
+      left: '0px',
+      top: '0px'
+    });
+  }
+
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: '#f8fafc' }}>
       {/* Background Decorators */}
@@ -34,24 +74,102 @@ export default function Home() {
 
       <main className="flex-grow">
         {/* ====== HERO SECTION ====== */}
-        <section className="relative pt-16 sm:pt-28 pb-12 sm:pb-20 px-4 sm:px-6 max-w-7xl mx-auto text-center">
-          <div className="inline-block mb-4 sm:mb-6 px-4 py-1.5 rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700 text-xs sm:text-sm font-medium">
-            🚀 Your Career Journey Starts Here
+        <section className="relative pt-12 sm:pt-20 pb-12 sm:pb-20 px-4 sm:px-6 max-w-7xl mx-auto grid md:grid-cols-12 gap-8 md:gap-12 items-center text-left">
+          <div className="md:col-span-7 flex flex-col items-center md:items-start text-center md:text-left">
+            <div className="inline-block mb-4 sm:mb-6 px-4 py-1.5 rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700 text-xs sm:text-sm font-medium animate-pulse-subtle">
+              🚀 Your Career Journey Starts Here
+            </div>
+            <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-5 sm:mb-6 leading-tight text-slate-800 animate-fade-in">
+              Discover Your Dream Career <br className="hidden md:block" />
+              <span className="bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">& Learn How To Get There</span>
+            </h1>
+            <p className="text-base sm:text-lg text-slate-500 max-w-2xl mx-auto md:mx-0 mb-8 sm:mb-10 leading-relaxed">
+              Find the perfect career path, follow a step-by-step roadmap from beginner to professional, and access curated learning resources at every stage.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
+              <Link to="/explorer" className="flex items-center justify-center px-6 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base font-semibold text-white bg-emerald-600 hover:bg-emerald-500 rounded-xl transition-all shadow-lg shadow-emerald-600/20 hover:scale-105 hover:shadow-xl cursor-pointer">
+                Explore Careers <ArrowRight className="ml-2 h-4 sm:h-5 w-4 sm:w-5" />
+              </Link>
+              <Link to="/register" className="flex items-center justify-center px-6 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base font-semibold text-slate-700 bg-white hover:bg-slate-50 rounded-xl transition-all border border-slate-200 shadow-sm cursor-pointer">
+                Get Started Free
+              </Link>
+            </div>
           </div>
-          <h1 className="text-3xl sm:text-5xl md:text-7xl font-extrabold tracking-tight mb-5 sm:mb-8 leading-tight text-slate-800">
-            Discover Your Dream Career <br className="hidden md:block" />
-            <span className="bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">& Learn How To Get There</span>
-          </h1>
-          <p className="text-base sm:text-xl text-slate-500 max-w-2xl mx-auto mb-8 sm:mb-12 leading-relaxed">
-            Find the perfect career path, follow a step-by-step roadmap from beginner to professional, and access curated learning resources at every stage.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
-            <Link to="/explorer" className="flex items-center justify-center px-6 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base font-semibold text-white bg-emerald-600 hover:bg-emerald-500 rounded-xl transition-all shadow-lg shadow-emerald-600/20 hover:scale-105 hover:shadow-xl">
-              Explore Careers <ArrowRight className="ml-2 h-4 sm:h-5 w-4 sm:w-5" />
-            </Link>
-            <Link to="/register" className="flex items-center justify-center px-6 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base font-semibold text-slate-700 bg-white hover:bg-slate-50 rounded-xl transition-all border border-slate-200 shadow-sm">
-              Get Started Free
-            </Link>
+
+          {/* Interactive Auto-Floating 3D Card Showcase (Runs floating 3D keyframe; Hover overrides it inline on desktop) */}
+          <div className="md:col-span-5 flex items-center justify-center w-full mt-6 md:mt-0">
+            <div
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              style={tiltStyle}
+              className="relative w-full max-w-[340px] sm:max-w-[380px] bg-white/85 backdrop-blur-xl border border-slate-200/60 shadow-2xl rounded-3xl p-5 sm:p-6 select-none cursor-pointer group animate-float-3d"
+            >
+              {/* Glare effect */}
+              <div 
+                className="absolute pointer-events-none rounded-full w-[200px] h-[200px] -translate-x-1/2 -translate-y-1/2 transition-opacity duration-300"
+                style={glareStyle}
+              />
+              
+              {/* Card Badge */}
+              <div className="flex justify-between items-center mb-5 sm:mb-6">
+                <span className="flex items-center gap-1 text-[9px] sm:text-[10px] uppercase font-bold tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-100/50 px-2.5 py-1 rounded-full">
+                  <Sparkles className="h-3 w-3 animate-spin" /> Active Roadmap
+                </span>
+                <span className="text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase">Preview</span>
+              </div>
+
+              {/* Card Title */}
+              <div className="mb-5 sm:mb-6">
+                <h3 className="text-lg sm:text-xl font-bold text-slate-800 mb-1 flex items-center gap-2">
+                  Full-Stack Developer
+                </h3>
+                <p className="text-[11px] sm:text-xs text-slate-500">Design, code, and deploy modern applications.</p>
+              </div>
+
+              {/* Progress Ring Widget */}
+              <div className="flex items-center gap-4 bg-slate-50/50 border border-slate-100 p-3 sm:p-3.5 rounded-2xl mb-5 sm:mb-6">
+                <div className="relative w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center shrink-0">
+                  {/* SVG Circle */}
+                  <svg className="w-11 h-11 sm:w-12 sm:h-12 transform -rotate-90">
+                    <circle cx="22" cy="22" r="16" className="stroke-slate-100" strokeWidth="3.5" fill="transparent" />
+                    <circle cx="22" cy="22" r="16" className="stroke-emerald-500" strokeWidth="3.5" fill="transparent" strokeDasharray="100" strokeDashoffset="40" />
+                  </svg>
+                  <span className="absolute text-[9px] sm:text-[10px] font-extrabold text-slate-700">60%</span>
+                </div>
+                <div>
+                  <h4 className="font-bold text-xs text-slate-800">Frontend Phase</h4>
+                  <p className="text-[9px] sm:text-[10px] text-slate-400 font-semibold mt-0.5">3/5 Steps Completed</p>
+                </div>
+              </div>
+
+              {/* Roadmap list preview */}
+              <div className="space-y-3 mb-2">
+                <div className="flex items-center gap-2.5">
+                  <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-500 shrink-0" />
+                  <span className="text-[11px] sm:text-xs font-semibold text-slate-700">1. HTML5 & Semantic Elements</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-500 shrink-0" />
+                  <span className="text-[11px] sm:text-xs font-semibold text-slate-700">2. Responsive Layouts & CSS Grid</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <div className="h-3.5 w-3.5 sm:h-4 sm:w-4 rounded-full border-2 border-dashed border-emerald-500 animate-spin shrink-0" />
+                  <span className="text-[11px] sm:text-xs font-bold text-emerald-600">3. JavaScript Promises & APIs</span>
+                </div>
+                <div className="flex items-center gap-2.5 opacity-40">
+                  <CircleDot className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-300 shrink-0" />
+                  <span className="text-[11px] sm:text-xs font-medium text-slate-500">4. React Components & Hooks</span>
+                </div>
+              </div>
+
+              {/* Card Footer Decorator */}
+              <div className="mt-5 sm:mt-6 pt-4 border-t border-slate-100 flex justify-between items-center text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                <span>🔥 7 Day Streak</span>
+                <span className="text-emerald-600 hover:text-emerald-700 transition-colors flex items-center gap-0.5">
+                  Start Roadmap <ChevronRight className="h-3.5 w-3.5" />
+                </span>
+              </div>
+            </div>
           </div>
         </section>
 

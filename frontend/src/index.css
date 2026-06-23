@@ -85,3 +85,17 @@
     transform: translateY(0);
   }
 }
+
+/* Passive 3D floating animation */
+.animate-float-3d {
+  animation: float-3d-animation 6s ease-in-out infinite;
+}
+
+@keyframes float-3d-animation {
+  0%, 100% {
+    transform: perspective(1000px) rotateX(4deg) rotateY(-6deg) translateY(0px);
+  }
+  50% {
+    transform: perspective(1000px) rotateX(-4deg) rotateY(6deg) translateY(-12px);
+  }
+}
