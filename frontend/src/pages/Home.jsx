@@ -121,9 +121,9 @@ export default function Home() {
               {/* Card Title */}
               <div className="mb-5 sm:mb-6">
                 <h3 className="text-lg sm:text-xl font-bold text-slate-800 mb-1 flex items-center gap-2">
-                  Full-Stack Developer
+                  AI / ML Engineer
                 </h3>
-                <p className="text-[11px] sm:text-xs text-slate-500">Design, code, and deploy modern applications.</p>
+                <p className="text-[11px] sm:text-xs text-slate-500">Train neural networks and deploy intelligent models.</p>
               </div>
 
               {/* Progress Ring Widget */}
@@ -137,7 +137,7 @@ export default function Home() {
                   <span className="absolute text-[9px] sm:text-[10px] font-extrabold text-slate-700">60%</span>
                 </div>
                 <div>
-                  <h4 className="font-bold text-xs text-slate-800">Frontend Phase</h4>
+                  <h4 className="font-bold text-xs text-slate-800">Model Training</h4>
                   <p className="text-[9px] sm:text-[10px] text-slate-400 font-semibold mt-0.5">3/5 Steps Completed</p>
                 </div>
               </div>
@@ -146,19 +146,19 @@ export default function Home() {
               <div className="space-y-3 mb-2">
                 <div className="flex items-center gap-2.5">
                   <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-500 shrink-0" />
-                  <span className="text-[11px] sm:text-xs font-semibold text-slate-700">1. HTML5 & Semantic Elements</span>
+                  <span className="text-[11px] sm:text-xs font-semibold text-slate-700">1. Python & Linear Algebra</span>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-500 shrink-0" />
-                  <span className="text-[11px] sm:text-xs font-semibold text-slate-700">2. Responsive Layouts & CSS Grid</span>
+                  <span className="text-[11px] sm:text-xs font-semibold text-slate-700">2. Regression & Classification</span>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <div className="h-3.5 w-3.5 sm:h-4 sm:w-4 rounded-full border-2 border-dashed border-emerald-500 animate-spin shrink-0" />
-                  <span className="text-[11px] sm:text-xs font-bold text-emerald-600">3. JavaScript Promises & APIs</span>
+                  <span className="text-[11px] sm:text-xs font-bold text-emerald-600">3. Neural Networks & PyTorch</span>
                 </div>
                 <div className="flex items-center gap-2.5 opacity-40">
                   <CircleDot className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-300 shrink-0" />
-                  <span className="text-[11px] sm:text-xs font-medium text-slate-500">4. React Components & Hooks</span>
+                  <span className="text-[11px] sm:text-xs font-medium text-slate-500">4. Large Language Models (LLMs)</span>
                 </div>
               </div>
 
