@@ -4,6 +4,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { DataProvider } from './contexts/DataContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AdminRoute } from './components/AdminRoute';
+import InstallPrompt from './components/InstallPrompt';
 
 // Public Pages
 import Home from './pages/Home';
@@ -33,6 +34,7 @@ function App() {
     <AuthProvider>
       <DataProvider>
         <Router>
+          <InstallPrompt />
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
