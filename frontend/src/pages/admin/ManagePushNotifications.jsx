@@ -19,9 +19,14 @@ export default function ManagePushNotifications() {
       setErrorMsg('');
       setSuccessMsg('');
 
-      // Send to the backend server endpoint (dynamically uses local hostname or env variable)
-      const apiBase = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:5001`;
-      const response = await fetch(`${apiBase}/api/send-push`, {
+      // In production (Vercel), use the relative /api/send-push path (serverless function).
+      // In local dev, fall back to the local Express backend server on port 5001.
+      const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || /^\d+\.\d+\.\d+\.\d+$/.test(window.location.hostname);
+      const apiUrl = isDev
+        ? `http://${window.location.hostname}:5001/api/send-push`
+        : '/api/send-push';
+
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
