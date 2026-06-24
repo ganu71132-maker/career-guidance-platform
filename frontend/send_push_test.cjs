@@ -20,10 +20,11 @@ webpush.setVapidDetails(
 // PASTE THE SUBSCRIPTION OBJECT FROM YOUR PHONE/BROWSER HERE:
 // ==========================================
 const testSubscription = {
-  endpoint: "https://fcm.googleapis.com/fcm/send/dpFvS7n7q1g:APA91bGwW1Q555ITyK-Nb0hB4IGDGe7lQkZPgclYO92cTeXq2CrBtGFtOtCskE-pGNPv-hoA45jQyLiJIUVn-wwAz3niAcETiqk6m7drCBZm2ycq-kbFbUwlaG_qh4L5qOrquDZRYvvI",
-  keys: {
-    p256dh: "BK9KH4Dy6IJyvlj1gk7Nn_MLhYZxiwBBMBgjNwDJtglOYjyTYyI8BTMA8_ZPX69-7zJ3p298tO1qZZ5W_DDOAYk",
-    auth: "xwflB8sM78KqXiceIsXxDg"
+  "endpoint": "https://fcm.googleapis.com/fcm/send/fos0NrMMC2g:APA91bFmn6kr0bw8z-91vEn3kWrcy3PgoHXIbZ3VWA1wPJRlJgrwMelLuHpZ7PEHR0IbmNlqfjKOClG2Zy6k056iKHNaP0TvG6-Q-ZQoq6b8VoBBDL7B3JNSsFI2Wl5xgtnokknl2lzb",
+  "expirationTime": null,
+  "keys": {
+    "p256dh": "BCkXckZCafwa9bTNAy6jcrl72OXG-X2MLaMRjs_xxgVkcP1Sym9qVQDaXD47dv8lAArwRtPujwBDBjNbPJx0yg4",
+    "auth": "XnxUUBMFEWLlodEh3P4SJw"
   }
 };
 

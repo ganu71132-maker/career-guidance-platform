@@ -28,6 +28,7 @@ import ManageResources from './pages/admin/ManageResources';
 import ManageCareerResources from './pages/admin/ManageCareerResources';
 import ManageUsers from './pages/admin/ManageUsers';
 import ManageAnnouncements from './pages/admin/ManageAnnouncements';
+import ManagePushNotifications from './pages/admin/ManagePushNotifications';
 
 function App() {
   return (
@@ -58,6 +59,7 @@ function App() {
             <Route path="/admin/career-resources" element={<AdminRoute><ManageCareerResources /></AdminRoute>} />
             <Route path="/admin/users" element={<AdminRoute><ManageUsers /></AdminRoute>} />
             <Route path="/admin/announcements" element={<AdminRoute><ManageAnnouncements /></AdminRoute>} />
+            <Route path="/admin/notifications" element={<AdminRoute><ManagePushNotifications /></AdminRoute>} />
 
             {/* Catch all */}
             <Route path="*" element={<Navigate to="/" replace />} />

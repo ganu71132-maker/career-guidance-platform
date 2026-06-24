@@ -56,7 +56,29 @@ export default function Dashboard() {
   useEffect(() => {
     if (!user) return;
     const supportsPush = 'serviceWorker' in navigator && 'PushManager' in window;
-    if (supportsPush && Notification.permission !== 'granted') {
+    if (!supportsPush) return;
+
+    if (Notification.permission === 'granted') {
+      // Auto-sync/register subscription in the database if permission is already granted
+      const syncSubscription = async () => {
+        try {
+          const registration = await navigator.serviceWorker.ready;
+          let sub = await registration.pushManager.getSubscription();
+          if (!sub) {
+            sub = await registration.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: 'BInACj48s2VLb4bczm5_4wvo2ujO1JR9cBJXPRDwH27Xs3pQHHGVJswQy-WjOm1MDB8XLSiklS0mH03n7U2RNEQ'
+            });
+          }
+          await supabase
+            .from('user_push_subscriptions')
+            .upsert({ user_id: user.id, subscription: sub }, { onConflict: 'user_id' });
+        } catch (e) {
+          console.error('Failed to auto-sync push subscription:', e);
+        }
+      };
+      syncSubscription();
+    } else {
       const dismissed = sessionStorage.getItem(`pwa-push-banner-dismissed-${user.id}`);
       if (!dismissed) {
         setShowPushBanner(true);
@@ -77,6 +99,15 @@ export default function Dashboard() {
         userVisibleOnly: true,
         applicationServerKey: 'BInACj48s2VLb4bczm5_4wvo2ujO1JR9cBJXPRDwH27Xs3pQHHGVJswQy-WjOm1MDB8XLSiklS0mH03n7U2RNEQ'
       });
+
+      // Save subscription details directly to Supabase table
+      const { error: dbError } = await supabase
+        .from('user_push_subscriptions')
+        .upsert({ user_id: user.id, subscription: sub }, { onConflict: 'user_id' });
+
+      if (dbError) {
+        console.error('Error saving subscription to Supabase DB:', dbError);
+      }
 
       setPushSubscriptionJSON(JSON.stringify(sub, null, 2));
       setPushStatus('success');

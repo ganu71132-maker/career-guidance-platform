@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { LayoutDashboard, Briefcase, Map, BookOpen, Users, LogOut, Shield, Star, Menu, X, Megaphone } from 'lucide-react';
+import { LayoutDashboard, Briefcase, Map, BookOpen, Users, LogOut, Shield, Star, Menu, X, Megaphone, Bell } from 'lucide-react';
 
 const navItems = [
   { path: '/admin', icon: <LayoutDashboard className="h-5 w-5" />, label: 'Dashboard' },
@@ -11,6 +11,7 @@ const navItems = [
   { path: '/admin/career-resources', icon: <Star className="h-5 w-5" />, label: 'Career Resources' },
   { path: '/admin/users', icon: <Users className="h-5 w-5" />, label: 'Manage Users' },
   { path: '/admin/announcements', icon: <Megaphone className="h-5 w-5" />, label: 'Announcements' },
+  { path: '/admin/notifications', icon: <Bell className="h-5 w-5" />, label: 'Push Notifications' },
 ];
 
 export default function AdminLayout({ children }) {
