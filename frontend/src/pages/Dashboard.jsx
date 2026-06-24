@@ -49,6 +49,44 @@ export default function Dashboard() {
     navigate('/');
   };
 
+  const [showPushBanner, setShowPushBanner] = useState(false);
+  const [pushStatus, setPushStatus] = useState('');
+  const [pushSubscriptionJSON, setPushSubscriptionJSON] = useState('');
+
+  useEffect(() => {
+    if (!user) return;
+    const supportsPush = 'serviceWorker' in navigator && 'PushManager' in window;
+    if (supportsPush && Notification.permission !== 'granted') {
+      const dismissed = sessionStorage.getItem(`pwa-push-banner-dismissed-${user.id}`);
+      if (!dismissed) {
+        setShowPushBanner(true);
+      }
+    }
+  }, [user]);
+
+  const handleSubscribePush = async () => {
+    try {
+      setPushStatus('loading');
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') {
+        throw new Error('Notification permission denied');
+      }
+
+      const registration = await navigator.serviceWorker.ready;
+      const sub = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: 'BInACj48s2VLb4bczm5_4wvo2ujO1JR9cBJXPRDwH27Xs3pQHHGVJswQy-WjOm1MDB8XLSiklS0mH03n7U2RNEQ'
+      });
+
+      setPushSubscriptionJSON(JSON.stringify(sub, null, 2));
+      setPushStatus('success');
+      setTimeout(() => setShowPushBanner(false), 8000);
+    } catch (err) {
+      console.error('Push subscription failed:', err);
+      setPushStatus('error');
+    }
+  };
+
   const savedCareersData = careersData.filter(c => savedCareers.includes(c.id));
   const totalStepsInSaved = savedCareersData.reduce((sum, c) => sum + c.roadmap.length, 0);
   const savedStepsIds = new Set(savedCareersData.flatMap(c => c.roadmap.map(step => step.id)));
@@ -290,6 +328,71 @@ export default function Dashboard() {
             <NotificationBell />
           </div>
         </header>
+
+        {/* PWA Notification Subscription Alert Banner */}
+        {showPushBanner && (
+          <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-blue-500/5 to-emerald-500/10 border border-emerald-500/20 backdrop-blur-md flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-fade-in">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 bg-emerald-50 rounded-xl flex items-center justify-center border border-emerald-100/50 shrink-0">
+                <Megaphone className="h-5 w-5 text-emerald-600 animate-bounce" />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-800 text-sm sm:text-base">🔔 Get Daily Learning Reminders!</h3>
+                <p className="text-xs text-slate-500 font-medium">Never break your streak. Install roadmap notifications on this device.</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 self-end sm:self-auto">
+              <button
+                onClick={() => {
+                  sessionStorage.setItem(`pwa-push-banner-dismissed-${user.id}`, 'true');
+                  setShowPushBanner(false);
+                }}
+                className="text-xs font-semibold text-slate-400 hover:text-slate-700 px-3 py-2 rounded-xl transition-all cursor-pointer"
+              >
+                Later
+              </button>
+              <button
+                onClick={handleSubscribePush}
+                disabled={pushStatus === 'loading'}
+                className="text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 px-4 py-2.5 rounded-xl shadow-md shadow-emerald-600/15 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
+              >
+                {pushStatus === 'loading' ? 'Enabling...' : pushStatus === 'success' ? 'Enabled! 🎉' : pushStatus === 'error' ? 'Failed, try again' : 'Enable Notifications'}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Display Mobile Token to Copy */}
+        {pushSubscriptionJSON && (
+          <div className="mb-6 p-5 rounded-2xl bg-slate-900 text-slate-100 border border-slate-800 shadow-xl animate-fade-in">
+            <div className="flex justify-between items-center mb-3">
+              <h4 className="text-sm font-bold text-emerald-400">📱 Mobile Push Token Generated!</h4>
+              <button 
+                onClick={() => setPushSubscriptionJSON('')}
+                className="text-xs text-slate-400 hover:text-white cursor-pointer"
+              >
+                Close
+              </button>
+            </div>
+            <p className="text-xs text-slate-400 mb-3 font-medium">
+              Copy the JSON block below and paste it in your laptop's <code>send_push_test.cjs</code> file:
+            </p>
+            <div className="relative">
+              <pre className="bg-slate-950 p-3 rounded-lg text-[10px] overflow-x-auto max-h-48 text-emerald-300 font-mono no-scrollbar">
+                {pushSubscriptionJSON}
+              </pre>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(pushSubscriptionJSON);
+                  alert('Token copied to clipboard!');
+                }}
+                className="absolute top-2 right-2 text-[10px] font-bold bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-1 rounded transition-all cursor-pointer"
+              >
+                Copy Code
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8 sm:mb-10">
