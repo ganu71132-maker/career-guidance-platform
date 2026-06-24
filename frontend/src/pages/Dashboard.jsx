@@ -8,6 +8,23 @@ import NotificationBell from '../components/NotificationBell';
 import WelcomePopup from '../components/WelcomePopup';
 import FeatureHighlightPopup from '../components/FeatureHighlightPopup';
 
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding)
+    .replace(/\-/g, '+')
+    .replace(/_/g, '/');
+
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
+const VAPID_PUBLIC_KEY = 'BInACj48s2VLb4bczm5_4wvo2ujO1JR9cBJXPRDwH27Xs3pQHHGVJswQy-WjOm1MDB8XLSiklS0mH03n7U2RNEQ';
+
 export default function Dashboard() {
   const { user, signOut } = useAuth();
   const { careers: careersData, loading, savedCareers, completedSteps, completionsList = [] } = useData();
@@ -67,7 +84,7 @@ export default function Dashboard() {
           if (!sub) {
             sub = await registration.pushManager.subscribe({
               userVisibleOnly: true,
-              applicationServerKey: 'BInACj48s2VLb4bczm5_4wvo2ujO1JR9cBJXPRDwH27Xs3pQHHGVJswQy-WjOm1MDB8XLSiklS0mH03n7U2RNEQ'
+              applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
             });
           }
           await supabase
@@ -97,7 +114,7 @@ export default function Dashboard() {
       const registration = await navigator.serviceWorker.ready;
       const sub = await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: 'BInACj48s2VLb4bczm5_4wvo2ujO1JR9cBJXPRDwH27Xs3pQHHGVJswQy-WjOm1MDB8XLSiklS0mH03n7U2RNEQ'
+        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
       });
 
       // Save subscription details directly to Supabase table
