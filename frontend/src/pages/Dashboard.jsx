@@ -68,6 +68,7 @@ export default function Dashboard() {
 
   const [showPushBanner, setShowPushBanner] = useState(false);
   const [pushStatus, setPushStatus] = useState('');
+  const [pushError, setPushError] = useState('');
   const [pushSubscriptionJSON, setPushSubscriptionJSON] = useState('');
 
   useEffect(() => {
@@ -131,6 +132,7 @@ export default function Dashboard() {
       setTimeout(() => setShowPushBanner(false), 8000);
     } catch (err) {
       console.error('Push subscription failed:', err);
+      setPushError(err.message || String(err));
       setPushStatus('error');
     }
   };
@@ -404,7 +406,7 @@ export default function Dashboard() {
                 disabled={pushStatus === 'loading'}
                 className="text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 px-4 py-2.5 rounded-xl shadow-md shadow-emerald-600/15 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
               >
-                {pushStatus === 'loading' ? 'Enabling...' : pushStatus === 'success' ? 'Enabled! 🎉' : pushStatus === 'error' ? 'Failed, try again' : 'Enable Notifications'}
+                {pushStatus === 'loading' ? 'Enabling...' : pushStatus === 'success' ? 'Enabled! 🎉' : pushStatus === 'error' ? `Failed: ${pushError}` : 'Enable Notifications'}
               </button>
             </div>
           </div>
