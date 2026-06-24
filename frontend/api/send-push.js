@@ -5,7 +5,7 @@ import { createClient } from '@supabase/supabase-js';
 const VAPID_PUBLIC_KEY = process.env.VAPID_PUBLIC_KEY;
 const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY;
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
-const SUPABASE_ANON_KEY = process.env.VITE_SUPABASE_ANON_KEY;
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 export default async function handler(req, res) {
   // CORS headers
@@ -31,8 +31,8 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'VAPID keys are not configured in Vercel environment variables.' });
   }
 
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-    return res.status(500).json({ error: 'Supabase credentials are not configured in Vercel environment variables.' });
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+    return res.status(500).json({ error: 'Supabase URL or Service Role Key not configured in Vercel environment variables.' });
   }
 
   webpush.setVapidDetails(
@@ -41,7 +41,8 @@ export default async function handler(req, res) {
     VAPID_PRIVATE_KEY
   );
 
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  // Use service role key to bypass RLS and read ALL subscriptions
+  const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
   try {
     const { data: subscriptions, error } = await supabase
