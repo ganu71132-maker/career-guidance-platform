@@ -19,8 +19,9 @@ export default function ManagePushNotifications() {
       setErrorMsg('');
       setSuccessMsg('');
 
-      // Send to the backend server endpoint
-      const response = await fetch('http://localhost:5001/api/send-push', {
+      // Send to the backend server endpoint (dynamically uses local hostname or env variable)
+      const apiBase = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:5001`;
+      const response = await fetch(`${apiBase}/api/send-push`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
