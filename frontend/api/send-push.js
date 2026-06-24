@@ -1,13 +1,13 @@
-const webpush = require('web-push');
-const { createClient } = require('@supabase/supabase-js');
+import webpush from 'web-push';
+import { createClient } from '@supabase/supabase-js';
 
-// These will be set as Vercel Environment Variables
+// These are set as Vercel Environment Variables
 const VAPID_PUBLIC_KEY = process.env.VAPID_PUBLIC_KEY;
 const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY;
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.VITE_SUPABASE_ANON_KEY;
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -88,4 +88,4 @@ module.exports = async (req, res) => {
     console.error('Push dispatch failed:', err);
     res.status(500).json({ error: err.message || 'Internal Server Error.' });
   }
-};
+}
