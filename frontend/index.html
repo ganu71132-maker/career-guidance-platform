@@ -21,6 +21,16 @@
     <meta property="og:title" content="NaviCareer - Discover Your Dream Career" />
     <meta property="og:description" content="Find the perfect career path, follow step-by-step roadmaps, and track your learning progress." />
     <meta property="og:type" content="website" />
+
+    <!-- Catch early PWA Install prompt events -->
+    <script>
+      window.pwaDeferredPrompt = null;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        window.pwaDeferredPrompt = e;
+        window.dispatchEvent(new CustomEvent('pwa-prompt-ready'));
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>

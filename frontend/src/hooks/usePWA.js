@@ -13,12 +13,8 @@ export function usePWA() {
       setIsInstalled(true);
     }
 
-    // 2. Handle install eligibility event
-    const handleBeforeInstallPrompt = (e) => {
-      // Prevent Chrome 67 and earlier from automatically showing the prompt
-      e.preventDefault();
-      // Stash the event so it can be triggered later.
-      setDeferredPrompt(e);
+    const checkPromptEligibility = (promptEvent) => {
+      setDeferredPrompt(promptEvent);
 
       // Check if user dismissed it recently (within the last 3 days)
       const lastDismissed = localStorage.getItem('pwa-prompt-dismissed-at');
@@ -29,11 +25,30 @@ export function usePWA() {
       }
     };
 
-    // 3. Handle success installation event
+    // 2. Check if the event was already captured by index.html early script
+    if (window.pwaDeferredPrompt) {
+      checkPromptEligibility(window.pwaDeferredPrompt);
+    }
+
+    // 3. Listen to early prompt custom ready event
+    const handleEarlyPromptReady = () => {
+      if (window.pwaDeferredPrompt) {
+        checkPromptEligibility(window.pwaDeferredPrompt);
+      }
+    };
+
+    // 4. Handle standard install eligibility event
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      checkPromptEligibility(e);
+    };
+
+    // 5. Handle success installation event
     const handleAppInstalled = () => {
       setIsInstalled(true);
       setIsInstallable(false);
       setDeferredPrompt(null);
+      window.pwaDeferredPrompt = null;
       setShowSuccess(true);
 
       // Reset success message after 6 seconds
@@ -44,10 +59,12 @@ export function usePWA() {
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     window.addEventListener('appinstalled', handleAppInstalled);
+    window.addEventListener('pwa-prompt-ready', handleEarlyPromptReady);
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
       window.removeEventListener('appinstalled', handleAppInstalled);
+      window.removeEventListener('pwa-prompt-ready', handleEarlyPromptReady);
     };
   }, []);
 
