@@ -126,9 +126,9 @@ export default function GestureScroll() {
 
     hands.setOptions({
       maxNumHands: 1,
-      modelComplexity: 1,
-      minDetectionConfidence: 0.6,
-      minTrackingConfidence: 0.6
+      modelComplexity: 0, // 0 is much faster and lighter for mobile devices
+      minDetectionConfidence: 0.5,
+      minTrackingConfidence: 0.5
     });
 
     hands.onResults(onResults);
@@ -140,8 +140,8 @@ export default function GestureScroll() {
           await hands.send({ image: videoRef.current });
         }
       },
-      width: 320,
-      height: 240
+      width: 256,  // Lower resolution means faster processing
+      height: 144
     });
 
     camera.start()
