@@ -586,13 +586,13 @@ export default function Dashboard() {
             <h2 className="text-lg sm:text-xl font-bold text-slate-800">
               {savedCareersData.length > 0 ? 'My Saved Careers' : 'Recommended Careers'}
             </h2>
-            <Link to="/explorer" className="text-xs sm:text-sm text-emerald-600 hover:text-emerald-500 flex items-center gap-1 font-medium">View All <ArrowRight className="h-3.5 sm:h-4 w-3.5 sm:w-4" /></Link>
+            <Link to="/explorer" className="text-xs sm:text-sm text-indigo-600 hover:text-indigo-500 flex items-center gap-1 font-medium">View All <ArrowRight className="h-3.5 sm:h-4 w-3.5 sm:w-4" /></Link>
           </div>
           <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
             {savedCareersData.length > 0 
               ? savedCareersData.map((career) => (
-                  <Link key={career.id} to={`/career/${career.id}`} className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-slate-200 transition-all duration-300 flex flex-col group">
-                    <h3 className="font-bold text-slate-800 mb-1.5 sm:mb-2 text-sm sm:text-base group-hover:text-emerald-600 transition-colors">{career.title}</h3>
+                  <Link key={career.id} to={`/career/${career.id}`} className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all duration-300 flex flex-col group">
+                    <h3 className="font-bold text-slate-800 mb-1.5 sm:mb-2 text-sm sm:text-base group-hover:text-indigo-600 transition-colors">{career.title}</h3>
                     <p className="text-[10px] sm:text-xs text-slate-500 mb-3 line-clamp-2">{career.description}</p>
                     
                     {/* Visual Progress Bar Widget */}
@@ -618,13 +618,13 @@ export default function Dashboard() {
                     
                     <div className="flex items-center justify-between text-[10px] sm:text-xs pt-2 border-t border-slate-50">
                       <span className="text-emerald-600 font-semibold">{career.demandLevel}</span>
-                      <span className="text-slate-400 font-medium group-hover:text-emerald-600 transition-colors">Continue Roadmap →</span>
+                      <span className="text-slate-400 font-medium group-hover:text-indigo-600 transition-colors">Continue Roadmap →</span>
                     </div>
                   </Link>
                 ))
               : careersData.slice(0, 3).map((career) => (
-                  <Link key={career.id} to={`/career/${career.id}`} className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-slate-200 transition-all duration-300 group">
-                    <h3 className="font-bold text-slate-800 mb-1.5 sm:mb-2 text-sm sm:text-base group-hover:text-emerald-600 transition-colors">{career.title}</h3>
+                  <Link key={career.id} to={`/career/${career.id}`} className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all duration-300 group">
+                    <h3 className="font-bold text-slate-800 mb-1.5 sm:mb-2 text-sm sm:text-base group-hover:text-indigo-600 transition-colors">{career.title}</h3>
                     <p className="text-[10px] sm:text-xs text-slate-500 mb-2.5 sm:mb-3 line-clamp-2">{career.description}</p>
                     <div className="flex items-center gap-3 text-[10px] sm:text-xs">
                       <span className="text-emerald-600 font-medium">{career.demandLevel}</span>

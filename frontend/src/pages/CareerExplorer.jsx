@@ -212,16 +212,16 @@ export default function CareerExplorer() {
         ) : filtered.length > 0 ? (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 animate-fade-in">
             {filtered.map((career) => (
-              <div key={career.id} className="bg-white p-5 sm:p-6 rounded-2xl border border-emerald-200 shadow-sm hover:shadow-md hover:border-emerald-300 hover:-translate-y-1 transition-all duration-300 group">
+              <div key={career.id} className="bg-white p-5 sm:p-6 rounded-2xl border border-indigo-200 shadow-sm hover:shadow-md hover:border-indigo-300 hover:-translate-y-1 transition-all duration-300 group">
                 <div className="flex justify-between items-start mb-3 sm:mb-4">
-                  <div className="p-2.5 sm:p-3 bg-emerald-50 rounded-xl group-hover:bg-emerald-100 transition-colors">
-                    <Briefcase className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-600" />
+                  <div className="p-2.5 sm:p-3 bg-indigo-50 rounded-xl group-hover:bg-indigo-100 transition-colors">
+                    <Briefcase className="h-5 w-5 sm:h-6 sm:w-6 text-indigo-600" />
                   </div>
                   <span className="text-[10px] sm:text-xs font-semibold px-2.5 sm:px-3 py-1 bg-slate-100 rounded-full text-slate-500">
                     {career.category}
                   </span>
                 </div>
-                <h3 className="text-base sm:text-xl font-bold mb-1.5 sm:mb-2 text-slate-800 group-hover:text-emerald-600 transition-colors">{career.title}</h3>
+                <h3 className="text-base sm:text-xl font-bold mb-1.5 sm:mb-2 text-slate-800 group-hover:text-indigo-600 transition-colors">{career.title}</h3>
                 <p className="text-xs sm:text-sm text-slate-500 mb-4 sm:mb-5 line-clamp-2">{career.description}</p>
 
                 <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4 text-xs sm:text-sm">
@@ -248,7 +248,7 @@ export default function CareerExplorer() {
 
                 <Link
                   to={`/career/${career.id}`}
-                  className="block text-center w-full py-2.5 sm:py-3 bg-emerald-50/40 hover:bg-emerald-600 text-emerald-700 hover:text-white font-semibold rounded-xl transition-all duration-300 border border-emerald-300/80 hover:border-emerald-600 text-xs sm:text-sm shadow-sm"
+                  className="block text-center w-full py-2.5 sm:py-3 bg-indigo-50 hover:bg-indigo-600 text-indigo-700 hover:text-white font-semibold rounded-xl transition-all duration-300 border border-indigo-200 hover:border-indigo-600 text-xs sm:text-sm shadow-sm"
                 >
                   View Career Details →
                 </Link>

@@ -90,7 +90,7 @@ export default function Home() {
               <Link to="/explorer" className="flex items-center justify-center px-6 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base font-semibold text-white bg-emerald-600 hover:bg-emerald-500 rounded-xl transition-all shadow-lg shadow-emerald-600/20 hover:scale-105 hover:shadow-xl cursor-pointer">
                 Explore Careers <ArrowRight className="ml-2 h-4 sm:h-5 w-4 sm:w-5" />
               </Link>
-              <Link to="/register" className="flex items-center justify-center px-6 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base font-semibold text-slate-700 bg-white hover:bg-slate-50 rounded-xl transition-all border border-slate-200 shadow-sm cursor-pointer">
+              <Link to="/register" className="flex items-center justify-center px-6 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base font-semibold text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl transition-all shadow-lg shadow-indigo-600/20 hover:scale-105 hover:shadow-xl cursor-pointer">
                 Get Started Free
               </Link>
             </div>
@@ -181,7 +181,7 @@ export default function Home() {
           </div>
           <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-8">
             {/* Step Cards */}
-            {[{ num: '01', icon: <Target className="h-6 sm:h-7 w-6 sm:w-7 text-blue-600" />, bg: 'bg-blue-50', border: 'border-blue-100', title: 'Explore Careers', desc: 'Browse curated tech careers. See descriptions, required skills, salary info, and industry demand at a glance.' },
+            {[{ num: '01', icon: <Target className="h-6 sm:h-7 w-6 sm:w-7 text-indigo-600" />, bg: 'bg-indigo-50', border: 'border-indigo-100', title: 'Explore Careers', desc: 'Browse curated tech careers. See descriptions, required skills, salary info, and industry demand at a glance.' },
               { num: '02', icon: <Map className="h-6 sm:h-7 w-6 sm:w-7 text-purple-650" />, bg: 'bg-purple-50', border: 'border-purple-100', title: 'Follow the Roadmap', desc: 'Each career has a step-by-step learning path — from absolute beginner to job-ready professional.' },
               { num: '03', icon: <BookOpen className="h-6 sm:h-7 w-6 sm:w-7 text-emerald-600" />, bg: 'bg-emerald-50', border: 'border-emerald-100', title: 'Access Resources', desc: 'Every roadmap step comes with curated YouTube videos, courses, documentation, and project ideas.' },
             ].map((item) => (
@@ -207,22 +207,22 @@ export default function Home() {
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {careersData.map((career) => (
-              <div key={career.id} className="bg-white p-5 sm:p-6 rounded-2xl border border-emerald-200 shadow-sm hover:shadow-md hover:border-emerald-300 hover:-translate-y-1 transition-all duration-300 group">
+              <div key={career.id} className="bg-white p-5 sm:p-6 rounded-2xl border border-indigo-200 shadow-sm hover:shadow-md hover:border-indigo-300 hover:-translate-y-1 transition-all duration-300 group">
                 <div className="flex justify-between items-start mb-3 sm:mb-4">
-                  <div className="p-2.5 sm:p-3 bg-emerald-50 rounded-xl group-hover:bg-emerald-100 transition-colors">
-                    <Briefcase className="h-5 sm:h-6 w-5 sm:w-6 text-emerald-600" />
+                  <div className="p-2.5 sm:p-3 bg-indigo-50 rounded-xl group-hover:bg-indigo-100 transition-colors">
+                    <Briefcase className="h-5 sm:h-6 w-5 sm:w-6 text-indigo-600" />
                   </div>
                   <span className="text-[10px] sm:text-xs font-semibold px-2.5 sm:px-3 py-1 bg-slate-100 rounded-full text-slate-500">
                     {career.category}
                   </span>
                 </div>
-                <h3 className="text-base sm:text-xl font-bold mb-1.5 sm:mb-2 text-slate-800 group-hover:text-emerald-600 transition-colors">{career.title}</h3>
+                <h3 className="text-base sm:text-xl font-bold mb-1.5 sm:mb-2 text-slate-800 group-hover:text-indigo-600 transition-colors">{career.title}</h3>
                 <p className="text-xs sm:text-sm text-slate-500 mb-4 sm:mb-5 line-clamp-2">{career.description}</p>
                 <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-5 text-xs sm:text-sm">
                   <span className="flex items-center gap-1 text-emerald-600 font-medium"><TrendingUp className="h-3 sm:h-3.5 w-3 sm:w-3.5" /> {career.demandLevel}</span>
                   <span className="flex items-center gap-1 text-slate-500"><IndianRupee className="h-3 sm:h-3.5 w-3 sm:w-3.5" /> {career.salary}</span>
                 </div>
-                <Link to={`/career/${career.id}`} className="block text-center w-full py-2.5 sm:py-3 bg-emerald-50/40 hover:bg-emerald-600 text-emerald-700 hover:text-white font-semibold rounded-xl transition-all duration-300 border border-emerald-300/80 hover:border-emerald-600 text-xs sm:text-sm shadow-sm">
+                <Link to={`/career/${career.id}`} className="block text-center w-full py-2.5 sm:py-3 bg-indigo-50 hover:bg-indigo-600 text-indigo-700 hover:text-white font-semibold rounded-xl transition-all duration-300 border border-indigo-200 hover:border-indigo-600 text-xs sm:text-sm shadow-sm">
                   Explore Career →
                 </Link>
               </div>
