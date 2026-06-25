@@ -69,7 +69,6 @@ export default function Dashboard() {
   const [showPushBanner, setShowPushBanner] = useState(false);
   const [pushStatus, setPushStatus] = useState('');
   const [pushError, setPushError] = useState('');
-  const [pushSubscriptionJSON, setPushSubscriptionJSON] = useState('');
 
   useEffect(() => {
     if (!user) return;
@@ -127,7 +126,6 @@ export default function Dashboard() {
         console.error('Error saving subscription to Supabase DB:', dbError);
       }
 
-      setPushSubscriptionJSON(JSON.stringify(sub, null, 2));
       setPushStatus('success');
       setTimeout(() => setShowPushBanner(false), 8000);
     } catch (err) {
@@ -412,37 +410,6 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Display Mobile Token to Copy */}
-        {pushSubscriptionJSON && (
-          <div className="mb-6 p-5 rounded-2xl bg-slate-900 text-slate-100 border border-slate-800 shadow-xl animate-fade-in">
-            <div className="flex justify-between items-center mb-3">
-              <h4 className="text-sm font-bold text-emerald-400">📱 Mobile Push Token Generated!</h4>
-              <button 
-                onClick={() => setPushSubscriptionJSON('')}
-                className="text-xs text-slate-400 hover:text-white cursor-pointer"
-              >
-                Close
-              </button>
-            </div>
-            <p className="text-xs text-slate-400 mb-3 font-medium">
-              Copy the JSON block below and paste it in your laptop's <code>send_push_test.cjs</code> file:
-            </p>
-            <div className="relative">
-              <pre className="bg-slate-950 p-3 rounded-lg text-[10px] overflow-x-auto max-h-48 text-emerald-300 font-mono no-scrollbar">
-                {pushSubscriptionJSON}
-              </pre>
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(pushSubscriptionJSON);
-                  alert('Token copied to clipboard!');
-                }}
-                className="absolute top-2 right-2 text-[10px] font-bold bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-1 rounded transition-all cursor-pointer"
-              >
-                Copy Code
-              </button>
-            </div>
-          </div>
-        )}
 
         {/* Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8 sm:mb-10">
