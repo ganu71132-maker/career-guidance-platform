@@ -5,7 +5,6 @@ import { DataProvider } from './contexts/DataContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AdminRoute } from './components/AdminRoute';
 import InstallPrompt from './components/InstallPrompt';
-import GestureScroll from './components/GestureScroll';
 
 // Public Pages
 import Home from './pages/Home';
@@ -37,7 +36,6 @@ function App() {
       <DataProvider>
         <Router>
           <InstallPrompt />
-          <GestureScroll />
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
