@@ -222,7 +222,7 @@ export default function Home() {
                   <span className="flex items-center gap-1 text-emerald-600 font-medium"><TrendingUp className="h-3 sm:h-3.5 w-3 sm:w-3.5" /> {career.demandLevel}</span>
                   <span className="flex items-center gap-1 text-slate-500"><IndianRupee className="h-3 sm:h-3.5 w-3 sm:w-3.5" /> {career.salary}</span>
                 </div>
-                <Link to={`/career/${career.id}`} className="block text-center w-full py-2.5 sm:py-3 bg-indigo-50 hover:bg-indigo-600 text-indigo-700 hover:text-white font-semibold rounded-xl transition-all duration-300 border border-indigo-200 hover:border-indigo-600 text-xs sm:text-sm shadow-sm">
+                <Link to={`/career/${career.id}`} className="block text-center w-full py-2.5 sm:py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-all duration-300 shadow-md hover:shadow-lg shadow-indigo-600/20 text-xs sm:text-sm">
                   Explore Career →
                 </Link>
               </div>

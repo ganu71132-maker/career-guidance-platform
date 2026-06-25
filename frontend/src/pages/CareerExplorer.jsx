@@ -248,7 +248,7 @@ export default function CareerExplorer() {
 
                 <Link
                   to={`/career/${career.id}`}
-                  className="block text-center w-full py-2.5 sm:py-3 bg-indigo-50 hover:bg-indigo-600 text-indigo-700 hover:text-white font-semibold rounded-xl transition-all duration-300 border border-indigo-200 hover:border-indigo-600 text-xs sm:text-sm shadow-sm"
+                  className="block text-center w-full py-2.5 sm:py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-all duration-300 shadow-md hover:shadow-lg shadow-indigo-600/20 text-xs sm:text-sm"
                 >
                   View Career Details →
                 </Link>
