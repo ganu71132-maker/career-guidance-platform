@@ -7,7 +7,7 @@ export default function GestureScroll() {
   const [isHandDetected, setIsHandDetected] = useState(false);
   const [isPinched, setIsPinched] = useState(false);
   const [isCameraPaused, setIsCameraPaused] = useState(false);
-  const [showInstructions, setShowInstructions] = useState(true);
+  const [showInstructions, setShowInstructions] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showPreview, setShowPreview] = useState(true);
 
@@ -228,41 +228,41 @@ export default function GestureScroll() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-[9999] flex flex-col items-end gap-3 font-sans">
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[9999] flex flex-col items-end gap-2 sm:gap-3 font-sans pointer-events-none">
       {/* Floating Webcam & Status Panel */}
       {isActive && (
-        <div className="w-72 overflow-hidden rounded-2xl bg-slate-900/95 text-white shadow-2xl border border-slate-700/60 backdrop-blur-md transition-all duration-300">
+        <div className="w-52 sm:w-72 overflow-hidden rounded-xl sm:rounded-2xl bg-slate-900/95 text-white shadow-2xl border border-slate-700/60 backdrop-blur-md transition-all duration-300 pointer-events-auto">
           {/* Header */}
-          <div className="flex items-center justify-between bg-slate-800/80 px-4 py-3 border-b border-slate-700/40">
-            <div className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-emerald-400 animate-pulse" />
-              <span className="text-sm font-semibold tracking-wide">Pinch to Scroll</span>
+          <div className="flex items-center justify-between bg-slate-800/80 px-3 py-2 sm:px-4 sm:py-3 border-b border-slate-700/40">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-400 animate-pulse" />
+              <span className="text-xs sm:text-sm font-semibold tracking-wide">Pinch to Scroll</span>
             </div>
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1 sm:gap-1.5">
               <button 
                 onClick={() => setShowPreview(!showPreview)} 
                 className="rounded-md p-1 hover:bg-slate-700/60 transition-colors"
               >
-                {showPreview ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                {showPreview ? <EyeOff className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> : <Eye className="h-3 w-3 sm:h-3.5 sm:w-3.5" />}
               </button>
               <button 
                 onClick={() => setShowSettings(!showSettings)} 
                 className="rounded-md p-1 hover:bg-slate-700/60 transition-colors"
               >
-                <Settings className={`h-3.5 w-3.5 ${showSettings ? 'text-emerald-400' : ''}`} />
+                <Settings className={`h-3 w-3 sm:h-3.5 sm:w-3.5 ${showSettings ? 'text-emerald-400' : ''}`} />
               </button>
               <button 
                 onClick={() => setShowInstructions(!showInstructions)} 
                 className="rounded-md p-1 hover:bg-slate-700/60 transition-colors"
               >
-                <HelpCircle className={`h-3.5 w-3.5 ${showInstructions ? 'text-emerald-400' : ''}`} />
+                <HelpCircle className={`h-3 w-3 sm:h-3.5 sm:w-3.5 ${showInstructions ? 'text-emerald-400' : ''}`} />
               </button>
             </div>
           </div>
 
           {/* Settings Section */}
           {showSettings && (
-            <div className="p-4 bg-slate-800/50 border-b border-slate-700/40 text-xs flex flex-col gap-3">
+            <div className="p-3 sm:p-4 bg-slate-800/50 border-b border-slate-700/40 text-[10px] sm:text-xs flex flex-col gap-3">
               <div>
                 <div className="flex justify-between mb-1">
                   <span>Pinch Sensitivity:</span>
@@ -305,11 +305,11 @@ export default function GestureScroll() {
                 <div className={`absolute inset-0 flex flex-col items-center justify-center transition-colors duration-200 ${isPinched ? 'bg-emerald-500/30' : 'bg-transparent'}`}>
                   {isPinched ? (
                     <>
-                      <Navigation className="h-10 w-10 text-emerald-400 drop-shadow-lg" />
-                      <span className="text-xs font-bold uppercase tracking-wider text-emerald-400 mt-2 drop-shadow-md">Grabbing Page</span>
+                      <Navigation className="h-8 w-8 sm:h-10 sm:w-10 text-emerald-400 drop-shadow-lg" />
+                      <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-emerald-400 mt-1 sm:mt-2 drop-shadow-md">Grabbing Page</span>
                     </>
                   ) : (
-                    <Hand className="h-8 w-8 text-white/40 drop-shadow-lg opacity-50" />
+                    <Hand className="h-6 w-6 sm:h-8 sm:w-8 text-white/40 drop-shadow-lg opacity-50" />
                   )}
                 </div>
               )}
@@ -318,12 +318,12 @@ export default function GestureScroll() {
 
           {/* Paused State */}
           {isCameraPaused && (
-            <div className="aspect-video w-full bg-slate-950 flex flex-col items-center justify-center p-4 text-center">
-              <CameraOff className="h-8 w-8 text-amber-500 mb-2" />
-              <p className="text-xs font-medium text-slate-300">No hand detected.</p>
+            <div className="aspect-video w-full bg-slate-950 flex flex-col items-center justify-center p-3 sm:p-4 text-center">
+              <CameraOff className="h-6 w-6 sm:h-8 sm:w-8 text-amber-500 mb-2" />
+              <p className="text-[10px] sm:text-xs font-medium text-slate-300">No hand detected.</p>
               <button 
                 onClick={resumeCamera}
-                className="mt-3 px-3 py-1 rounded bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-semibold shadow transition-colors"
+                className="mt-2 sm:mt-3 px-2 py-1 sm:px-3 rounded bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] sm:text-xs font-semibold shadow transition-colors"
               >
                 Resume Camera
               </button>
@@ -331,35 +331,35 @@ export default function GestureScroll() {
           )}
 
           {/* Status & Instructions */}
-          <div className="p-4 flex flex-col gap-3">
-            <div className="flex flex-col gap-1.5 text-xs">
+          <div className="p-3 sm:p-4 flex flex-col gap-2 sm:gap-3">
+            <div className="flex flex-col gap-1 sm:gap-1.5 text-[10px] sm:text-xs">
               <div className="flex items-center justify-between">
                 <span className="text-slate-400">Camera Connected</span>
-                <span className={`h-2 w-2 rounded-full ${cameraConnected ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)]' : 'bg-rose-500'}`} />
+                <span className={`h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full ${cameraConnected ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)]' : 'bg-rose-500'}`} />
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-slate-400">Hand Detected</span>
-                <span className={`h-2 w-2 rounded-full ${isHandDetected && !isCameraPaused ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)] animate-ping' : 'bg-slate-600'}`} />
+                <span className={`h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full ${isHandDetected && !isCameraPaused ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)] animate-ping' : 'bg-slate-600'}`} />
               </div>
             </div>
 
             {showInstructions && (
-              <div className="rounded-lg bg-slate-800/60 p-3 text-[11px] text-slate-300 border border-slate-700/30 flex flex-col gap-2">
+              <div className="rounded-lg bg-slate-800/60 p-2 sm:p-3 text-[10px] sm:text-[11px] text-slate-300 border border-slate-700/30 flex flex-col gap-1.5 sm:gap-2">
                 <div className="font-semibold text-emerald-400 flex items-center gap-1">
                   <span>How to use:</span>
                 </div>
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex items-start gap-1.5">
-                    <Hand className="h-3.5 w-3.5 text-slate-400" />
-                    <span><strong>Open hand</strong> to move freely without scrolling.</span>
+                <div className="flex flex-col gap-1 sm:gap-1.5">
+                  <div className="flex items-start gap-1 sm:gap-1.5">
+                    <Hand className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-slate-400 flex-shrink-0" />
+                    <span><strong>Open hand</strong> to move freely.</span>
                   </div>
-                  <div className="flex items-start gap-1.5">
-                    <span className="text-emerald-400 font-bold">🤏</span>
-                    <span><strong>Pinch thumb & index finger</strong> together to "Grab".</span>
+                  <div className="flex items-start gap-1 sm:gap-1.5">
+                    <span className="text-emerald-400 font-bold flex-shrink-0">🤏</span>
+                    <span><strong>Pinch fingers</strong> together to "Grab".</span>
                   </div>
-                  <div className="flex items-start gap-1.5">
-                    <Navigation className="h-3.5 w-3.5 text-emerald-400" />
-                    <span>While grabbing, <strong>move your hand up or down</strong> to drag the page.</span>
+                  <div className="flex items-start gap-1 sm:gap-1.5">
+                    <Navigation className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-emerald-400 flex-shrink-0" />
+                    <span>While grabbing, <strong>move hand</strong> to drag page.</span>
                   </div>
                 </div>
               </div>
@@ -371,7 +371,7 @@ export default function GestureScroll() {
       {/* Floating Action Button */}
       <button
         onClick={toggleGestureControl}
-        className={`flex items-center gap-2 rounded-full px-5 py-3.5 text-sm font-semibold shadow-xl border transition-all duration-300 ${
+        className={`flex items-center gap-1.5 sm:gap-2 rounded-full px-3 py-2 sm:px-5 sm:py-3.5 text-xs sm:text-sm font-semibold shadow-xl border transition-all duration-300 pointer-events-auto ${
           isActive 
             ? 'bg-rose-600 hover:bg-rose-700 text-white border-rose-500' 
             : 'bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-500'
@@ -379,12 +379,12 @@ export default function GestureScroll() {
       >
         {isActive ? (
           <>
-            <CameraOff className="h-4 w-4" />
+            <CameraOff className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             <span>Disable Gesture Scroll</span>
           </>
         ) : (
           <>
-            <Camera className="h-4 w-4" />
+            <Camera className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             <span>Enable Gesture Scrolling</span>
           </>
         )}
