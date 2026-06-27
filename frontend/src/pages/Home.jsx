@@ -61,6 +61,7 @@ export default function Home() {
           <div className="hidden md:flex gap-8 text-sm font-medium text-slate-500">
             <a href="#how-it-works" className="hover:text-slate-800 transition-colors">How It Works</a>
             <a href="#careers" className="hover:text-slate-800 transition-colors">Careers</a>
+            <Link to="/skills" className="hover:text-slate-800 transition-colors">Skills</Link>
             <a href="#stats" className="hover:text-slate-800 transition-colors">Impact</a>
           </div>
           <div className="flex items-center gap-3 sm:gap-4">

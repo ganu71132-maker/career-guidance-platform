@@ -19,6 +19,7 @@ import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import ResumeBuilder from './pages/ResumeBuilder';
+import SkillExplorer from './pages/SkillExplorer';
 
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -45,6 +46,7 @@ function App() {
             <Route path="/career/:id" element={<CareerDetails />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/skills" element={<SkillExplorer />} />
 
             {/* Protected User Routes */}
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
