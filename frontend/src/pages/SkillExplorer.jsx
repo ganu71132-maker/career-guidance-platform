@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { useData } from '../contexts/DataContext';
 import { Link } from 'react-router-dom';
-import { Compass, Search, Code2, PlayCircle, GraduationCap, X, ChevronRight, Briefcase } from 'lucide-react';
+import { Compass, Search, Code2, PlayCircle, GraduationCap, X, ChevronRight, Briefcase, CheckCircle2 } from 'lucide-react';
+import { skillsData } from '../data/skillsData';
 
 export default function SkillExplorer() {
   const { careers } = useData();
@@ -118,36 +119,67 @@ export default function SkillExplorer() {
                 ))}
               </div>
 
-              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400 mb-3">Learn This Skill</h3>
-              <div className="flex flex-col gap-3">
-                <a 
-                  href={`https://www.youtube.com/results?search_query=${encodeURIComponent(selectedSkill.name + " full course beginner")}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 p-4 bg-red-50 border border-red-100 rounded-xl hover:bg-red-100 transition-colors group"
-                >
-                  <PlayCircle className="h-6 w-6 text-red-600 shrink-0" />
-                  <div>
-                    <h4 className="font-bold text-slate-800 group-hover:text-red-700 text-sm">Search YouTube Tutorials</h4>
-                    <p className="text-xs text-slate-500">Find free video courses and crash courses.</p>
+              {skillsData[selectedSkill.name] ? (
+                <div>
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400 mb-3">Detailed Learning Roadmap</h3>
+                  <p className="text-sm text-slate-500 mb-6">{skillsData[selectedSkill.name].description}</p>
+                  
+                  <div className="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-200 before:to-transparent">
+                    {skillsData[selectedSkill.name].roadmap.map((step, index) => (
+                      <div key={index} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                        <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-indigo-100 text-indigo-600 font-bold shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-sm z-10">
+                          {step.step}
+                        </div>
+                        <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border border-slate-100 bg-white shadow-sm hover:shadow-md hover:border-indigo-200 transition-all">
+                          <h4 className="font-bold text-slate-800 mb-2">{step.title}</h4>
+                          <ul className="list-disc list-inside text-xs text-slate-600 mb-3 space-y-1">
+                            {step.topics.map((topic, i) => (
+                              <li key={i}>{topic}</li>
+                            ))}
+                          </ul>
+                          <div className="bg-indigo-50 p-3 rounded-lg border border-indigo-100/50">
+                            <h5 className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider mb-1">Practice</h5>
+                            <p className="text-xs text-indigo-900">{step.practice}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <ChevronRight className="h-5 w-5 text-slate-400 ml-auto" />
-                </a>
+                </div>
+              ) : (
+                <>
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400 mb-3">Learn This Skill</h3>
+                  <div className="flex flex-col gap-3">
+                    <a 
+                      href={`https://www.youtube.com/results?search_query=${encodeURIComponent(selectedSkill.name + " full course beginner")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 p-4 bg-red-50 border border-red-100 rounded-xl hover:bg-red-100 transition-colors group"
+                    >
+                      <PlayCircle className="h-6 w-6 text-red-600 shrink-0" />
+                      <div>
+                        <h4 className="font-bold text-slate-800 group-hover:text-red-700 text-sm">Search YouTube Tutorials</h4>
+                        <p className="text-xs text-slate-500">Find free video courses and crash courses.</p>
+                      </div>
+                      <ChevronRight className="h-5 w-5 text-slate-400 ml-auto" />
+                    </a>
 
-                <a 
-                  href={`https://www.coursera.org/search?query=${encodeURIComponent(selectedSkill.name)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 p-4 bg-blue-50 border border-blue-100 rounded-xl hover:bg-blue-100 transition-colors group"
-                >
-                  <GraduationCap className="h-6 w-6 text-blue-600 shrink-0" />
-                  <div>
-                    <h4 className="font-bold text-slate-800 group-hover:text-blue-700 text-sm">Search Coursera Courses</h4>
-                    <p className="text-xs text-slate-500">Find professional certifications and specializations.</p>
+                    <a 
+                      href={`https://www.coursera.org/search?query=${encodeURIComponent(selectedSkill.name)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 p-4 bg-blue-50 border border-blue-100 rounded-xl hover:bg-blue-100 transition-colors group"
+                    >
+                      <GraduationCap className="h-6 w-6 text-blue-600 shrink-0" />
+                      <div>
+                        <h4 className="font-bold text-slate-800 group-hover:text-blue-700 text-sm">Search Coursera Courses</h4>
+                        <p className="text-xs text-slate-500">Find professional certifications and specializations.</p>
+                      </div>
+                      <ChevronRight className="h-5 w-5 text-slate-400 ml-auto" />
+                    </a>
                   </div>
-                  <ChevronRight className="h-5 w-5 text-slate-400 ml-auto" />
-                </a>
-              </div>
+                </>
+              )}
             </div>
           </div>
         </div>
