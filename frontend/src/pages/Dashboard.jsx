@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useData } from '../contexts/DataContext';
-import { Compass, Bookmark, CheckCircle, TrendingUp, LogOut, Map, BookOpen, User, ArrowRight, FileText, Megaphone } from 'lucide-react';
+import { Compass, Bookmark, CheckCircle, TrendingUp, LogOut, Map, BookOpen, User, ArrowRight, FileText, Megaphone, Code2 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import NotificationBell from '../components/NotificationBell';
@@ -351,18 +351,20 @@ export default function Dashboard() {
             <NotificationBell />
           </div>
 
-          {/* Row 2: Segmented Navigation Tabs */}
-          <div className="flex items-center justify-between bg-slate-100/80 p-1 rounded-xl border border-slate-200/20">
-            <Link to="/dashboard" className="flex-1 text-center bg-white text-emerald-600 text-[11px] font-bold py-1.5 rounded-lg shadow-sm border border-slate-200/40 transition-all">
+          <div className="flex items-center justify-between bg-slate-100/80 p-1 rounded-xl border border-slate-200/20 overflow-x-auto hide-scrollbar">
+            <Link to="/dashboard" className="flex-1 min-w-[70px] text-center bg-white text-emerald-600 text-[10px] font-bold py-1.5 rounded-lg shadow-sm border border-slate-200/40 transition-all">
               Dashboard
             </Link>
-            <Link to="/explorer" className="flex-1 text-center text-slate-500 hover:text-slate-800 text-[11px] font-semibold py-1.5 transition-colors">
+            <Link to="/explorer" className="flex-1 min-w-[60px] text-center text-slate-500 hover:text-slate-800 text-[10px] font-semibold py-1.5 transition-colors">
               Explore
             </Link>
-            <Link to="/resume" className="flex-1 text-center text-slate-500 hover:text-slate-800 text-[11px] font-semibold py-1.5 transition-colors flex items-center justify-center gap-0.5">
-              Resume <span className="text-[9px]">✨</span>
+            <Link to="/skills" className="flex-1 min-w-[50px] text-center text-slate-500 hover:text-slate-800 text-[10px] font-semibold py-1.5 transition-colors">
+              Skills
             </Link>
-            <Link to="/profile" className="flex-1 text-center text-slate-500 hover:text-slate-800 text-[11px] font-semibold py-1.5 transition-colors">
+            <Link to="/resume" className="flex-1 min-w-[70px] text-center text-slate-500 hover:text-slate-800 text-[10px] font-semibold py-1.5 transition-colors flex items-center justify-center gap-0.5">
+              Resume <span className="text-[8px]">✨</span>
+            </Link>
+            <Link to="/profile" className="flex-1 min-w-[55px] text-center text-slate-500 hover:text-slate-800 text-[10px] font-semibold py-1.5 transition-colors">
               Profile
             </Link>
           </div>
@@ -646,6 +648,13 @@ export default function Dashboard() {
               <div>
                 <h3 className="font-bold text-slate-800 text-sm sm:text-base">Browse Careers</h3>
                 <p className="text-[10px] sm:text-xs text-slate-500">Explore all career paths</p>
+              </div>
+            </Link>
+            <Link to="/skills" className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5 bg-indigo-50 border border-indigo-100 rounded-2xl hover:bg-indigo-100/70 transition-colors">
+              <Code2 className="h-7 sm:h-8 w-7 sm:w-8 text-indigo-600" />
+              <div>
+                <h3 className="font-bold text-slate-800 text-sm sm:text-base">Skill Library</h3>
+                <p className="text-[10px] sm:text-xs text-slate-500">Find careers by skill</p>
               </div>
             </Link>
             <Link to="/explorer" className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5 bg-purple-50 border border-purple-100 rounded-2xl hover:bg-purple-100/70 transition-colors">
