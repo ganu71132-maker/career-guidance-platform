@@ -58,10 +58,70 @@ export function DataProvider({ children }) {
   const [savedCareers, setSavedCareers] = useState([]);
   const [completedSteps, setCompletedSteps] = useState([]);
   const [completionsList, setCompletionsList] = useState([]);
+  const [skillsList, setSkillsList] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // ======== FETCH ALL DATA ========
+  const fetchAllSkills = useCallback(async () => {
+    try {
+      const { data, error } = await supabase
+        .from('skills')
+        .select('*, skill_roadmaps(*)')
+        .order('created_at', { ascending: true });
+
+      if (error) {
+        console.error('Error fetching skills:', error);
+        return;
+      }
+      
+      // Process the roadmaps to group by phase
+      const formattedSkills = (data || []).map(skill => {
+        const roadmaps = skill.skill_roadmaps || [];
+        
+        // Group by phase
+        const phasesMap = {};
+        roadmaps.forEach(r => {
+          if (!phasesMap[r.phase_number]) {
+            phasesMap[r.phase_number] = {
+              phaseNumber: r.phase_number,
+              phaseTitle: r.phase_title,
+              topics: []
+            };
+          }
+          phasesMap[r.phase_number].topics.push({
+            id: r.id,
+            title: r.topic_title,
+            description: r.topic_description || [],
+            order: r.display_order
+          });
+        });
+        
+        // Sort topics within phases
+        Object.values(phasesMap).forEach(phase => {
+          phase.topics.sort((a, b) => a.order - b.order);
+        });
+        
+        // Convert to sorted array of phases
+        const phasesArray = Object.values(phasesMap).sort((a, b) => a.phaseNumber - b.phaseNumber);
+
+        return {
+          id: skill.id,
+          name: skill.name,
+          description: skill.description,
+          difficulty: skill.difficulty,
+          estimatedTime: skill.estimated_time,
+          skillsGained: skill.skills_gained || [],
+          careerOpportunities: skill.career_opportunities || [],
+          phases: phasesArray
+        };
+      });
+      
+      setSkillsList(formattedSkills);
+    } catch (err) {
+      console.error('Error in fetchAllSkills:', err);
+    }
+  }, []);
   const fetchCareers = useCallback(async () => {
     try {
       const { data, error } = await supabase
@@ -141,7 +201,7 @@ export function DataProvider({ children }) {
   useEffect(() => {
     async function init() {
       setLoading(true);
-      await Promise.all([fetchCareers(), fetchCareerResources()]);
+      await Promise.all([fetchCareers(), fetchCareerResources(), fetchAllSkills()]);
       setLoading(false);
     }
     init();
@@ -464,6 +524,7 @@ export function DataProvider({ children }) {
     careers, loading,
     careerResources,
     savedCareers, completedSteps, completionsList,
+    skillsList, fetchAllSkills,
     toggleSaveCareer, toggleStepCompletion,
     addCareer, updateCareer, deleteCareer,
     addRoadmapStep, updateRoadmapStep, deleteRoadmapStep, reorderRoadmapSteps,

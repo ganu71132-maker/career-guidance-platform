@@ -47,6 +47,7 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/skills" element={<SkillExplorer />} />
+            <Route path="/skill/:name" element={<SkillDetails />} />
 
             {/* Protected User Routes */}
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />

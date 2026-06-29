@@ -1,36 +1,53 @@
 import React, { useState, useMemo } from 'react';
 import { useData } from '../contexts/DataContext';
-import { Link } from 'react-router-dom';
-import { Compass, Search, Code2, PlayCircle, GraduationCap, X, ChevronRight, Briefcase, CheckCircle2 } from 'lucide-react';
-import { skillsData } from '../data/skillsData';
+import { Link, useNavigate } from 'react-router-dom';
+import { Compass, Search, Code2, ChevronRight } from 'lucide-react';
 
 export default function SkillExplorer() {
-  const { careers } = useData();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedSkill, setSelectedSkill] = useState(null);
+  const { careers, skillsList, loading } = useData();
+  const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
 
-  // Extract unique skills and map them to careers
-  const skillsMap = useMemo(() => {
-    const map = {};
+  // Create a combined list of skills from old careers extraction + new database skills
+  const allSkills = useMemo(() => {
+    // 1. Get all skills from the new database
+    const dbSkillsMap = new Map();
+    (skillsList || []).forEach(s => {
+      dbSkillsMap.set(s.name.toLowerCase(), {
+        name: s.name,
+        fromDb: true,
+        careersCount: 0 // Will compute below
+      });
+    });
+
+    // 2. Count career occurrences
     careers.forEach(career => {
-      if (career.requiredSkills && Array.isArray(career.requiredSkills)) {
+      if (career.requiredSkills) {
         career.requiredSkills.forEach(skill => {
-          if (!map[skill]) {
-            map[skill] = { name: skill, careers: [] };
+          const lowerName = skill.toLowerCase();
+          if (dbSkillsMap.has(lowerName)) {
+            dbSkillsMap.get(lowerName).careersCount += 1;
+          } else {
+            dbSkillsMap.set(lowerName, {
+              name: skill,
+              fromDb: false,
+              careersCount: 1
+            });
           }
-          map[skill].careers.push(career);
         });
       }
     });
-    // Convert to array and sort alphabetically
-    return Object.values(map).sort((a, b) => a.name.localeCompare(b.name));
-  }, [careers]);
 
-  // Filter skills based on search term
+    return Array.from(dbSkillsMap.values()).sort((a, b) => a.name.localeCompare(b.name));
+  }, [careers, skillsList]);
+
   const filteredSkills = useMemo(() => {
-    if (!searchTerm) return skillsMap;
-    return skillsMap.filter(s => s.name.toLowerCase().includes(searchTerm.toLowerCase()));
-  }, [skillsMap, searchTerm]);
+    if (!searchQuery.trim()) return allSkills;
+    const q = searchQuery.toLowerCase();
+    return allSkills.filter(skill => 
+      skill.name.toLowerCase().includes(q)
+    );
+  }, [allSkills, searchQuery]);
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
@@ -63,127 +80,46 @@ export default function SkillExplorer() {
           <input
             type="text"
             placeholder="Search for a skill (e.g. Python, Communication, React)..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-white border border-slate-200 rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-300 shadow-sm transition-all text-slate-700"
           />
         </div>
 
         {/* Skills Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {filteredSkills.map(skill => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredSkills.map((skill, index) => (
             <div 
-              key={skill.name}
-              onClick={() => setSelectedSkill(skill)}
-              className="bg-white p-5 rounded-xl border border-slate-100 shadow-sm hover:shadow-md hover:border-indigo-200 cursor-pointer transition-all group"
+              key={index}
+              onClick={() => navigate(`/skill/${encodeURIComponent(skill.name)}`)}
+              className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-indigo-200 cursor-pointer transition-all duration-300 group"
             >
-              <h3 className="font-bold text-slate-800 mb-2 group-hover:text-indigo-600 transition-colors">{skill.name}</h3>
-              <p className="text-xs text-slate-500 font-medium">
-                Required in <span className="text-emerald-600 font-bold">{skill.careers.length}</span> career{skill.careers.length > 1 ? 's' : ''}
-              </p>
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="font-bold text-slate-800 text-lg group-hover:text-indigo-600 transition-colors mb-1">{skill.name}</h3>
+                  <p className="text-xs text-slate-500 font-medium">
+                    Required in <span className="text-emerald-600 font-bold">{skill.careersCount}</span> career{skill.careersCount !== 1 ? 's' : ''}
+                  </p>
+                </div>
+                {skill.fromDb ? (
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
+                    <Code2 className="h-4 w-4" />
+                  </span>
+                ) : (
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-50 text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-500 transition-colors">
+                    <ChevronRight className="h-4 w-4" />
+                  </span>
+                )}
+              </div>
             </div>
           ))}
           {filteredSkills.length === 0 && (
             <div className="col-span-full py-12 text-center text-slate-500">
-              No skills found matching "{searchTerm}"
+              No skills found matching "{searchQuery}"
             </div>
           )}
         </div>
       </main>
-
-      {/* Skill Details Modal */}
-      {selectedSkill && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div className="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-              <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-                <Code2 className="text-indigo-500 h-5 w-5" /> {selectedSkill.name}
-              </h2>
-              <button onClick={() => setSelectedSkill(null)} className="p-1 hover:bg-slate-200 rounded-lg transition-colors">
-                <X className="h-5 w-5 text-slate-500" />
-              </button>
-            </div>
-            
-            <div className="p-6 overflow-y-auto">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400 mb-3">Careers Requiring This Skill</h3>
-              <div className="grid sm:grid-cols-2 gap-3 mb-8">
-                {selectedSkill.careers.map(career => (
-                  <Link 
-                    key={career.id} 
-                    to={`/career/${career.id}`}
-                    className="flex items-center justify-between p-3 bg-slate-50 border border-slate-100 rounded-xl hover:bg-indigo-50 hover:border-indigo-100 transition-colors group"
-                  >
-                    <span className="text-sm font-semibold text-slate-700 group-hover:text-indigo-700">{career.title}</span>
-                    <Briefcase className="h-4 w-4 text-slate-400 group-hover:text-indigo-500" />
-                  </Link>
-                ))}
-              </div>
-
-              {skillsData[selectedSkill.name] ? (
-                <div>
-                  <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400 mb-3">Detailed Learning Roadmap</h3>
-                  <p className="text-sm text-slate-500 mb-6">{skillsData[selectedSkill.name].description}</p>
-                  
-                  <div className="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-200 before:to-transparent">
-                    {skillsData[selectedSkill.name].roadmap.map((step, index) => (
-                      <div key={index} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                        <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-indigo-100 text-indigo-600 font-bold shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-sm z-10">
-                          {step.step}
-                        </div>
-                        <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border border-slate-100 bg-white shadow-sm hover:shadow-md hover:border-indigo-200 transition-all">
-                          <h4 className="font-bold text-slate-800 mb-2">{step.title}</h4>
-                          <ul className="list-disc list-inside text-xs text-slate-600 mb-3 space-y-1">
-                            {step.topics.map((topic, i) => (
-                              <li key={i}>{topic}</li>
-                            ))}
-                          </ul>
-                          <div className="bg-indigo-50 p-3 rounded-lg border border-indigo-100/50">
-                            <h5 className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider mb-1">Practice</h5>
-                            <p className="text-xs text-indigo-900">{step.practice}</p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <>
-                  <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400 mb-3">Learn This Skill</h3>
-                  <div className="flex flex-col gap-3">
-                    <a 
-                      href={`https://www.youtube.com/results?search_query=${encodeURIComponent(selectedSkill.name + " full course beginner")}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 p-4 bg-red-50 border border-red-100 rounded-xl hover:bg-red-100 transition-colors group"
-                    >
-                      <PlayCircle className="h-6 w-6 text-red-600 shrink-0" />
-                      <div>
-                        <h4 className="font-bold text-slate-800 group-hover:text-red-700 text-sm">Search YouTube Tutorials</h4>
-                        <p className="text-xs text-slate-500">Find free video courses and crash courses.</p>
-                      </div>
-                      <ChevronRight className="h-5 w-5 text-slate-400 ml-auto" />
-                    </a>
-
-                    <a 
-                      href={`https://www.coursera.org/search?query=${encodeURIComponent(selectedSkill.name)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 p-4 bg-blue-50 border border-blue-100 rounded-xl hover:bg-blue-100 transition-colors group"
-                    >
-                      <GraduationCap className="h-6 w-6 text-blue-600 shrink-0" />
-                      <div>
-                        <h4 className="font-bold text-slate-800 group-hover:text-blue-700 text-sm">Search Coursera Courses</h4>
-                        <p className="text-xs text-slate-500">Find professional certifications and specializations.</p>
-                      </div>
-                      <ChevronRight className="h-5 w-5 text-slate-400 ml-auto" />
-                    </a>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
