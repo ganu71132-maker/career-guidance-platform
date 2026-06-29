@@ -224,12 +224,12 @@ export function DataProvider({ children }) {
         const completedAt = new Date().toISOString();
         const { error } = await supabase
           .from('user_progress')
-          .upsert({
+          .insert({
             user_id: currentUser.id,
             roadmap_step_id: stepId,
             completed: true,
             completed_at: completedAt
-          }, { onConflict: 'user_id, roadmap_step_id' }); // Handle composite unique constraints
+          });
         if (error) throw error;
       }
     } catch (err) {
