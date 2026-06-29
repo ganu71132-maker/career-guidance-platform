@@ -166,6 +166,14 @@ export function DataProvider({ children }) {
   async function toggleSaveCareer(careerId) {
     if (!currentUser) return;
     const isSaved = savedCareers.includes(careerId);
+    
+    // Optimistic UI update
+    if (isSaved) {
+      setSavedCareers(prev => prev.filter(id => id !== careerId));
+    } else {
+      setSavedCareers(prev => [...prev, careerId]);
+    }
+
     try {
       if (isSaved) {
         const { error } = await supabase
@@ -174,7 +182,6 @@ export function DataProvider({ children }) {
           .eq('user_id', currentUser.id)
           .eq('career_id', careerId);
         if (error) throw error;
-        setSavedCareers(prev => prev.filter(id => id !== careerId));
       } else {
         const { error } = await supabase
           .from('saved_careers')
@@ -183,16 +190,28 @@ export function DataProvider({ children }) {
             career_id: careerId
           });
         if (error) throw error;
-        setSavedCareers(prev => [...prev, careerId]);
       }
     } catch (err) {
       console.error('Error toggling save career:', err);
+      // Revert optimistic update on failure
+      fetchUserProgress();
     }
   }
 
   async function toggleStepCompletion(stepId) {
     if (!currentUser) return;
     const isCompleted = completedSteps.includes(stepId);
+    
+    // Optimistic UI update
+    if (isCompleted) {
+      setCompletedSteps(prev => prev.filter(id => id !== stepId));
+      setCompletionsList(prev => prev.filter(item => item.stepId !== stepId));
+    } else {
+      const completedAt = new Date().toISOString();
+      setCompletedSteps(prev => [...prev, stepId]);
+      setCompletionsList(prev => [...prev, { stepId, completedAt }]);
+    }
+
     try {
       if (isCompleted) {
         const { error } = await supabase
@@ -201,8 +220,6 @@ export function DataProvider({ children }) {
           .eq('user_id', currentUser.id)
           .eq('roadmap_step_id', stepId);
         if (error) throw error;
-        setCompletedSteps(prev => prev.filter(id => id !== stepId));
-        setCompletionsList(prev => prev.filter(item => item.stepId !== stepId));
       } else {
         const completedAt = new Date().toISOString();
         const { error } = await supabase
@@ -212,13 +229,13 @@ export function DataProvider({ children }) {
             roadmap_step_id: stepId,
             completed: true,
             completed_at: completedAt
-          });
+          }, { onConflict: 'user_id, roadmap_step_id' }); // Handle composite unique constraints
         if (error) throw error;
-        setCompletedSteps(prev => [...prev, stepId]);
-        setCompletionsList(prev => [...prev, { stepId, completedAt }]);
       }
     } catch (err) {
       console.error('Error toggling step completion:', err);
+      // Revert optimistic update on failure
+      fetchUserProgress();
     }
   }
 
