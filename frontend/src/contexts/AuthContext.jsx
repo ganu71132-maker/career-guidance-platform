@@ -11,16 +11,23 @@ export function AuthProvider({ children }) {
   // Fetch user profile (role) from the users table
   async function fetchProfile(userId) {
     try {
+      console.log('Auth: Fetching profile for user...', userId);
       const { data, error } = await supabase
         .from('users')
         .select('*')
         .eq('id', userId)
         .single();
-      if (error) throw error;
+        
+      if (error) {
+        console.error('Auth: Supabase error fetching profile:', error);
+        throw error;
+      }
+      
+      console.log('Auth: Profile loaded successfully from DB:', data);
       setProfile(data);
       return data;
     } catch (err) {
-      console.error('Error fetching profile:', err);
+      console.error('Auth: Error inside fetchProfile:', err);
       setProfile(null);
       return null;
     }
@@ -69,7 +76,7 @@ export function AuthProvider({ children }) {
     updatePassword: (password) => supabase.auth.updateUser({ password }),
     user,
     profile,       // { id, full_name, email, role }
-    isAdmin: profile?.role === 'admin',
+    isAdmin: profile?.role?.toLowerCase() === 'admin',
     fetchProfile,
   };
 
