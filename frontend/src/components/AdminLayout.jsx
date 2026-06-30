@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { LayoutDashboard, Briefcase, Map, BookOpen, Users, LogOut, Shield, Star, Menu, X, Megaphone, Bell } from 'lucide-react';
+import { LayoutDashboard, Briefcase, Map, BookOpen, Users, LogOut, Shield, Star, Menu, X, Megaphone, Bell, Code2 } from 'lucide-react';
 
 const navItems = [
   { path: '/admin', icon: <LayoutDashboard className="h-5 w-5" />, label: 'Dashboard' },
   { path: '/admin/careers', icon: <Briefcase className="h-5 w-5" />, label: 'Manage Careers' },
   { path: '/admin/roadmaps', icon: <Map className="h-5 w-5" />, label: 'Manage Roadmaps' },
+  { path: '/admin/skills', icon: <Code2 className="h-5 w-5" />, label: 'Manage Skills' },
+  { path: '/admin/skill-roadmaps', icon: <Map className="h-5 w-5" />, label: 'Manage Skill Roadmaps' },
   { path: '/admin/resources', icon: <BookOpen className="h-5 w-5" />, label: 'Roadmap Resources' },
   { path: '/admin/career-resources', icon: <Star className="h-5 w-5" />, label: 'Career Resources' },
   { path: '/admin/users', icon: <Users className="h-5 w-5" />, label: 'Manage Users' },

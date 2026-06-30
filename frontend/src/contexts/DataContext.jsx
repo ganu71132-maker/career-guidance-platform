@@ -505,6 +505,104 @@ export function DataProvider({ children }) {
     await fetchCareerResources();
   }
 
+  // ======== SKILLS ========
+  const addSkill = async (skillData) => {
+    try {
+      const { data, error } = await supabase
+        .from('skills')
+        .insert([skillData])
+        .select()
+        .single();
+      if (error) throw error;
+      await fetchAllSkills();
+      return { success: true, data };
+    } catch (error) {
+      console.error('Error adding skill:', error);
+      return { success: false, error: error.message };
+    }
+  };
+
+  const updateSkill = async (id, updates) => {
+    try {
+      const { data, error } = await supabase
+        .from('skills')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single();
+      if (error) throw error;
+      await fetchAllSkills();
+      return { success: true, data };
+    } catch (error) {
+      console.error('Error updating skill:', error);
+      return { success: false, error: error.message };
+    }
+  };
+
+  const deleteSkill = async (id) => {
+    try {
+      const { error } = await supabase
+        .from('skills')
+        .delete()
+        .eq('id', id);
+      if (error) throw error;
+      await fetchAllSkills();
+      return { success: true };
+    } catch (error) {
+      console.error('Error deleting skill:', error);
+      return { success: false, error: error.message };
+    }
+  };
+
+  // ======== SKILL ROADMAPS ========
+  const addSkillPhase = async (phaseData) => {
+    try {
+      const { data, error } = await supabase
+        .from('skill_roadmaps')
+        .insert([phaseData])
+        .select()
+        .single();
+      if (error) throw error;
+      await fetchAllSkills();
+      return { success: true, data };
+    } catch (error) {
+      console.error('Error adding skill phase:', error);
+      return { success: false, error: error.message };
+    }
+  };
+
+  const updateSkillPhase = async (id, updates) => {
+    try {
+      const { data, error } = await supabase
+        .from('skill_roadmaps')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single();
+      if (error) throw error;
+      await fetchAllSkills();
+      return { success: true, data };
+    } catch (error) {
+      console.error('Error updating skill phase:', error);
+      return { success: false, error: error.message };
+    }
+  };
+
+  const deleteSkillPhase = async (id) => {
+    try {
+      const { error } = await supabase
+        .from('skill_roadmaps')
+        .delete()
+        .eq('id', id);
+      if (error) throw error;
+      await fetchAllSkills();
+      return { success: true };
+    } catch (error) {
+      console.error('Error deleting skill phase:', error);
+      return { success: false, error: error.message };
+    }
+  };
+
   // ======== STATS ========
   function getStats() {
     const totalCareers = careers.length;
@@ -530,6 +628,8 @@ export function DataProvider({ children }) {
     addRoadmapStep, updateRoadmapStep, deleteRoadmapStep, reorderRoadmapSteps,
     addResource, updateResource, deleteResource,
     getCareerResources, addCareerResource, updateCareerResource, deleteCareerResource,
+    addSkill, updateSkill, deleteSkill,
+    addSkillPhase, updateSkillPhase, deleteSkillPhase,
     getStats, fetchCareers, fetchCareerResources,
   };
 

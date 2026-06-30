@@ -31,6 +31,8 @@ import ManageCareerResources from './pages/admin/ManageCareerResources';
 import ManageUsers from './pages/admin/ManageUsers';
 import ManageAnnouncements from './pages/admin/ManageAnnouncements';
 import ManagePushNotifications from './pages/admin/ManagePushNotifications';
+import ManageSkills from './pages/admin/ManageSkills';
+import ManageSkillRoadmaps from './pages/admin/ManageSkillRoadmaps';
 
 function App() {
   return (
@@ -64,6 +66,8 @@ function App() {
             <Route path="/admin/users" element={<AdminRoute><ManageUsers /></AdminRoute>} />
             <Route path="/admin/announcements" element={<AdminRoute><ManageAnnouncements /></AdminRoute>} />
             <Route path="/admin/notifications" element={<AdminRoute><ManagePushNotifications /></AdminRoute>} />
+            <Route path="/admin/skills" element={<AdminRoute><ManageSkills /></AdminRoute>} />
+            <Route path="/admin/skill-roadmaps" element={<AdminRoute><ManageSkillRoadmaps /></AdminRoute>} />
 
             {/* Catch all */}
             <Route path="*" element={<Navigate to="/" replace />} />
