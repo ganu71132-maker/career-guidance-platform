@@ -10,36 +10,16 @@ export default function SkillExplorer() {
 
   // Create a combined list of skills from old careers extraction + new database skills
   const allSkills = useMemo(() => {
-    // 1. Get all skills from the new database
-    const dbSkillsMap = new Map();
-    (skillsList || []).forEach(s => {
-      dbSkillsMap.set(s.name.toLowerCase(), {
+    if (!skillsList) return [];
+    
+    // Map database skills and sort alphabetically
+    return [...skillsList]
+      .map(s => ({
         name: s.name,
         fromDb: true,
-        careersCount: 0 // Will compute below
-      });
-    });
-
-    // 2. Count career occurrences
-    careers.forEach(career => {
-      if (career.requiredSkills) {
-        career.requiredSkills.forEach(skill => {
-          const lowerName = skill.toLowerCase();
-          if (dbSkillsMap.has(lowerName)) {
-            dbSkillsMap.get(lowerName).careersCount += 1;
-          } else {
-            dbSkillsMap.set(lowerName, {
-              name: skill,
-              fromDb: false,
-              careersCount: 1
-            });
-          }
-        });
-      }
-    });
-
-    return Array.from(dbSkillsMap.values()).sort((a, b) => a.name.localeCompare(b.name));
-  }, [careers, skillsList]);
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [skillsList]);
 
   const filteredSkills = useMemo(() => {
     if (!searchQuery.trim()) return allSkills;
@@ -97,9 +77,6 @@ export default function SkillExplorer() {
               <div className="flex items-start justify-between">
                 <div>
                   <h3 className="font-bold text-slate-800 text-lg group-hover:text-indigo-600 transition-colors mb-1">{skill.name}</h3>
-                  <p className="text-xs text-slate-500 font-medium">
-                    Required in <span className="text-emerald-600 font-bold">{skill.careersCount}</span> career{skill.careersCount !== 1 ? 's' : ''}
-                  </p>
                 </div>
                 {skill.fromDb ? (
                   <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
