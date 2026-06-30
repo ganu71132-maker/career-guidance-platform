@@ -48,7 +48,7 @@ export default function WelcomePopup() {
         {/* Title */}
         <div className="space-y-2">
           <h2 className="text-xl sm:text-2xl font-black text-slate-800 flex items-center justify-center gap-1.5">
-            🎉 Welcome to NaviCareer <Sparkles className="h-5 w-5 text-amber-500 fill-amber-500" />
+            🎉 Welcome to NextraPath <Sparkles className="h-5 w-5 text-amber-500 fill-amber-500" />
           </h2>
           <p className="text-slate-500 text-xs sm:text-sm leading-relaxed px-2">
             Your personalized smart career guidance platform is ready. Explore advanced tools crafted for your growth.

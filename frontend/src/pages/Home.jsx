@@ -56,7 +56,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
           <Link to="/" className="text-xl sm:text-2xl font-bold tracking-tight text-slate-800 flex items-center gap-2">
             <Compass className="text-emerald-500 h-6 w-6 sm:h-8 sm:w-8" />
-            NaviCareer
+            NextraPath
           </Link>
           <div className="hidden md:flex gap-8 text-sm font-medium text-slate-500">
             <a href="#how-it-works" className="hover:text-slate-800 transition-colors">How It Works</a>
@@ -265,7 +265,7 @@ export default function Home() {
           <div className="sm:col-span-2">
             <div className="text-xl sm:text-2xl font-bold tracking-tight text-slate-800 flex items-center gap-2 mb-3 sm:mb-4">
               <Compass className="text-emerald-500 h-5 w-5 sm:h-6 sm:w-6" />
-              NaviCareer
+              NextraPath
             </div>
             <p className="text-slate-500 max-w-sm text-sm sm:text-base">
               Empowering students with clear career paths, structured roadmaps, and curated learning resources.
@@ -289,7 +289,7 @@ export default function Home() {
           </div>
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center text-xs sm:text-sm text-slate-400 pt-6 sm:pt-8 border-t border-slate-100">
-          &copy; {new Date().getFullYear()} NaviCareer. All rights reserved.
+          &copy; {new Date().getFullYear()} NextraPath. All rights reserved.
         </div>
       </footer>
     </div>

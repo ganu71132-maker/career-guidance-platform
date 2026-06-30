@@ -66,7 +66,7 @@ export default function Register() {
       <div className="bg-white w-full max-w-md p-6 sm:p-8 rounded-2xl shadow-xl border border-slate-100 relative z-10">
         <div className="text-center mb-6 sm:mb-8">
           <Link to="/" className="inline-flex items-center gap-2 text-xl sm:text-2xl font-bold text-slate-800 mb-5 sm:mb-6">
-            <Compass className="text-emerald-500 h-6 w-6 sm:h-7 sm:w-7" /> NaviCareer
+            <Compass className="text-emerald-500 h-6 w-6 sm:h-7 sm:w-7" /> NextraPath
           </Link>
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-2 text-slate-800">Create Account</h2>
           <p className="text-slate-500 text-sm sm:text-base">Start your career planning journey.</p>

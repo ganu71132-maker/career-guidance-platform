@@ -25,7 +25,7 @@ export default function ManageUsers() {
       // Fallback demo data
       setUsers([
         { id: '1', full_name: 'Demo User', email: 'demo@example.com', role: 'user', created_at: new Date().toISOString() },
-        { id: '2', full_name: 'Admin', email: 'admin@navicareer.com', role: 'admin', created_at: new Date().toISOString() },
+        { id: '2', full_name: 'Admin', email: 'admin@nextrapath.com', role: 'admin', created_at: new Date().toISOString() },
       ]);
     } finally {
       setLoading(false);

@@ -35,7 +35,7 @@ export default function SkillExplorer() {
       <nav className="bg-white border-b border-slate-100 sticky top-0 z-40 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link to="/" className="text-xl font-bold text-slate-800 flex items-center gap-2">
-            <Compass className="text-emerald-500 h-6 w-6" /> NaviCareer
+            <Compass className="text-emerald-500 h-6 w-6" /> NextraPath
           </Link>
           <div className="flex gap-4">
             <Link to="/explorer" className="text-sm font-medium text-slate-500 hover:text-slate-800">Careers</Link>

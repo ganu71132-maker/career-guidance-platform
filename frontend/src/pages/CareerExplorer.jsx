@@ -53,7 +53,7 @@ export default function CareerExplorer() {
         {/* Desktop Header & Logged Out Mobile Header */}
         <div className={`max-w-7xl mx-auto px-4 sm:px-6 h-16 items-center justify-between ${user ? 'hidden md:flex' : 'flex'}`}>
           <Link to="/" className="flex items-center gap-2 text-base sm:text-lg font-bold text-slate-800">
-            <Compass className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-500" /> NaviCareer
+            <Compass className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-500" /> NextraPath
           </Link>
           <div className="flex gap-3 sm:gap-4 text-sm items-center">
             {user ? (
@@ -76,7 +76,7 @@ export default function CareerExplorer() {
             {/* Row 1: Brand Logo & Notification Bell */}
             <div className="flex items-center justify-between">
               <Link to="/" className="text-base font-bold text-slate-800 flex items-center gap-1.5 shrink-0">
-                <Compass className="text-emerald-500 h-5 w-5" /> NaviCareer
+                <Compass className="text-emerald-500 h-5 w-5" /> NextraPath
               </Link>
               <NotificationBell />
             </div>

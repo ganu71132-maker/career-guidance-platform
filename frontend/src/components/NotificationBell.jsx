@@ -243,7 +243,7 @@ export default function NotificationBell() {
           </div>
 
           <div className="px-4 py-2 bg-slate-50 text-center border-t border-slate-100">
-            <span className="text-[9px] text-slate-400 font-medium">NaviCareer Platform Broadcasts</span>
+            <span className="text-[9px] text-slate-400 font-medium">NextraPath Platform Broadcasts</span>
           </div>
         </div>
       )}

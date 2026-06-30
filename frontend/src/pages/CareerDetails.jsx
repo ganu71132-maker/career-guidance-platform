@@ -97,7 +97,7 @@ export default function CareerDetails() {
         <nav className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100 shadow-sm">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
             <div className="flex items-center gap-2 text-base sm:text-lg font-bold text-slate-800">
-              <Compass className="h-5 w-5 text-emerald-500" /> NaviCareer
+              <Compass className="h-5 w-5 text-emerald-500" /> NextraPath
             </div>
             <div className="w-28 h-4 rounded shimmer" />
           </div>
@@ -201,7 +201,7 @@ export default function CareerDetails() {
       <nav className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100 shadow-sm">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 text-base sm:text-lg font-bold text-slate-800">
-            <Compass className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-500" /> NaviCareer
+            <Compass className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-500" /> NextraPath
           </Link>
           <Link to="/explorer" className="text-xs sm:text-sm text-slate-500 hover:text-slate-800 transition-colors font-medium">← Back to Careers</Link>
         </div>

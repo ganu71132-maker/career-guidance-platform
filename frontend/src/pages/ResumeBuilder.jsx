@@ -510,7 +510,7 @@ export default function ResumeBuilder() {
       <aside className="w-64 bg-white border-r border-slate-100 hidden md:flex flex-col shrink-0 shadow-sm print-hidden">
         <div className="h-20 flex items-center px-6 border-b border-slate-100">
           <Link to="/" className="text-xl font-bold text-slate-800 flex items-center gap-2">
-            <User className="text-emerald-500 h-6 w-6" /> NaviCareer
+            <User className="text-emerald-500 h-6 w-6" /> NextraPath
           </Link>
         </div>
         <div className="flex-1 py-6 px-4 space-y-1">
