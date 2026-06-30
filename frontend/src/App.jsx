@@ -20,6 +20,7 @@ import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import ResumeBuilder from './pages/ResumeBuilder';
 import SkillExplorer from './pages/SkillExplorer';
+import SkillDetails from './pages/SkillDetails';
 
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
