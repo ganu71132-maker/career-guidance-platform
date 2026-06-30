@@ -65,7 +65,7 @@ export default function Login() {
       console.log('Profile fetched:', profile, 'Error:', profileError);
 
       // Step 5: Redirect based on role
-      if (profile && profile.role === 'admin') {
+      if (profile && profile.role?.toLowerCase().trim() === 'admin') {
         navigate('/admin');
       } else {
         navigate('/dashboard');
