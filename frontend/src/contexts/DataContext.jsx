@@ -511,11 +511,10 @@ export function DataProvider({ children }) {
       const { data, error } = await supabase
         .from('skills')
         .insert([skillData])
-        .select()
-        .single();
+        .select();
       if (error) throw error;
       await fetchAllSkills();
-      return { success: true, data };
+      return { success: true, data: data?.[0] };
     } catch (error) {
       console.error('Error adding skill:', error);
       return { success: false, error: error.message };
@@ -528,11 +527,11 @@ export function DataProvider({ children }) {
         .from('skills')
         .update(updates)
         .eq('id', id)
-        .select()
-        .single();
+        .select();
       if (error) throw error;
+      if (!data || data.length === 0) throw new Error("No rows updated. Skill may not exist.");
       await fetchAllSkills();
-      return { success: true, data };
+      return { success: true, data: data[0] };
     } catch (error) {
       console.error('Error updating skill:', error);
       return { success: false, error: error.message };
@@ -560,11 +559,10 @@ export function DataProvider({ children }) {
       const { data, error } = await supabase
         .from('skill_roadmaps')
         .insert([phaseData])
-        .select()
-        .single();
+        .select();
       if (error) throw error;
       await fetchAllSkills();
-      return { success: true, data };
+      return { success: true, data: data?.[0] };
     } catch (error) {
       console.error('Error adding skill phase:', error);
       return { success: false, error: error.message };
@@ -577,11 +575,11 @@ export function DataProvider({ children }) {
         .from('skill_roadmaps')
         .update(updates)
         .eq('id', id)
-        .select()
-        .single();
+        .select();
       if (error) throw error;
+      if (!data || data.length === 0) throw new Error("No rows updated. Topic may have been deleted.");
       await fetchAllSkills();
-      return { success: true, data };
+      return { success: true, data: data[0] };
     } catch (error) {
       console.error('Error updating skill phase:', error);
       return { success: false, error: error.message };
