@@ -571,11 +571,18 @@ export function DataProvider({ children }) {
 
   const updateSkillPhase = async (id, updates) => {
     try {
+      console.log("Updating Skill Phase. ID:", id, "Payload:", updates);
+      if (!id) {
+        throw new Error("Missing ID for update!");
+      }
       const { data, error } = await supabase
         .from('skill_roadmaps')
         .update(updates)
         .eq('id', id)
         .select();
+      
+      console.log("Supabase response:", { data, error });
+      
       if (error) throw error;
       if (!data || data.length === 0) throw new Error("No rows updated. Topic may have been deleted.");
       await fetchAllSkills();
