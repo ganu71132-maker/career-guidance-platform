@@ -26,7 +26,7 @@ function urlBase64ToUint8Array(base64String) {
 const VAPID_PUBLIC_KEY = 'BInACj48s2VLb4bczm5_4wvo2ujO1JR9cBJXPRDwH27Xs3pQHHGVJswQy-WjOm1MDB8XLSiklS0mH03n7U2RNEQ';
 
 export default function Dashboard() {
-  const { user, signOut } = useAuth();
+  const { user, signOut, isAdmin } = useAuth();
   const { careers: careersData, loading, savedCareers, completedSteps, completionsList = [] } = useData();
   const navigate = useNavigate();
   const [recentAnnouncements, setRecentAnnouncements] = useState([]);
@@ -325,6 +325,11 @@ export default function Dashboard() {
           <Link to="/skills" className="block px-4 py-3 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-xl text-sm transition-all font-medium">Skill Library</Link>
           <Link to="/resume" className="block px-4 py-3 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-xl text-sm transition-all font-medium">Resume Builder</Link>
           <Link to="/profile" className="block px-4 py-3 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-xl text-sm transition-all font-medium">Profile</Link>
+          {isAdmin && (
+            <Link to="/admin" className="block px-4 py-3 text-emerald-600 font-bold hover:bg-emerald-50 rounded-xl text-sm transition-all mt-4 border border-emerald-100 bg-emerald-50/50">
+              ⚙️ Admin Panel
+            </Link>
+          )}
         </div>
         <div className="p-4 border-t border-slate-100">
           <button onClick={handleSignOut} className="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl transition-all text-sm font-medium">
@@ -367,6 +372,11 @@ export default function Dashboard() {
             <Link to="/profile" className="flex-1 min-w-[55px] text-center text-slate-500 hover:text-slate-800 text-[10px] font-semibold py-1.5 transition-colors">
               Profile
             </Link>
+            {isAdmin && (
+              <Link to="/admin" className="flex-1 min-w-[55px] text-center text-emerald-600 font-bold text-[10px] py-1.5 transition-colors bg-emerald-50 rounded-lg ml-1 border border-emerald-100">
+                Admin
+              </Link>
+            )}
           </div>
         </div>
 
