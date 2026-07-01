@@ -664,8 +664,9 @@ export default function CareerDetails() {
         </div>
       )}
 
-      {/* Comment Section */}
-      <CommentSection pageType="career" pageId={career.id} />
+        {/* Comment Section */}
+        <CommentSection pageType="career" pageId={career.id} />
+      </div>
     </div>
   );
 }
