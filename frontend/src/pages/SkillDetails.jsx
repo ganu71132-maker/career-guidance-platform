@@ -3,7 +3,6 @@ import { useParams, Link } from 'react-router-dom';
 import { useData } from '../contexts/DataContext';
 import { Compass, Code2, ChevronRight, X } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
-import CommentSection from '../components/CommentSection';
 
 export default function SkillDetails() {
   const { name } = useParams();
@@ -172,9 +171,6 @@ export default function SkillDetails() {
           </div>
           
         </div>
-        
-        {/* Comment Section */}
-        <CommentSection pageType="skill" pageId={skill.id} />
       </div>
     </div>
   );
