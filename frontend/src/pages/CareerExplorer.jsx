@@ -4,6 +4,7 @@ import { useData } from '../contexts/DataContext';
 import { useAuth } from '../contexts/AuthContext';
 import { Search, Briefcase, TrendingUp, IndianRupee, Compass, ArrowLeft, Map, GraduationCap, ChevronDown } from 'lucide-react';
 import NotificationBell from '../components/NotificationBell';
+import CommentSection from '../components/CommentSection';
 
 export default function CareerExplorer() {
   const { careers: careersData, loading } = useData();
@@ -262,6 +263,11 @@ export default function CareerExplorer() {
             <p className="text-xs sm:text-sm text-slate-500">Try adjusting your search or filters.</p>
           </div>
         )}
+      </div>
+
+      {/* General Career Guidance Discussion */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-12">
+        <CommentSection pageType="explorer" pageId="00000000-0000-0000-0000-000000000001" />
       </div>
     </div>
   );
