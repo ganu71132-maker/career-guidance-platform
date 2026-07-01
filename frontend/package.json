@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host --port 5173",
+    "prebuild": "node generate_sitemap.js",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
