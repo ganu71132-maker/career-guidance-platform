@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useData } from '../contexts/DataContext';
 import { useAuth } from '../contexts/AuthContext';
-import { MessageSquare, Send, Trash2, Edit2, X, Check, Loader2, AlertCircle } from 'lucide-react';
+import { MessageSquare, Send, Trash2, Edit2, Check, Loader2, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 function timeAgo(dateString) {
@@ -35,7 +35,7 @@ function timeAgo(dateString) {
 
 export default function CommentSection({ pageType, pageId }) {
   const { fetchComments, addComment, editComment, deleteComment } = useData();
-  const { currentUser } = useAuth();
+  const { user } = useAuth();
   
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -69,12 +69,12 @@ export default function CommentSection({ pageType, pageId }) {
 
   async function handlePostComment(e) {
     e.preventDefault();
-    if (!newComment.trim() || newComment.length > MAX_CHARS || !currentUser) return;
+    if (!newComment.trim() || newComment.length > MAX_CHARS || !user) return;
     
     setIsSubmitting(true);
     setError(null);
     
-    const { success, data, error: postError } = await addComment(pageType, pageId, newComment, currentUser.email);
+    const { success, data, error: postError } = await addComment(pageType, pageId, newComment, user.email);
     
     if (success) {
       setNewComment('');
@@ -160,7 +160,7 @@ export default function CommentSection({ pageType, pageId }) {
 
       {/* Input Area (Logged In vs Guest) */}
       <div className="mb-10">
-        {currentUser ? (
+        {user ? (
           <form onSubmit={handlePostComment} className="bg-slate-50/50 rounded-2xl p-4 border border-slate-200">
             <textarea
               value={newComment}
@@ -229,7 +229,7 @@ export default function CommentSection({ pageType, pageId }) {
                       <span className="font-bold text-slate-800 text-sm">
                         {getUsername(comment.user_email)}
                       </span>
-                      {comment.user_id === currentUser?.id && (
+                      {comment.user_id === user?.id && (
                         <span className="bg-emerald-100 text-emerald-700 text-[10px] uppercase font-bold px-1.5 py-0.5 rounded">You</span>
                       )}
                       <span className="text-slate-400 text-xs">
@@ -243,7 +243,7 @@ export default function CommentSection({ pageType, pageId }) {
                     </div>
                     
                     {/* Actions Menu */}
-                    {comment.user_id === currentUser?.id && editingId !== comment.id && (
+                    {comment.user_id === user?.id && editingId !== comment.id && (
                       <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button onClick={() => startEdit(comment)} className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors" title="Edit">
                           <Edit2 className="h-3.5 w-3.5" />
