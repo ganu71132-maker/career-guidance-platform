@@ -626,7 +626,7 @@ export function DataProvider({ children }) {
     }
   };
 
-  const addComment = async (pageType, pageId, content, userEmail) => {
+  const addComment = async (pageType, pageId, content, userEmail, parentId = null) => {
     if (!currentUser) return { success: false, error: 'Not authenticated' };
     try {
       const { data, error } = await supabase
@@ -636,7 +636,8 @@ export function DataProvider({ children }) {
           page_id: pageId,
           user_id: currentUser.id,
           user_email: userEmail,
-          content: content
+          content: content,
+          parent_id: parentId,
         })
         .select();
       
