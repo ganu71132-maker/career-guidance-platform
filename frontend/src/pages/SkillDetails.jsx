@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useData } from '../contexts/DataContext';
 import { Compass, Code2, ChevronRight, X } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
+import CommentSection from '../components/CommentSection';
 
 export default function SkillDetails() {
   const { name } = useParams();
@@ -46,7 +48,16 @@ export default function SkillDetails() {
   const activePhaseData = skill.phases.find(p => p.phaseNumber === activePhase);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen relative pb-20 animate-fade-in" style={{ background: '#f8fafc' }}>
+      <Helmet>
+        <title>{skill.name} Roadmap & Learning Guide | NextraPath</title>
+        <meta name="description" content={`Learn ${skill.name} from scratch with our step-by-step roadmap. Estimated time: ${skill.estimated_time}.`} />
+        <meta property="og:title" content={`${skill.name} Roadmap & Learning Guide | NextraPath`} />
+        <meta property="og:description" content={`Learn ${skill.name} from scratch with our step-by-step roadmap.`} />
+      </Helmet>
+      <div className="fixed top-0 right-0 w-[40vw] h-[40vw] rounded-full bg-indigo-100/30 blur-[120px] -z-10" />
+      <div className="fixed bottom-0 left-0 w-[30vw] h-[30vw] rounded-full bg-blue-100/30 blur-[120px] -z-10" />
+
       {/* Navigation */}
       <nav className="bg-white border-b border-slate-100 sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -161,6 +172,9 @@ export default function SkillDetails() {
           </div>
           
         </div>
+        
+        {/* Comment Section */}
+        <CommentSection pageType="skill" pageId={skill.id} />
       </div>
     </div>
   );

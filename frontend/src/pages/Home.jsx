@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '../contexts/DataContext';
 import { ArrowRight, Compass, Map, BookOpen, Target, Briefcase, TrendingUp, IndianRupee, Star, Sparkles, CheckCircle2, CircleDot, ChevronRight } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 export default function Home() {
   const { careers: careersData } = useData();
@@ -47,6 +48,11 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: '#f8fafc' }}>
+      <Helmet>
+        <title>NextraPath - Discover Your Dream Career & Roadmap</title>
+        <meta name="description" content="Find the perfect career path, follow a step-by-step roadmap from beginner to professional, and access curated learning resources at every stage." />
+        <meta property="og:title" content="NextraPath - Discover Your Dream Career & Roadmap" />
+      </Helmet>
       {/* Background Decorators */}
       <div className="fixed top-0 right-[-10%] w-[50vw] h-[50vw] rounded-full bg-emerald-100/30 blur-[120px] -z-10" />
       <div className="fixed bottom-[20%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-blue-100/30 blur-[120px] -z-10" />

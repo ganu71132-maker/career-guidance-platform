@@ -608,6 +608,84 @@ export function DataProvider({ children }) {
     }
   };
 
+  // ======== COMMENTS CRUD ========
+  const fetchComments = async (pageType, pageId) => {
+    try {
+      const { data, error } = await supabase
+        .from('comments')
+        .select('*')
+        .eq('page_type', pageType)
+        .eq('page_id', pageId)
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      return { success: true, data };
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+      return { success: false, error: error.message };
+    }
+  };
+
+  const addComment = async (pageType, pageId, content, userEmail) => {
+    if (!currentUser) return { success: false, error: 'Not authenticated' };
+    try {
+      const { data, error } = await supabase
+        .from('comments')
+        .insert({
+          page_type: pageType,
+          page_id: pageId,
+          user_id: currentUser.id,
+          user_email: userEmail,
+          content: content
+        })
+        .select();
+      
+      if (error) throw error;
+      return { success: true, data: data[0] };
+    } catch (error) {
+      console.error('Error adding comment:', error);
+      return { success: false, error: error.message };
+    }
+  };
+
+  const editComment = async (commentId, content) => {
+    if (!currentUser) return { success: false, error: 'Not authenticated' };
+    try {
+      const { data, error } = await supabase
+        .from('comments')
+        .update({
+          content: content,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', commentId)
+        .eq('user_id', currentUser.id) // Extra safety check
+        .select();
+        
+      if (error) throw error;
+      return { success: true, data: data[0] };
+    } catch (error) {
+      console.error('Error editing comment:', error);
+      return { success: false, error: error.message };
+    }
+  };
+
+  const deleteComment = async (commentId) => {
+    if (!currentUser) return { success: false, error: 'Not authenticated' };
+    try {
+      const { error } = await supabase
+        .from('comments')
+        .delete()
+        .eq('id', commentId)
+        .eq('user_id', currentUser.id); // Extra safety check
+        
+      if (error) throw error;
+      return { success: true };
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+      return { success: false, error: error.message };
+    }
+  };
+
   // ======== STATS ========
   function getStats() {
     const totalCareers = careers.length;
@@ -635,6 +713,7 @@ export function DataProvider({ children }) {
     getCareerResources, addCareerResource, updateCareerResource, deleteCareerResource,
     addSkill, updateSkill, deleteSkill,
     addSkillPhase, updateSkillPhase, deleteSkillPhase,
+    fetchComments, addComment, editComment, deleteComment,
     getStats, fetchCareers, fetchCareerResources,
   };
 

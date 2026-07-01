@@ -34,13 +34,16 @@ import ManagePushNotifications from './pages/admin/ManagePushNotifications';
 import ManageSkills from './pages/admin/ManageSkills';
 import ManageSkillRoadmaps from './pages/admin/ManageSkillRoadmaps';
 
+import { HelmetProvider } from 'react-helmet-async';
+
 function App() {
   return (
-    <AuthProvider>
-      <DataProvider>
-        <Router>
-          <InstallPrompt />
-          <Routes>
+    <HelmetProvider>
+      <AuthProvider>
+        <DataProvider>
+          <Router>
+            <InstallPrompt />
+            <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
@@ -75,6 +78,7 @@ function App() {
         </Router>
       </DataProvider>
     </AuthProvider>
+    </HelmetProvider>
   );
 }
 

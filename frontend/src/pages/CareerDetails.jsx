@@ -3,6 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import { useData } from '../contexts/DataContext';
 import { useAuth } from '../contexts/AuthContext';
 import { ArrowLeft, Target, Map, BookOpen, TrendingUp, IndianRupee, Briefcase, ExternalLink, CheckCircle, Circle, Compass, ChevronDown, ChevronUp, Video, BookText, FileText, Code, Lightbulb, Star, Play, Lock, Bookmark } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
+import CommentSection from '../components/CommentSection';
 
 const resourceIcons = {
   video: <Video className="h-4 w-4" />,
@@ -194,6 +196,12 @@ export default function CareerDetails() {
 
   return (
     <div className="min-h-screen relative pb-20 animate-fade-in" style={{ background: '#f8fafc' }}>
+      <Helmet>
+        <title>{career.title} Roadmap & Career Guide | NextraPath</title>
+        <meta name="description" content={`Step-by-step roadmap and learning resources to become a ${career.title}. Learn about salary, demand, and required skills.`} />
+        <meta property="og:title" content={`${career.title} Roadmap & Career Guide | NextraPath`} />
+        <meta property="og:description" content={`Step-by-step roadmap and learning resources to become a ${career.title}.`} />
+      </Helmet>
       <div className="fixed top-0 right-0 w-[40vw] h-[40vw] rounded-full bg-blue-100/30 blur-[120px] -z-10" />
       <div className="fixed bottom-0 left-0 w-[30vw] h-[30vw] rounded-full bg-purple-100/30 blur-[120px] -z-10" />
 
@@ -655,6 +663,9 @@ export default function CareerDetails() {
           </div>
         </div>
       )}
+
+      {/* Comment Section */}
+      <CommentSection pageType="career" pageId={career.id} />
     </div>
   );
 }
