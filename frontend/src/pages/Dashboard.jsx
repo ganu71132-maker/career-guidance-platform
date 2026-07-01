@@ -210,7 +210,7 @@ export default function Dashboard() {
         <aside className="w-64 bg-white border-r border-slate-100 hidden md:flex flex-col shrink-0 shadow-sm animate-fade-in">
           <div className="h-20 flex items-center px-6 border-b border-slate-100">
             <div className="text-xl font-bold text-slate-800 flex items-center gap-2">
-              <Compass className="text-emerald-500 h-6 w-6" /> NextraPath
+              <img src="/logo.png" alt="NextraPath Logo" className="h-6 w-6 object-contain drop-shadow-sm" /> NextraPath
             </div>
           </div>
           <div className="flex-1 py-6 px-4 space-y-1">
@@ -229,7 +229,7 @@ export default function Dashboard() {
           <div className="md:hidden flex flex-col gap-3 mb-6 pb-4 border-b border-slate-100">
             <div className="flex items-center justify-between">
               <div className="text-base font-bold text-slate-800 flex items-center gap-1.5 shrink-0">
-                <Compass className="text-emerald-500 h-5 w-5" /> NextraPath
+                <img src="/logo.png" alt="NextraPath Logo" className="h-5 w-5 object-contain drop-shadow-sm" /> NextraPath
               </div>
             </div>
             <div className="flex items-center justify-between bg-slate-100/80 p-1 rounded-xl border border-slate-200/20">
@@ -316,7 +316,7 @@ export default function Dashboard() {
       <aside className="w-64 bg-white border-r border-slate-100 hidden md:flex flex-col shrink-0 shadow-sm">
         <div className="h-20 flex items-center px-6 border-b border-slate-100">
           <Link to="/" className="text-xl font-bold text-slate-800 flex items-center gap-2">
-            <Compass className="text-emerald-500 h-6 w-6" /> NextraPath
+            <img src="/logo.png" alt="NextraPath Logo" className="h-6 w-6 object-contain drop-shadow-sm" /> NextraPath
           </Link>
         </div>
         <div className="flex-1 py-6 px-4 space-y-1">
@@ -351,7 +351,7 @@ export default function Dashboard() {
           {/* Row 1: Brand Logo & Notification Bell */}
           <div className="flex items-center justify-between">
             <Link to="/" className="text-base font-bold text-slate-800 flex items-center gap-1.5 shrink-0">
-              <Compass className="text-emerald-500 h-5 w-5" /> NextraPath
+              <img src="/logo.png" alt="NextraPath Logo" className="h-5 w-5 object-contain drop-shadow-sm" /> NextraPath
             </Link>
             <NotificationBell />
           </div>

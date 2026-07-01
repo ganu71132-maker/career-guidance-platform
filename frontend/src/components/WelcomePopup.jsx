@@ -37,7 +37,7 @@ export default function WelcomePopup() {
         {/* Decorative elements */}
         <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-400" />
         <div className="absolute top-0 right-0 p-6 opacity-[0.03] select-none pointer-events-none">
-          <Compass className="h-44 w-44 text-emerald-600" />
+          <img src="/logo.png" alt="NextraPath" className="h-44 w-44 object-contain drop-shadow-lg opacity-90" />
         </div>
 
         {/* Brand Icon */}

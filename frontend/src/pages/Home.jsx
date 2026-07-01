@@ -61,8 +61,7 @@ export default function Home() {
       <nav className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
           <Link to="/" className="text-xl sm:text-2xl font-bold tracking-tight text-slate-800 flex items-center gap-2">
-            <Compass className="text-emerald-500 h-6 w-6 sm:h-8 sm:w-8" />
-            NextraPath
+            <img src="/logo.png" alt="NextraPath Logo" className="h-6 w-6 sm:h-8 sm:w-8 object-contain drop-shadow-sm" /> NextraPath
           </Link>
           <div className="hidden md:flex gap-8 text-sm font-medium text-slate-500">
             <a href="#how-it-works" className="hover:text-slate-800 transition-colors">How It Works</a>
@@ -270,8 +269,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 grid sm:grid-cols-2 md:grid-cols-4 gap-8 mb-8 sm:mb-12">
           <div className="sm:col-span-2">
             <div className="text-xl sm:text-2xl font-bold tracking-tight text-slate-800 flex items-center gap-2 mb-3 sm:mb-4">
-              <Compass className="text-emerald-500 h-5 w-5 sm:h-6 sm:w-6" />
-              NextraPath
+              <img src="/logo.png" alt="NextraPath Logo" className="h-5 w-5 sm:h-6 sm:w-6 object-contain drop-shadow-sm" /> NextraPath
             </div>
             <p className="text-slate-500 max-w-sm text-sm sm:text-base">
               Empowering students with clear career paths, structured roadmaps, and curated learning resources.

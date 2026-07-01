@@ -70,7 +70,7 @@ export default function Profile() {
         {/* Desktop Header */}
         <div className="max-w-3xl mx-auto px-4 sm:px-6 h-16 hidden md:flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 text-base sm:text-lg font-bold text-slate-800">
-            <Compass className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-500" /> NextraPath
+            <img src="/logo.png" alt="NextraPath Logo" className="h-5 w-5 sm:h-6 sm:w-6 object-contain drop-shadow-sm" /> NextraPath
           </Link>
           <Link to="/dashboard" className="text-xs sm:text-sm text-slate-500 hover:text-slate-800 transition-colors font-medium">← Back to Dashboard</Link>
         </div>
@@ -80,7 +80,7 @@ export default function Profile() {
           {/* Row 1: Brand Logo & Notification Bell */}
           <div className="flex items-center justify-between">
             <Link to="/" className="text-base font-bold text-slate-800 flex items-center gap-1.5 shrink-0">
-              <Compass className="text-emerald-500 h-5 w-5" /> NextraPath
+              <img src="/logo.png" alt="NextraPath Logo" className="h-5 w-5 object-contain drop-shadow-sm" /> NextraPath
             </Link>
             <NotificationBell />
           </div>

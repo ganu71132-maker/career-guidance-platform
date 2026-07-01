@@ -51,7 +51,7 @@ export default function CareerExplorer() {
       <nav className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100 shadow-sm">
         <div className={`max-w-7xl mx-auto px-4 sm:px-6 h-16 items-center justify-between ${user ? 'hidden md:flex' : 'flex'}`}>
           <Link to="/" className="flex items-center gap-2 text-base sm:text-lg font-bold text-slate-800">
-            <Compass className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-500" /> NextraPath
+            <img src="/logo.png" alt="NextraPath Logo" className="h-5 w-5 sm:h-6 sm:w-6 object-contain drop-shadow-sm" /> NextraPath
           </Link>
           <div className="flex gap-3 sm:gap-4 text-sm items-center">
             {user ? (
@@ -72,7 +72,7 @@ export default function CareerExplorer() {
           <div className="md:hidden flex flex-col gap-3 px-4 py-3">
             <div className="flex items-center justify-between">
               <Link to="/" className="text-base font-bold text-slate-800 flex items-center gap-1.5 shrink-0">
-                <Compass className="text-emerald-500 h-5 w-5" /> NextraPath
+                <img src="/logo.png" alt="NextraPath Logo" className="h-5 w-5 object-contain drop-shadow-sm" /> NextraPath
               </Link>
               <NotificationBell />
             </div>
