@@ -664,7 +664,8 @@ export default function CareerDetails() {
         </div>
       )}
 
-        {/* Comment Section */}
+      {/* Comment Section */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 pb-10">
         <CommentSection pageType="career" pageId={career.id} />
       </div>
     </div>
