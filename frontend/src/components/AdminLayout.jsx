@@ -17,10 +17,13 @@ const navItems = [
 ];
 
 export default function AdminLayout({ children }) {
-  const { signOut } = useAuth();
+  const { signOut, isSuperAdmin } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const restrictedPaths = ['/admin/users', '/admin/announcements', '/admin/notifications'];
+  const filteredNavItems = isSuperAdmin ? navItems : navItems.filter(item => !restrictedPaths.includes(item.path));
 
   const handleSignOut = async () => {
     await signOut();
@@ -38,7 +41,7 @@ export default function AdminLayout({ children }) {
           </Link>
         </div>
         <div className="flex-1 py-6 px-3 space-y-1 overflow-y-auto">
-          {navItems.map(item => {
+          {filteredNavItems.map(item => {
             const isActive = location.pathname === item.path ||
               (item.path !== '/admin' && location.pathname.startsWith(item.path));
             return (
@@ -81,7 +84,7 @@ export default function AdminLayout({ children }) {
           {/* Mobile Dropdown Menu */}
           {menuOpen && (
             <div className="bg-white border border-slate-200 rounded-xl p-3 shadow-md space-y-1 animate-fade-in">
-              {navItems.map(item => {
+              {filteredNavItems.map(item => {
                 const isActive = location.pathname === item.path ||
                   (item.path !== '/admin' && location.pathname.startsWith(item.path));
                 return (

@@ -68,9 +68,9 @@ function App() {
             <Route path="/admin/roadmaps" element={<AdminRoute><ManageRoadmaps /></AdminRoute>} />
             <Route path="/admin/resources" element={<AdminRoute><ManageResources /></AdminRoute>} />
             <Route path="/admin/career-resources" element={<AdminRoute><ManageCareerResources /></AdminRoute>} />
-            <Route path="/admin/users" element={<AdminRoute><ManageUsers /></AdminRoute>} />
-            <Route path="/admin/announcements" element={<AdminRoute><ManageAnnouncements /></AdminRoute>} />
-            <Route path="/admin/notifications" element={<AdminRoute><ManagePushNotifications /></AdminRoute>} />
+            <Route path="/admin/users" element={<AdminRoute superAdminOnly={true}><ManageUsers /></AdminRoute>} />
+            <Route path="/admin/announcements" element={<AdminRoute superAdminOnly={true}><ManageAnnouncements /></AdminRoute>} />
+            <Route path="/admin/notifications" element={<AdminRoute superAdminOnly={true}><ManagePushNotifications /></AdminRoute>} />
             <Route path="/admin/skills" element={<AdminRoute><ManageSkills /></AdminRoute>} />
             <Route path="/admin/skill-roadmaps" element={<AdminRoute><ManageSkillRoadmaps /></AdminRoute>} />
 

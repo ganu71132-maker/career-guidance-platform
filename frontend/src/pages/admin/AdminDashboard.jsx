@@ -1,11 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import AdminLayout from '../../components/AdminLayout';
 import { useData } from '../../contexts/DataContext';
+import { supabase } from '../../lib/supabase';
 import { Briefcase, Map, BookOpen, Users, TrendingUp } from 'lucide-react';
 
 export default function AdminDashboard() {
   const { getStats, careers } = useData();
   const stats = getStats();
+  const [totalUsers, setTotalUsers] = useState(0);
+
+  useEffect(() => {
+    async function fetchUserCount() {
+      const { count, error } = await supabase
+        .from('users')
+        .select('*', { count: 'exact', head: true });
+      if (!error && count !== null) {
+        setTotalUsers(count);
+      }
+    }
+    fetchUserCount();
+  }, []);
 
   // Count resources by type
   const resourcesByType = {};
@@ -21,7 +35,14 @@ export default function AdminDashboard() {
       </header>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-10">
+        <div className="bg-white p-6 rounded-2xl border border-emerald-200 shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2.5 bg-indigo-50 rounded-lg"><Users className="h-6 w-6 text-indigo-600" /></div>
+          </div>
+          <div className="text-3xl font-bold text-slate-800 mb-1">{totalUsers}</div>
+          <div className="text-xs text-slate-500">Total Users</div>
+        </div>
         <div className="bg-white p-6 rounded-2xl border border-emerald-200 shadow-sm hover:shadow-md transition-shadow">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2.5 bg-blue-50 rounded-lg"><Briefcase className="h-6 w-6 text-blue-600" /></div>

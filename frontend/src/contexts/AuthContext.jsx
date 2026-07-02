@@ -76,7 +76,8 @@ export function AuthProvider({ children }) {
     updatePassword: (password) => supabase.auth.updateUser({ password }),
     user,
     profile,       // { id, full_name, email, role }
-    isAdmin: profile?.role?.toLowerCase() === 'admin',
+    isAdmin: profile?.role?.toLowerCase() === 'admin' || profile?.role?.toLowerCase() === 'super admin',
+    isSuperAdmin: profile?.role?.toLowerCase() === 'super admin',
     fetchProfile,
   };
 
