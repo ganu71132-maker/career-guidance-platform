@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import { useData } from '../contexts/DataContext';
 import { useAuth } from '../contexts/AuthContext';
 import { ArrowLeft, Target, Map, BookOpen, TrendingUp, IndianRupee, Briefcase, ExternalLink, CheckCircle, Circle, Compass, ChevronDown, ChevronUp, Video, BookText, FileText, Code, Lightbulb, Star, Play, Lock, Bookmark } from 'lucide-react';
@@ -25,6 +25,7 @@ const resourceColors = {
 export default function CareerDetails() {
   const { id } = useParams();
   const { user } = useAuth();
+  const location = useLocation();
   const isAuthenticated = !!user;
   const { careers: careersData, loading, getCareerResources, savedCareers, completedSteps, toggleSaveCareer, toggleStepCompletion } = useData();
   const career = careersData.find(c => c.id === id);
@@ -641,12 +642,14 @@ export default function CareerDetails() {
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link
                   to="/login"
+                  state={{ from: location.pathname }}
                   className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 px-4 rounded-xl text-center shadow-md shadow-emerald-600/20 transition-all text-sm sm:text-base"
                 >
                   Login
                 </Link>
                 <Link
                   to="/register"
+                  state={{ from: location.pathname }}
                   className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 px-4 rounded-xl text-center border border-slate-200 transition-all text-sm sm:text-base"
                 >
                   Sign Up

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { Mail, Lock, LogIn, Loader, Compass } from 'lucide-react';
@@ -12,6 +12,8 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const { signIn, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from || null;
 
   async function handleGoogleSignIn() {
     try {
@@ -64,11 +66,30 @@ export default function Login() {
 
       console.log('Profile fetched:', profile, 'Error:', profileError);
 
-      // Step 5: Redirect based on role
+      console.log('Profile fetched:', profile, 'Error:', profileError);
+
+      // Step 5: Check if user is "New" (no saved items)
+      const { count: careerCount } = await supabase
+        .from('saved_careers')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', data.user.id);
+        
+      const { count: codeCount } = await supabase
+        .from('saved_code')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', data.user.id);
+
+      const isNewUser = careerCount === 0 && codeCount === 0;
+
+      // Step 6: Smart Redirect
       if (profile && profile.role?.toLowerCase().trim() === 'admin') {
         navigate('/admin');
+      } else if (from) {
+        navigate(from); // Intent-driven redirect
+      } else if (isNewUser) {
+        navigate('/explorer'); // New users go to Explorer
       } else {
-        navigate('/dashboard');
+        navigate('/dashboard'); // Returning users go to Dashboard
       }
     } catch (err) {
       setError(err.message);
