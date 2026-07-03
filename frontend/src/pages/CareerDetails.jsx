@@ -195,6 +195,10 @@ export default function CareerDetails() {
     { id: 'resources', label: 'Resources', icon: <BookOpen className="h-4 w-4" /> },
   ];
 
+  if (career.requiresCoding) {
+    tabs.push({ id: 'practice', label: 'Coding Practice', icon: <Code className="h-4 w-4" /> });
+  }
+
   return (
     <div className="min-h-screen relative pb-20 animate-fade-in" style={{ background: '#f8fafc' }}>
       <Helmet>
@@ -280,7 +284,7 @@ export default function CareerDetails() {
 
         {/* ====== TAB NAVIGATION ====== */}
         <div id="tabs-navigation" className="sticky top-16 z-40 bg-[#f8fafc]/90 backdrop-blur-md py-3 mb-6 sm:mb-8 border-b border-slate-200/50">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+          <div className={`grid grid-cols-2 ${tabs.length === 5 ? 'md:grid-cols-5' : 'md:grid-cols-4'} gap-3 sm:gap-4`}>
             {tabs.map(tab => {
               const isSelected = activeTab === tab.id;
               const isLocked = !isAuthenticated && tab.id !== 'overview';
@@ -300,6 +304,9 @@ export default function CareerDetails() {
               } else if (tab.id === 'resources') {
                 activeColorClass = 'bg-[#b45309] border-[#d97706] shadow-amber-600/25';
                 iconColorClass = isSelected ? 'text-white' : 'text-[#d97706]';
+              } else if (tab.id === 'practice') {
+                activeColorClass = 'bg-[#4f46e5] border-[#4338ca] shadow-indigo-600/25';
+                iconColorClass = isSelected ? 'text-white' : 'text-[#4338ca]';
               }
 
               return (
