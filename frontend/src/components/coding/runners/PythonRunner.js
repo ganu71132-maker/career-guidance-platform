@@ -37,13 +37,25 @@ export class PythonRunner {
     try {
       const pyodide = await this.init();
       
-      // We need to capture stdout
-      let output = [];
-      pyodide.setStdout({ batched: (msg) => output.push(msg) });
-      pyodide.setStderr({ batched: (msg) => output.push(`Error: ${msg}`) });
+      // Redirect stdout and stderr to capture print statements
+      await pyodide.runPythonAsync(`
+import sys
+import io
+sys.stdout = io.StringIO()
+sys.stderr = io.StringIO()
+      `);
 
       await pyodide.runPythonAsync(code);
-      return output.join('\n');
+      
+      const stdout = pyodide.runPython("sys.stdout.getvalue()");
+      const stderr = pyodide.runPython("sys.stderr.getvalue()");
+      
+      let finalOutput = stdout;
+      if (stderr) {
+        finalOutput += "\nError: " + stderr;
+      }
+      
+      return finalOutput.trim() || "Code executed successfully (no output).";
     } catch (error) {
       return `Runtime Error:\n${error.message}`;
     }
