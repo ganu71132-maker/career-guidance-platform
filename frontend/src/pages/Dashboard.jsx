@@ -341,7 +341,10 @@ export default function Dashboard() {
           <div className="px-4 py-3 bg-emerald-50 text-emerald-700 rounded-xl font-medium text-sm border border-emerald-100">Dashboard</div>
           <Link to="/explorer" className="block px-4 py-3 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-xl text-sm transition-all font-medium">Explore Careers</Link>
           <Link to="/skills" className="block px-4 py-3 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-xl text-sm transition-all font-medium">Skill Library</Link>
-          <Link to="/sandbox" className="block px-4 py-3 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-xl text-sm transition-all font-medium">Code Sandbox</Link>
+          <Link to="/sandbox" className="flex items-center justify-between px-4 py-3 text-indigo-600 font-bold hover:bg-indigo-50 rounded-xl text-sm transition-all border border-indigo-100 bg-indigo-50/50">
+            Code Sandbox
+            <span className="bg-indigo-600 text-white text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded-full animate-pulse">New</span>
+          </Link>
           <Link to="/resume" className="block px-4 py-3 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-xl text-sm transition-all font-medium">Resume Builder</Link>
           <Link to="/profile" className="block px-4 py-3 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-xl text-sm transition-all font-medium">Profile</Link>
           {isAdmin && (
@@ -385,8 +388,12 @@ export default function Dashboard() {
             <Link to="/skills" className="flex-1 min-w-[50px] text-center text-slate-500 hover:text-slate-800 text-[10px] font-semibold py-1.5 transition-colors">
               Skills
             </Link>
-            <Link to="/sandbox" className="flex-1 min-w-[60px] text-center text-slate-500 hover:text-slate-800 text-[10px] font-semibold py-1.5 transition-colors">
+            <Link to="/sandbox" className="flex-1 min-w-[70px] text-center text-indigo-600 hover:text-indigo-700 bg-indigo-50/50 hover:bg-indigo-100 rounded-lg text-[10px] font-bold py-1.5 transition-colors border border-indigo-100 relative">
               Sandbox
+              <span className="absolute -top-1 -right-1 flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+              </span>
             </Link>
             <Link to="/resume" className="flex-1 min-w-[70px] text-center text-slate-500 hover:text-slate-800 text-[10px] font-semibold py-1.5 transition-colors flex items-center justify-center gap-0.5">
               Resume <span className="text-[8px]">✨</span>

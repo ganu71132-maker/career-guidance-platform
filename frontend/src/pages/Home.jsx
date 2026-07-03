@@ -63,11 +63,14 @@ export default function Home() {
           <Link to="/" className="text-xl sm:text-2xl font-bold tracking-tight text-slate-800 flex items-center gap-2">
             <img src="/logo.png" alt="NextraPath Logo" className="h-6 w-6 sm:h-8 sm:w-8 object-contain drop-shadow-sm" /> NextraPath
           </Link>
-          <div className="hidden md:flex gap-8 text-sm font-medium text-slate-500">
+          <div className="hidden md:flex gap-8 text-sm font-medium text-slate-500 items-center">
             <a href="#how-it-works" className="hover:text-slate-800 transition-colors">How It Works</a>
             <a href="#careers" className="hover:text-slate-800 transition-colors">Careers</a>
             <Link to="/skills" className="hover:text-slate-800 transition-colors">Skills</Link>
-            <Link to="/sandbox" className="hover:text-slate-800 transition-colors">Code Sandbox</Link>
+            <Link to="/sandbox" className="flex items-center gap-1.5 text-indigo-600 font-bold hover:text-indigo-700 hover:bg-indigo-50 px-3 py-1.5 rounded-full transition-all border border-transparent hover:border-indigo-100">
+              Code Sandbox
+              <span className="bg-indigo-600 text-white text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded-full animate-pulse">New</span>
+            </Link>
             <a href="#stats" className="hover:text-slate-800 transition-colors">Impact</a>
           </div>
           <div className="flex items-center gap-3 sm:gap-4">
