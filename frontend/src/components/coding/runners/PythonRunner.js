@@ -21,7 +21,9 @@ export class PythonRunner {
           });
         }
         
-        pyodideInstance = await window.loadPyodide();
+        pyodideInstance = await window.loadPyodide({
+          indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.25.0/full/'
+        });
         resolve(pyodideInstance);
       } catch (error) {
         reject(error);
