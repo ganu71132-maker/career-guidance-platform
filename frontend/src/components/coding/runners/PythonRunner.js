@@ -24,6 +24,7 @@ export class PythonRunner {
         pyodideInstance = await window.loadPyodide({
           indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.25.0/full/'
         });
+        await pyodideInstance.loadPackage("micropip");
         resolve(pyodideInstance);
       } catch (error) {
         reject(error);
@@ -46,6 +47,9 @@ import io
 sys.stdout = io.StringIO()
 sys.stderr = io.StringIO()
       `);
+
+      // Auto-load any required packages (e.g., numpy, pandas) based on user's import statements
+      await pyodide.loadPackagesFromImports(code);
 
       await pyodide.runPythonAsync(code);
       
