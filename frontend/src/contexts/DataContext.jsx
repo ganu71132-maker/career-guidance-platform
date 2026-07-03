@@ -34,7 +34,7 @@ function dbToCareer(row) {
           recommended: r.recommended,
         })),
       })),
-    requiresCoding: row.requires_coding ?? (
+    requiresCoding: (
       row.category?.toLowerCase().includes('tech') || 
       row.category?.toLowerCase().includes('software') || 
       row.category?.toLowerCase().includes('data') ||
@@ -43,7 +43,8 @@ function dbToCareer(row) {
       row.category?.toLowerCase().includes('cyber') ||
       row.title?.toLowerCase().includes('engineer') ||
       row.title?.toLowerCase().includes('developer') ||
-      row.title?.toLowerCase().includes('programmer')
+      row.title?.toLowerCase().includes('programmer') ||
+      row.title?.toLowerCase().includes('scientist')
     )
   };
 }
