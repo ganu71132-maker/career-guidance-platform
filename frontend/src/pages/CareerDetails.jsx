@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useData } from '../contexts/DataContext';
 import { useAuth } from '../contexts/AuthContext';
-import { ArrowLeft, Target, Map, BookOpen, TrendingUp, IndianRupee, Briefcase, ExternalLink, CheckCircle, Circle, Compass, ChevronDown, ChevronUp, Video, BookText, FileText, Star, Bookmark } from 'lucide-react';
+import { ArrowLeft, Target, Map, BookOpen, TrendingUp, IndianRupee, Briefcase, ExternalLink, CheckCircle, Circle, Compass, ChevronDown, ChevronUp, Video, BookText, FileText, Code, Lightbulb, Star, Play, Lock, Bookmark } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import CommentSection from '../components/CommentSection';
 
