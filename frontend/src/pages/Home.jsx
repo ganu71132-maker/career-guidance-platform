@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '../contexts/DataContext';
+import { useAuth } from '../contexts/AuthContext';
 import { ArrowRight, Compass, Map, BookOpen, Target, Briefcase, TrendingUp, IndianRupee, Star, Sparkles, CheckCircle2, CircleDot, ChevronRight } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 
 export default function Home() {
   const { careers: careersData } = useData();
+  const { user } = useAuth();
   const [tiltStyle, setTiltStyle] = useState({ transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)' });
   const [glareStyle, setGlareStyle] = useState({ opacity: 0, left: '0px', top: '0px' });
 
@@ -74,10 +76,18 @@ export default function Home() {
             <a href="#stats" className="hover:text-slate-800 transition-colors">Impact</a>
           </div>
           <div className="flex items-center gap-3 sm:gap-4">
-            <Link to="/login" className="text-xs sm:text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors">Log in</Link>
-            <Link to="/register" className="text-xs sm:text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg transition-all shadow-md shadow-emerald-600/20">
-              Get Started
-            </Link>
+            {user ? (
+              <Link to="/dashboard" className="text-xs sm:text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg transition-all shadow-md shadow-emerald-600/20">
+                Go to Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link to="/login" className="text-xs sm:text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors">Log in</Link>
+                <Link to="/register" className="text-xs sm:text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg transition-all shadow-md shadow-emerald-600/20">
+                  Get Started
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </nav>
@@ -100,9 +110,15 @@ export default function Home() {
               <Link to="/explorer" className="flex items-center justify-center px-6 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base font-semibold text-white bg-emerald-600 hover:bg-emerald-500 rounded-xl transition-all shadow-lg shadow-emerald-600/20 hover:scale-105 hover:shadow-xl cursor-pointer">
                 Explore Careers <ArrowRight className="ml-2 h-4 sm:h-5 w-4 sm:w-5" />
               </Link>
-              <Link to="/register" className="flex items-center justify-center px-6 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base font-semibold text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl transition-all shadow-lg shadow-indigo-600/20 hover:scale-105 hover:shadow-xl cursor-pointer">
-                Get Started Free
-              </Link>
+              {user ? (
+                <Link to="/dashboard" className="flex items-center justify-center px-6 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base font-semibold text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl transition-all shadow-lg shadow-indigo-600/20 hover:scale-105 hover:shadow-xl cursor-pointer">
+                  Go to Dashboard
+                </Link>
+              ) : (
+                <Link to="/register" className="flex items-center justify-center px-6 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base font-semibold text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl transition-all shadow-lg shadow-indigo-600/20 hover:scale-105 hover:shadow-xl cursor-pointer">
+                  Get Started Free
+                </Link>
+              )}
             </div>
           </div>
 
