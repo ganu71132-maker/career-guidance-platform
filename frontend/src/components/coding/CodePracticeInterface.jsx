@@ -22,19 +22,22 @@ const CHALLENGES = {
   sql: { title: 'Select Data', description: 'Select all columns from the users table where id is 1.' }
 };
 
-export default function CodePracticeInterface({ initialLanguage = 'python' }) {
+export default function CodePracticeInterface({ initialLanguage = 'python', initialCode = null, onClose = null }) {
   const { user } = useAuth();
   const [language, setLanguage] = useState(initialLanguage);
-  const [code, setCode] = useState(STARTER_CODE[initialLanguage]);
+  const [code, setCode] = useState(initialCode || STARTER_CODE[initialLanguage]);
   const [output, setOutput] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
   const [executionTime, setExecutionTime] = useState(null);
 
   useEffect(() => {
-    setCode(STARTER_CODE[language]);
+    // Only reset code if initialCode wasn't explicitly passed for this language
+    if (!initialCode) {
+      setCode(STARTER_CODE[language]);
+    }
     setOutput(null);
     setExecutionTime(null);
-  }, [language]);
+  }, [language, initialCode]);
 
   const runCode = async () => {
     setIsRunning(true);
@@ -142,6 +145,11 @@ export default function CodePracticeInterface({ initialLanguage = 'python' }) {
         </div>
         
         <div className="flex items-center gap-2">
+          {onClose && (
+            <button onClick={onClose} className="px-3 py-1.5 mr-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 hover:text-white transition-colors text-sm font-bold border border-slate-700">
+              Close Editor
+            </button>
+          )}
           <button onClick={resetEnvironment} className="p-2 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors" title="Reset Environment">
             <RotateCcw className="h-4 w-4" />
           </button>

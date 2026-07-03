@@ -7,6 +7,7 @@ import { supabase } from '../lib/supabase';
 import NotificationBell from '../components/NotificationBell';
 import WelcomePopup from '../components/WelcomePopup';
 import FeatureHighlightPopup from '../components/FeatureHighlightPopup';
+import CodePracticeInterface from '../components/coding/CodePracticeInterface';
 
 function urlBase64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -31,6 +32,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [recentAnnouncements, setRecentAnnouncements] = useState([]);
   const [savedCodes, setSavedCodes] = useState([]);
+  const [selectedSnippet, setSelectedSnippet] = useState(null);
 
   useEffect(() => {
     if (!user) return;
@@ -619,33 +621,33 @@ export default function Dashboard() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {savedCodes.map((codeItem) => (
-                <div key={codeItem.id} className="p-4 bg-slate-900 rounded-2xl flex flex-col justify-between border border-slate-800 shadow-xl shadow-slate-900/10">
+                <div 
+                  key={codeItem.id} 
+                  onClick={() => setSelectedSnippet(codeItem)}
+                  className="p-5 bg-slate-900 rounded-2xl flex flex-col justify-between border border-slate-800 shadow-xl shadow-slate-900/10 cursor-pointer hover:border-indigo-500/50 hover:bg-slate-800 transition-all group"
+                >
                   <div>
-                    <div className="flex justify-between items-start gap-2 mb-3">
-                      <h3 className="font-bold text-slate-200 text-xs sm:text-sm line-clamp-1">{codeItem.title}</h3>
-                      <span className="bg-indigo-500/20 text-indigo-400 border border-indigo-500/20 text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shrink-0">
+                    <div className="flex justify-between items-start gap-2 mb-2">
+                      <h3 className="font-bold text-slate-200 text-sm sm:text-base line-clamp-1 group-hover:text-indigo-400 transition-colors">{codeItem.title}</h3>
+                      <span className="bg-indigo-500/20 text-indigo-400 border border-indigo-500/20 text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full shrink-0">
                         {codeItem.language}
                       </span>
                     </div>
-                    <div className="bg-[#1e1e1e] p-3 rounded-xl overflow-hidden relative">
-                      <pre className="text-[10px] text-slate-300 font-mono line-clamp-4 whitespace-pre-wrap">
-                        {codeItem.code}
-                      </pre>
-                      <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-[#1e1e1e] to-transparent pointer-events-none" />
-                    </div>
                   </div>
                   <div className="mt-4 flex items-center justify-between">
-                    <span className="text-[9px] font-medium text-slate-500">
-                      Saved {new Date(codeItem.created_at).toLocaleDateString()}
+                    <span className="text-[10px] font-medium text-slate-500 flex items-center gap-1.5">
+                      <Clock className="h-3 w-3" />
+                      {new Date(codeItem.created_at).toLocaleDateString()}
                     </span>
                     <button 
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         navigator.clipboard.writeText(codeItem.code);
                         alert('Code copied to clipboard!');
                       }}
-                      className="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-bold py-1.5 px-3 rounded-lg transition-colors cursor-pointer"
+                      className="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-bold py-1.5 px-3 rounded-lg transition-colors cursor-pointer opacity-0 group-hover:opacity-100"
                     >
-                      Copy Code
+                      Copy
                     </button>
                   </div>
                 </div>
@@ -752,6 +754,19 @@ export default function Dashboard() {
           </div>
         </div>
       </main>
+
+      {/* Full Screen Modal for Selected Snippet */}
+      {selectedSnippet && (
+        <div className="fixed inset-0 z-[100] flex flex-col bg-slate-900/80 backdrop-blur-sm p-4 sm:p-8 animate-in fade-in duration-200">
+          <div className="w-full max-w-6xl mx-auto h-full flex flex-col shadow-2xl animate-in zoom-in-95 duration-200">
+            <CodePracticeInterface 
+              initialLanguage={selectedSnippet.language} 
+              initialCode={selectedSnippet.code} 
+              onClose={() => setSelectedSnippet(null)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
