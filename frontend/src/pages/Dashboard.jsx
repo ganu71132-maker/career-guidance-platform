@@ -30,6 +30,7 @@ export default function Dashboard() {
   const { careers: careersData, loading, savedCareers, completedSteps, completionsList = [] } = useData();
   const navigate = useNavigate();
   const [recentAnnouncements, setRecentAnnouncements] = useState([]);
+  const [savedCodes, setSavedCodes] = useState([]);
 
   useEffect(() => {
     if (!user) return;
@@ -44,7 +45,22 @@ export default function Dashboard() {
         .limit(3);
       if (data) setRecentAnnouncements(data);
     }
+
+    async function fetchSavedCodes() {
+      try {
+        const { data, error } = await supabase
+          .from('saved_code')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false });
+        if (!error && data) setSavedCodes(data);
+      } catch (err) {
+        console.error('Error fetching saved codes:', err);
+      }
+    }
+
     fetchRecent();
+    fetchSavedCodes();
   }, [user]);
 
   // Redirect old users to /explorer on initial login/dashboard mount
@@ -587,6 +603,51 @@ export default function Dashboard() {
                       {ann.button_text || 'Learn More'} <ArrowRight className="h-3 w-3" />
                     </Link>
                   )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Saved Code Snippets Widget */}
+        {savedCodes.length > 0 && (
+          <div className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-100 shadow-sm mb-8 sm:mb-10 relative overflow-hidden">
+            <div className="flex justify-between items-center mb-4 pb-2 border-b border-slate-100/50">
+              <h2 className="text-base sm:text-lg font-bold text-slate-800 flex items-center gap-2">
+                <Code2 className="text-indigo-500 h-5 w-5" /> My Saved Code Snippets
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {savedCodes.map((codeItem) => (
+                <div key={codeItem.id} className="p-4 bg-slate-900 rounded-2xl flex flex-col justify-between border border-slate-800 shadow-xl shadow-slate-900/10">
+                  <div>
+                    <div className="flex justify-between items-start gap-2 mb-3">
+                      <h3 className="font-bold text-slate-200 text-xs sm:text-sm line-clamp-1">{codeItem.title}</h3>
+                      <span className="bg-indigo-500/20 text-indigo-400 border border-indigo-500/20 text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shrink-0">
+                        {codeItem.language}
+                      </span>
+                    </div>
+                    <div className="bg-[#1e1e1e] p-3 rounded-xl overflow-hidden relative">
+                      <pre className="text-[10px] text-slate-300 font-mono line-clamp-4 whitespace-pre-wrap">
+                        {codeItem.code}
+                      </pre>
+                      <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-[#1e1e1e] to-transparent pointer-events-none" />
+                    </div>
+                  </div>
+                  <div className="mt-4 flex items-center justify-between">
+                    <span className="text-[9px] font-medium text-slate-500">
+                      Saved {new Date(codeItem.created_at).toLocaleDateString()}
+                    </span>
+                    <button 
+                      onClick={() => {
+                        navigator.clipboard.writeText(codeItem.code);
+                        alert('Code copied to clipboard!');
+                      }}
+                      className="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-bold py-1.5 px-3 rounded-lg transition-colors cursor-pointer"
+                    >
+                      Copy Code
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
