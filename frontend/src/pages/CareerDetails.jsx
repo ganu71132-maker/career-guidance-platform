@@ -625,6 +625,22 @@ export default function CareerDetails() {
             </div>
           )}
 
+          {/* CODING PRACTICE SECTION */}
+          {isAuthenticated && career.requiresCoding && (
+            <section id="practice" className="pt-2 sm:pt-4">
+              <div className="flex items-center gap-3 mb-6 sm:mb-8">
+                <div className="h-10 sm:h-12 w-10 sm:w-12 bg-indigo-100 rounded-xl flex items-center justify-center shrink-0">
+                  <Code className="h-5 sm:h-6 w-5 sm:w-6 text-indigo-600" />
+                </div>
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-bold text-slate-800">Browser Coding Practice</h2>
+                  <p className="text-slate-500 text-sm">Practice algorithms, scripts, and queries directly in your browser.</p>
+                </div>
+              </div>
+              <CodePracticeInterface />
+            </section>
+          )}
+
         </div>
       </div>
 
