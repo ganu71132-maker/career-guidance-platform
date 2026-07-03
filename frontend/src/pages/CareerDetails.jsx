@@ -5,6 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { ArrowLeft, Target, Map, BookOpen, TrendingUp, IndianRupee, Briefcase, ExternalLink, CheckCircle, Circle, Compass, ChevronDown, ChevronUp, Video, BookText, FileText, Code, Lightbulb, Star, Play, Lock, Bookmark } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import CommentSection from '../components/CommentSection';
+import CodePracticeInterface from '../components/coding/CodePracticeInterface';
 
 const resourceIcons = {
   video: <Video className="h-4 w-4" />,
@@ -38,7 +39,7 @@ export default function CareerDetails() {
       if (isScrollingRef.current) return;
       
       const sections = isAuthenticated
-        ? ['overview', 'skills', 'roadmap', 'resources']
+        ? (career?.requiresCoding ? ['overview', 'skills', 'roadmap', 'resources', 'practice'] : ['overview', 'skills', 'roadmap', 'resources'])
         : ['overview'];
       const navbarHeight = 64;
       const tabsElement = document.getElementById('tabs-navigation');

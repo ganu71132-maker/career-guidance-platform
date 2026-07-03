@@ -34,6 +34,17 @@ function dbToCareer(row) {
           recommended: r.recommended,
         })),
       })),
+    requiresCoding: row.requires_coding ?? (
+      row.category?.toLowerCase().includes('tech') || 
+      row.category?.toLowerCase().includes('software') || 
+      row.category?.toLowerCase().includes('data') ||
+      row.category?.toLowerCase().includes('ai') ||
+      row.category?.toLowerCase().includes('cloud') ||
+      row.category?.toLowerCase().includes('cyber') ||
+      row.title?.toLowerCase().includes('engineer') ||
+      row.title?.toLowerCase().includes('developer') ||
+      row.title?.toLowerCase().includes('programmer')
+    )
   };
 }
 
