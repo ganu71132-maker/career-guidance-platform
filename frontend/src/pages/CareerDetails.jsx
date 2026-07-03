@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useData } from '../contexts/DataContext';
 import { useAuth } from '../contexts/AuthContext';
-import { ArrowLeft, Target, Map, BookOpen, TrendingUp, IndianRupee, Briefcase, ExternalLink, CheckCircle, Circle, Compass, ChevronDown, ChevronUp, Video, BookText, FileText, Code, Lightbulb, Star, Play, Lock, Bookmark } from 'lucide-react';
+import { ArrowLeft, Target, Map, BookOpen, TrendingUp, IndianRupee, Briefcase, ExternalLink, CheckCircle, Circle, Compass, ChevronDown, ChevronUp, Video, BookText, FileText, Star, Bookmark } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import CommentSection from '../components/CommentSection';
-import CodePracticeInterface from '../components/coding/CodePracticeInterface';
 
 const resourceIcons = {
   video: <Video className="h-4 w-4" />,
@@ -39,7 +38,7 @@ export default function CareerDetails() {
       if (isScrollingRef.current) return;
       
       const sections = isAuthenticated
-        ? (career?.requiresCoding ? ['overview', 'skills', 'roadmap', 'resources', 'practice'] : ['overview', 'skills', 'roadmap', 'resources'])
+        ? ['overview', 'skills', 'roadmap', 'resources']
         : ['overview'];
       const navbarHeight = 64;
       const tabsElement = document.getElementById('tabs-navigation');
@@ -195,10 +194,6 @@ export default function CareerDetails() {
     { id: 'resources', label: 'Resources', icon: <BookOpen className="h-4 w-4" /> },
   ];
 
-  if (career.requiresCoding) {
-    tabs.push({ id: 'practice', label: 'Coding Practice', icon: <Code className="h-4 w-4" /> });
-  }
-
   return (
     <div className="min-h-screen relative pb-20 animate-fade-in" style={{ background: '#f8fafc' }}>
       <Helmet>
@@ -304,9 +299,6 @@ export default function CareerDetails() {
               } else if (tab.id === 'resources') {
                 activeColorClass = 'bg-[#b45309] border-[#d97706] shadow-amber-600/25';
                 iconColorClass = isSelected ? 'text-white' : 'text-[#d97706]';
-              } else if (tab.id === 'practice') {
-                activeColorClass = 'bg-[#4f46e5] border-[#4338ca] shadow-indigo-600/25';
-                iconColorClass = isSelected ? 'text-white' : 'text-[#4338ca]';
               }
 
               return (
@@ -623,22 +615,6 @@ export default function CareerDetails() {
                 );
               })()}
             </div>
-          )}
-
-          {/* CODING PRACTICE SECTION */}
-          {isAuthenticated && career.requiresCoding && (
-            <section id="practice" className="pt-2 sm:pt-4">
-              <div className="flex items-center gap-3 mb-6 sm:mb-8">
-                <div className="h-10 sm:h-12 w-10 sm:w-12 bg-indigo-100 rounded-xl flex items-center justify-center shrink-0">
-                  <Code className="h-5 sm:h-6 w-5 sm:w-6 text-indigo-600" />
-                </div>
-                <div>
-                  <h2 className="text-xl sm:text-2xl font-bold text-slate-800">Browser Coding Practice</h2>
-                  <p className="text-slate-500 text-sm">Practice algorithms, scripts, and queries directly in your browser.</p>
-                </div>
-              </div>
-              <CodePracticeInterface />
-            </section>
           )}
 
         </div>

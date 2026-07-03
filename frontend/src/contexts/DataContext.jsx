@@ -33,19 +33,7 @@ function dbToCareer(row) {
           platform: r.platform,
           recommended: r.recommended,
         })),
-      })),
-    requiresCoding: (
-      row.category?.toLowerCase().includes('tech') || 
-      row.category?.toLowerCase().includes('software') || 
-      row.category?.toLowerCase().includes('data') ||
-      row.category?.toLowerCase().includes('ai') ||
-      row.category?.toLowerCase().includes('cloud') ||
-      row.category?.toLowerCase().includes('cyber') ||
-      row.title?.toLowerCase().includes('engineer') ||
-      row.title?.toLowerCase().includes('developer') ||
-      row.title?.toLowerCase().includes('programmer') ||
-      row.title?.toLowerCase().includes('scientist')
-    )
+      }))
   };
 }
 

@@ -67,6 +67,7 @@ export default function Home() {
             <a href="#how-it-works" className="hover:text-slate-800 transition-colors">How It Works</a>
             <a href="#careers" className="hover:text-slate-800 transition-colors">Careers</a>
             <Link to="/skills" className="hover:text-slate-800 transition-colors">Skills</Link>
+            <Link to="/sandbox" className="hover:text-slate-800 transition-colors">Code Sandbox</Link>
             <a href="#stats" className="hover:text-slate-800 transition-colors">Impact</a>
           </div>
           <div className="flex items-center gap-3 sm:gap-4">

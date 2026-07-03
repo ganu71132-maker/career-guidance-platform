@@ -341,6 +341,7 @@ export default function Dashboard() {
           <div className="px-4 py-3 bg-emerald-50 text-emerald-700 rounded-xl font-medium text-sm border border-emerald-100">Dashboard</div>
           <Link to="/explorer" className="block px-4 py-3 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-xl text-sm transition-all font-medium">Explore Careers</Link>
           <Link to="/skills" className="block px-4 py-3 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-xl text-sm transition-all font-medium">Skill Library</Link>
+          <Link to="/sandbox" className="block px-4 py-3 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-xl text-sm transition-all font-medium">Code Sandbox</Link>
           <Link to="/resume" className="block px-4 py-3 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-xl text-sm transition-all font-medium">Resume Builder</Link>
           <Link to="/profile" className="block px-4 py-3 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-xl text-sm transition-all font-medium">Profile</Link>
           {isAdmin && (
@@ -383,6 +384,9 @@ export default function Dashboard() {
             </Link>
             <Link to="/skills" className="flex-1 min-w-[50px] text-center text-slate-500 hover:text-slate-800 text-[10px] font-semibold py-1.5 transition-colors">
               Skills
+            </Link>
+            <Link to="/sandbox" className="flex-1 min-w-[60px] text-center text-slate-500 hover:text-slate-800 text-[10px] font-semibold py-1.5 transition-colors">
+              Sandbox
             </Link>
             <Link to="/resume" className="flex-1 min-w-[70px] text-center text-slate-500 hover:text-slate-800 text-[10px] font-semibold py-1.5 transition-colors flex items-center justify-center gap-0.5">
               Resume <span className="text-[8px]">✨</span>
