@@ -79,6 +79,7 @@ export default function InteractiveWorkspace() {
         if (stateData && stateData.current_code) {
           setCode(stateData.current_code);
         }
+      }
       if (data.learning_chapters?.course_id) {
         // Also fetch the next lesson in the course
         const { data: allLessons } = await supabase
