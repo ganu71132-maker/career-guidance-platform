@@ -1,0 +1,79 @@
+{
+  "course": {
+    "title": "Learn Python",
+    "slug": "python",
+    "language": "python",
+    "description": "Master the world's most versatile programming language."
+  },
+  "chapter": {
+    "title": "Variables & Data Types",
+    "description": "Learn how to store and manipulate different types of data in Python.",
+    "order_index": 2
+  },
+  "lessons": [
+    {
+      "title": "Variables and Assignment",
+      "objectives": [
+        "Understand what variables are",
+        "Learn how to assign values to variables",
+        "Understand Python's naming conventions"
+      ],
+      "explanation": "In programming, a variable is essentially a container for storing data values. Unlike other programming languages, Python has no command for declaring a variable. A variable is created the moment you first assign a value to it.\n\nPython variables are dynamically typed, meaning you don't need to specify what type of data the variable holds—Python figures it out automatically based on the value you assign.",
+      "analogy": "Think of a variable as a labeled box. You can put things into the box (assignment) and whenever you read the label on the box, you are actually referring to whatever is inside it.",
+      "syntax": "variable_name = value\n\nage = 25\nname = \"Alice\"",
+      "common_mistakes": [
+        "Starting a variable name with a number: `1st_place = \"John\"` (This causes a SyntaxError).",
+        "Using spaces in variable names: `my name = \"Alice\"` (Use underscores instead: `my_name = \"Alice\"`)."
+      ],
+      "best_practices": [
+        "Use snake_case for variable names (all lowercase, words separated by underscores).",
+        "Use descriptive names. `age = 25` is much better than `x = 25`."
+      ],
+      "summary": "You've learned that variables are used to store data, and they are created the moment you assign a value using the `=` operator.",
+      "order_index": 1,
+      "version": "1.0",
+      "tags": ["python", "variables", "basics"],
+      "estimated_time": 10,
+      "difficulty": "beginner",
+      "careers": ["Data Science", "Backend Developer", "AI Engineer"],
+      "exercises": [
+        {
+          "statement": "Create a variable named `favorite_color` and assign the string `\"blue\"` to it. Then, print the variable.",
+          "starter_code": "# Create your variable below\n\n\n# Print the variable\n",
+          "expected_output": "blue"
+        }
+      ]
+    },
+    {
+      "title": "Data Types: Strings & Numbers",
+      "objectives": [
+        "Learn about strings (text)",
+        "Learn about integers and floats (numbers)",
+        "Perform basic math operations"
+      ],
+      "explanation": "Data types classify what kind of data a variable holds. Python has several built-in data types, but the most common are:\n\n1. **Strings (`str`)**: Used for text. They are wrapped in single or double quotes.\n2. **Integers (`int`)**: Whole numbers, positive or negative, without decimals.\n3. **Floats (`float`)**: Numbers containing a decimal point.\n\nYou can perform math on numbers using operators like `+` (addition), `-` (subtraction), `*` (multiplication), and `/` (division).",
+      "analogy": "Data types are like physical properties of objects. You can do math with numbers just like you can measure liquids, but you can't divide a word by 2, just like you can't pour a solid brick.",
+      "syntax": "my_string = \"Hello\"\nmy_int = 10\nmy_float = 3.14\n\nsum = my_int + 5",
+      "common_mistakes": [
+        "Trying to add a string and an integer: `\"Age: \" + 25` will cause a TypeError. You must convert the number to a string first using `str()`."
+      ],
+      "best_practices": [
+        "Always be aware of what data type your variable holds, especially when taking input from users (which is always a string by default)."
+      ],
+      "summary": "Strings hold text, while integers and floats hold numeric values. Python allows you to perform standard mathematical operations on numeric data types easily.",
+      "order_index": 2,
+      "version": "1.0",
+      "tags": ["python", "data types", "strings", "numbers"],
+      "estimated_time": 15,
+      "difficulty": "beginner",
+      "careers": ["Data Science", "Backend Developer"],
+      "exercises": [
+        {
+          "statement": "Create a variable `apples` equal to 5, and `oranges` equal to 3. Add them together in a variable called `total_fruit`, and print `total_fruit`.",
+          "starter_code": "apples = 5\noranges = 3\n\n# Create total_fruit below\n\n\n# Print total_fruit\n",
+          "expected_output": "8"
+        }
+      ]
+    }
+  ]
+}

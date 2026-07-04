@@ -1,0 +1,47 @@
+{
+  "course": {
+    "title": "Learn Python",
+    "slug": "python",
+    "language": "python",
+    "description": "Master the world's most versatile programming language."
+  },
+  "chapter": {
+    "title": "Control Flow",
+    "description": "Learn how to make decisions in your code using if statements and loops.",
+    "order_index": 3
+  },
+  "lessons": [
+    {
+      "title": "If, Elif, and Else Statements",
+      "objectives": [
+        "Learn how to use if statements to control program flow",
+        "Understand boolean expressions and comparison operators",
+        "Learn to chain conditions with elif and else"
+      ],
+      "explanation": "Often, you want your code to execute only if a certain condition is true. This is where `if` statements come in.\n\nPython relies on indentation (whitespace at the beginning of a line) to define scope in the code. Other programming languages often use curly-brackets for this purpose.\n\nAn `if` statement evaluates a condition. If the condition is True, the indented block of code runs. You can also use `elif` (else if) for additional conditions, and `else` for a catch-all when no conditions are met.",
+      "analogy": "Control flow is like a fork in a road. If the weather is sunny, take the path to the beach. Else if it's raining, take the path to the museum. Else, stay home.",
+      "syntax": "if condition:\n    # do something\nelif another_condition:\n    # do something else\nelse:\n    # do this if nothing else is true",
+      "common_mistakes": [
+        "Forgetting the colon (`:`) at the end of the if statement line.",
+        "Incorrect indentation. All code inside the if block must be indented by exactly 4 spaces (or 1 tab)."
+      ],
+      "best_practices": [
+        "Keep your conditional logic as simple as possible. Deeply nested if statements are hard to read."
+      ],
+      "summary": "You can use `if`, `elif`, and `else` statements alongside comparison operators (like `==`, `>`, `<`) to make decisions in your code.",
+      "order_index": 1,
+      "version": "1.0",
+      "tags": ["python", "control flow", "conditionals"],
+      "estimated_time": 15,
+      "difficulty": "beginner",
+      "careers": ["Backend Developer", "AI Engineer"],
+      "exercises": [
+        {
+          "statement": "Write an if statement that checks if `score` is greater than or equal to 50. If it is, print 'Pass'. Otherwise, print 'Fail'.",
+          "starter_code": "score = 75\n\n# Write your if statement below\n\n",
+          "expected_output": "Pass"
+        }
+      ]
+    }
+  ]
+}
