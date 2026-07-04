@@ -40,7 +40,9 @@
         {
           "statement": "Create a variable named `favorite_color` and assign the string `\"blue\"` to it. Then, print the variable.",
           "starter_code": "# Create your variable below\n\n\n# Print the variable\n",
-          "expected_output": "blue"
+          "expected_output": "blue",
+          "hint": "First, type 'favorite_color = \"blue\"'. On the next line, type 'print(favorite_color)'.",
+          "solution": "favorite_color = \"blue\"\nprint(favorite_color)"
         }
       ]
     },
@@ -71,7 +73,9 @@
         {
           "statement": "Create a variable `apples` equal to 5, and `oranges` equal to 3. Add them together in a variable called `total_fruit`, and print `total_fruit`.",
           "starter_code": "apples = 5\noranges = 3\n\n# Create total_fruit below\n\n\n# Print total_fruit\n",
-          "expected_output": "8"
+          "expected_output": "8",
+          "hint": "Create a new variable 'total_fruit = apples + oranges'. Then print it.",
+          "solution": "apples = 5\noranges = 3\n\ntotal_fruit = apples + oranges\n\nprint(total_fruit)"
         }
       ]
     }

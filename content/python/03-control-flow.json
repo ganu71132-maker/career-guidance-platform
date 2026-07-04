@@ -39,7 +39,9 @@
         {
           "statement": "Write an if statement that checks if `score` is greater than or equal to 50. If it is, print 'Pass'. Otherwise, print 'Fail'.",
           "starter_code": "score = 75\n\n# Write your if statement below\n\n",
-          "expected_output": "Pass"
+          "expected_output": "Pass",
+          "hint": "Use 'if score >= 50:' followed by 'print(\"Pass\")', and then use 'else:' followed by 'print(\"Fail\")'.",
+          "solution": "score = 75\n\nif score >= 50:\n    print(\"Pass\")\nelse:\n    print(\"Fail\")"
         }
       ]
     }
