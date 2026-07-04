@@ -226,7 +226,7 @@ export default function InteractiveWorkspace() {
         <div className="w-2/3 flex flex-col bg-[#1e1e1e]">
           
           {/* Instructions Bar */}
-          <div className="h-auto min-h-[60px] bg-slate-950 border-b border-slate-800 p-4 shrink-0 flex items-start sm:items-center justify-between gap-4 flex-col sm:flex-row">
+          <div className="h-auto min-h-[60px] max-h-[40vh] overflow-y-auto custom-scrollbar bg-slate-950 border-b border-slate-800 p-4 shrink-0 flex items-start sm:items-center justify-between gap-4 flex-col sm:flex-row">
             {currentExercise ? (
               <div className="flex-grow">
                 <span className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1 block">Exercise</span>
