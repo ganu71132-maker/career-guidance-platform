@@ -80,17 +80,17 @@ export default function InteractiveWorkspace() {
           setCode(stateData.current_code);
         }
       }
-      if (data.learning_chapters?.course_id) {
+      if (lessonData.learning_chapters?.course_id) {
         // Also fetch the next lesson in the course
         const { data: allLessons } = await supabase
           .from('learning_lessons')
           .select('id, order_index, chapter_id, learning_chapters!inner(course_id, order_index)')
-          .eq('learning_chapters.course_id', data.learning_chapters.course_id)
+          .eq('learning_chapters.course_id', lessonData.learning_chapters.course_id)
           .order('order_index', { referencedTable: 'learning_chapters', ascending: true })
           .order('order_index', { ascending: true });
         
         if (allLessons && allLessons.length > 0) {
-          const currentIndex = allLessons.findIndex(l => l.id === data.id);
+          const currentIndex = allLessons.findIndex(l => l.id === lessonData.id);
           if (currentIndex !== -1 && currentIndex < allLessons.length - 1) {
             setNextLessonId(allLessons[currentIndex + 1].id);
           } else {
@@ -202,12 +202,15 @@ export default function InteractiveWorkspace() {
   };
 
   if (loading) return <div className="min-h-screen bg-slate-900 flex items-center justify-center"><div className="animate-spin h-10 w-10 border-4 border-blue-500 border-t-transparent rounded-full"></div></div>;
-  if (!lesson) return <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center">Lesson not found.</div>;
+  if (!lesson) {
+    return <div className="flex h-screen items-center justify-center bg-slate-900 text-slate-400">Loading lesson workspace...</div>;
+  }
 
   const currentExercise = exercises[currentExerciseIdx];
+  const language = lesson?.learning_chapters?.learning_courses?.language || 'python';
 
   return (
-    <div className="h-screen w-screen flex flex-col overflow-hidden bg-slate-900 text-slate-300 font-sans">
+    <div className="flex flex-col h-screen bg-slate-900 text-slate-200 font-sans">
       {/* Header */}
       <header className="h-14 bg-slate-950 border-b border-slate-800 flex items-center justify-between px-4 shrink-0">
         <div className="flex items-center gap-4">
