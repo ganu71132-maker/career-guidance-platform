@@ -168,7 +168,7 @@ export default function CodePracticeInterface({ initialLanguage = 'python', init
             className="ml-2 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors disabled:opacity-50"
           >
             {isRunning ? <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" /> : <Play className="h-4 w-4" />}
-            Run
+            {isRunning ? 'Running...' : `Run ${language === 'sql' ? 'Query' : 'Code'}`}
           </button>
         </div>
       </div>
