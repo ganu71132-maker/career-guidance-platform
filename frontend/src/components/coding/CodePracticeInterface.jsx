@@ -54,7 +54,7 @@ export default function CodePracticeInterface({ initialLanguage = 'python', init
         setOutput({ type: 'text', content: res });
       } else if (language === 'sql') {
         const res = await SqlRunner.run(code);
-        setOutput(res);
+        setOutput({ type: 'text', content: res });
       } else if (language === 'html/css') {
         // Handled by WebPreview
       }
