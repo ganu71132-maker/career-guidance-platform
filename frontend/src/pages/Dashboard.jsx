@@ -341,10 +341,11 @@ export default function Dashboard() {
           <div className="px-4 py-3 bg-emerald-50 text-emerald-700 rounded-xl font-medium text-sm border border-emerald-100">Dashboard</div>
           <Link to="/explorer" className="block px-4 py-3 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-xl text-sm transition-all font-medium">Explore Careers</Link>
           <Link to="/skills" className="block px-4 py-3 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-xl text-sm transition-all font-medium">Skill Library</Link>
-          <Link to="/sandbox" className="flex items-center justify-between px-4 py-3 text-indigo-600 font-bold hover:bg-indigo-50 rounded-xl text-sm transition-all border border-indigo-100 bg-indigo-50/50">
-            Code Sandbox
-            <span className="bg-indigo-600 text-white text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded-full animate-pulse">New</span>
+          <Link to="/learn" className="flex items-center justify-between px-4 py-3 text-blue-600 font-bold hover:bg-blue-50 rounded-xl text-sm transition-all border border-blue-100 bg-blue-50/50">
+            <div className="flex items-center gap-1.5"><BookOpen className="w-4 h-4" /> Learn to Code</div>
+            <span className="bg-blue-600 text-white text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded-full animate-pulse">New</span>
           </Link>
+          <Link to="/sandbox" className="block px-4 py-3 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-xl text-sm transition-all font-medium">Code Sandbox</Link>
           <Link to="/resume" className="block px-4 py-3 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-xl text-sm transition-all font-medium">Resume Builder</Link>
           <Link to="/profile" className="block px-4 py-3 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-xl text-sm transition-all font-medium">Profile</Link>
           {isAdmin && (

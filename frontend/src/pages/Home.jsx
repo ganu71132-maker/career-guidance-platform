@@ -69,9 +69,12 @@ export default function Home() {
             <a href="#how-it-works" className="hover:text-slate-800 transition-colors">How It Works</a>
             <a href="#careers" className="hover:text-slate-800 transition-colors">Careers</a>
             <Link to="/skills" className="hover:text-slate-800 transition-colors">Skills</Link>
+            <Link to="/learn" className="flex items-center gap-1.5 text-blue-600 font-bold hover:text-blue-700 hover:bg-blue-50 px-3 py-1.5 rounded-full transition-all border border-transparent hover:border-blue-100">
+              <BookOpen className="w-4 h-4" /> Learn to Code
+              <span className="bg-blue-600 text-white text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded-full animate-pulse">New</span>
+            </Link>
             <Link to="/sandbox" className="flex items-center gap-1.5 text-indigo-600 font-bold hover:text-indigo-700 hover:bg-indigo-50 px-3 py-1.5 rounded-full transition-all border border-transparent hover:border-indigo-100">
               Code Sandbox
-              <span className="bg-indigo-600 text-white text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded-full animate-pulse">New</span>
             </Link>
             <a href="#stats" className="hover:text-slate-800 transition-colors">Impact</a>
           </div>
