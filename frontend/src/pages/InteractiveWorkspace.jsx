@@ -33,7 +33,9 @@ export default function InteractiveWorkspace() {
         .from('learning_lessons')
         .select(`
           *,
-          learning_courses!inner(slug, language),
+          learning_chapters!inner(
+            learning_courses!inner(slug, language)
+          ),
           learning_lesson_careers(
             careers(title)
           )
@@ -159,7 +161,7 @@ export default function InteractiveWorkspace() {
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <div className="flex items-center gap-2 text-sm font-semibold">
-            <span className="text-slate-500">{lesson.learning_courses?.language || 'Python'}</span>
+            <span className="text-slate-500">{lesson.learning_chapters?.learning_courses?.language || 'Python'}</span>
             <ChevronRight className="w-4 h-4 text-slate-600" />
             <span className="text-white">{lesson.title}</span>
           </div>
@@ -244,7 +246,7 @@ export default function InteractiveWorkspace() {
           {/* Monaco Editor */}
           <div className="flex-grow relative">
             <CodeEditor 
-              language={lesson.learning_courses?.language || 'python'} 
+              language={lesson.learning_chapters?.learning_courses?.language || 'python'} 
               value={code} 
               onChange={setCode} 
             />
