@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { ArrowLeft, Play, Check, X, RefreshCcw, Sparkles, BookOpen, ChevronRight, Bookmark } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Play, Check, X, RefreshCcw, Sparkles, BookOpen, ChevronRight, Bookmark } from 'lucide-react';
 import CodeEditor from '../components/coding/CodeEditor';
 import { PythonRunner } from '../components/coding/runners/PythonRunner';
 import { useAuth } from '../contexts/AuthContext';
@@ -23,6 +23,8 @@ export default function InteractiveWorkspace() {
   
   const [showHint, setShowHint] = useState(false);
   const [showSolution, setShowSolution] = useState(false);
+
+  const [nextLessonId, setNextLessonId] = useState(null);
 
   useEffect(() => {
     fetchLesson();
@@ -74,6 +76,23 @@ export default function InteractiveWorkspace() {
         
         if (stateData && stateData.current_code) {
           setCode(stateData.current_code);
+        }
+      if (data.learning_chapters?.course_id) {
+        // Also fetch the next lesson in the course
+        const { data: allLessons } = await supabase
+          .from('learning_lessons')
+          .select('id, order_index, chapter_id, learning_chapters!inner(course_id, order_index)')
+          .eq('learning_chapters.course_id', data.learning_chapters.course_id)
+          .order('order_index', { referencedTable: 'learning_chapters', ascending: true })
+          .order('order_index', { ascending: true });
+        
+        if (allLessons && allLessons.length > 0) {
+          const currentIndex = allLessons.findIndex(l => l.id === data.id);
+          if (currentIndex !== -1 && currentIndex < allLessons.length - 1) {
+            setNextLessonId(allLessons[currentIndex + 1].id);
+          } else {
+            setNextLessonId(null);
+          }
         }
       }
 
@@ -290,9 +309,26 @@ export default function InteractiveWorkspace() {
             <div className="flex items-center justify-between px-4 py-2 border-b border-slate-800 bg-slate-900/50">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Console</span>
               {passed && (
-                <span className="flex items-center gap-1 text-xs font-bold text-emerald-400 bg-emerald-900/20 px-3 py-1 rounded-full">
-                  <Check className="w-3.5 h-3.5" /> Passed! +20 XP
-                </span>
+                <div className="flex items-center gap-3">
+                  <span className="flex items-center gap-1 text-xs font-bold text-emerald-400 bg-emerald-900/20 px-3 py-1 rounded-full animate-pulse">
+                    <Check className="w-3.5 h-3.5" /> Passed! +20 XP
+                  </span>
+                  {nextLessonId ? (
+                    <button 
+                      onClick={() => navigate(`/learn/${lesson?.learning_chapters?.learning_courses?.slug}/${nextLessonId}`)}
+                      className="flex items-center gap-1.5 text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg transition-colors shadow-lg shadow-emerald-900/20"
+                    >
+                      Next Lesson <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  ) : (
+                    <button 
+                      onClick={() => navigate(`/learn/${lesson?.learning_chapters?.learning_courses?.slug}`)}
+                      className="flex items-center gap-1.5 text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-lg transition-colors shadow-lg shadow-blue-900/20"
+                    >
+                      Back to Syllabus <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
               )}
             </div>
             <div className="flex-grow p-4 overflow-y-auto font-mono text-sm custom-scrollbar">
