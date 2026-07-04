@@ -1,0 +1,78 @@
+{
+  "course": {
+    "title": "Learn Python",
+    "slug": "python",
+    "language": "python",
+    "description": "Master Python from scratch with hands-on interactive coding lessons. From variables to machine learning."
+  },
+  "chapter": {
+    "title": "1. Introduction to Python",
+    "description": "Welcome to Python! Learn what Python is, why it's popular, and write your first program.",
+    "order_index": 1
+  },
+  "lessons": [
+    {
+      "title": "Hello, World!",
+      "objectives": [
+        "Understand what Python is and why it's used",
+        "Write your first Python program",
+        "Learn how to use the print() function"
+      ],
+      "explanation": "Welcome to Python! Python is a high-level, incredibly popular programming language known for being easy to read and write. \n\nEvery programmer's journey begins with the classic 'Hello, World!' program. To display text on the screen in Python, we use the built-in `print()` function. Functions are like commands that perform specific tasks. The `print()` function simply takes whatever you put inside its parentheses and displays it in the terminal.",
+      "analogy": "Think of the `print()` function like a megaphone. Whatever message you put into it is shouted out loudly for everyone (or the terminal) to hear.",
+      "syntax": "print(\"Your message here\")",
+      "common_mistakes": [
+        "Forgetting the parentheses: `print 'Hello'` (This worked in Python 2, but causes a SyntaxError in Python 3).",
+        "Forgetting the quotes: `print(Hello)` will cause a NameError because Python thinks Hello is a variable.",
+        "Mismatched quotes: `print(\"Hello')` (You must start and end with the same type of quote)."
+      ],
+      "best_practices": [
+        "You can use either single quotes ('Hello') or double quotes (\"Hello\"). Pick one and stick with it for consistency in your codebase."
+      ],
+      "summary": "You've written your first line of Python! You learned that the `print()` function is the standard way to output text to the console, which is crucial for debugging and communicating with the user.",
+      "order_index": 1,
+      "estimated_time": 5,
+      "difficulty": "beginner",
+      "tags": ["python", "basics", "beginner", "print"],
+      "careers": ["Data Science", "Backend Development", "AI Engineering"],
+      "examples": [
+        {
+          "title": "Printing a String",
+          "code": "print(\"Hello, World!\")\nprint('Python is awesome!')",
+          "explanation": "Here we output two separate lines of text. Notice how we can use both double and single quotes."
+        },
+        {
+          "title": "Printing Numbers",
+          "code": "print(42)\nprint(3.14)",
+          "explanation": "You can also print numbers directly without quotes!"
+        }
+      ],
+      "exercises": [
+        {
+          "statement": "Write a Python program that prints exactly: I am ready to learn Python!",
+          "difficulty": "beginner",
+          "starter_code": "# Write your code below this line\n",
+          "expected_output": "I am ready to learn Python!\n",
+          "hint": "Use the print() function and don't forget to wrap the sentence in quotation marks.",
+          "solution": "print(\"I am ready to learn Python!\")"
+        }
+      ],
+      "resources": [
+        {
+          "title": "Official Python Documentation: print()",
+          "url": "https://docs.python.org/3/library/functions.html#print",
+          "type": "documentation",
+          "platform": "Python.org",
+          "rating": 5
+        },
+        {
+          "title": "Python for Beginners",
+          "url": "https://www.youtube.com/watch?v=kqtD5dpn9C8",
+          "type": "video",
+          "platform": "YouTube",
+          "rating": 4
+        }
+      ]
+    }
+  ]
+}

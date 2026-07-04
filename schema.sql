@@ -155,3 +155,239 @@ CREATE POLICY "Admins can manage announcements" ON announcements
 -- Policies for User Announcements
 CREATE POLICY "Users can manage their own announcement reads" ON user_announcements 
   FOR ALL USING (auth.uid() = user_id);
+
+-- ==========================================
+-- INTERACTIVE LEARNING PLATFORM SCHEMA
+-- ==========================================
+
+-- 1. Courses
+CREATE TABLE learning_courses (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  title TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  language TEXT NOT NULL,
+  description TEXT,
+  order_index INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 2. Chapters
+CREATE TABLE learning_chapters (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  course_id UUID REFERENCES learning_courses(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  description TEXT,
+  order_index INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 3. Lessons
+CREATE TABLE learning_lessons (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  chapter_id UUID REFERENCES learning_chapters(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  objectives TEXT[],
+  explanation TEXT,
+  analogy TEXT,
+  syntax TEXT,
+  common_mistakes TEXT[],
+  best_practices TEXT[],
+  summary TEXT,
+  order_index INTEGER DEFAULT 0,
+  version TEXT DEFAULT '1.0',
+  tags TEXT[] DEFAULT '{}',
+  estimated_time INTEGER DEFAULT 10,
+  difficulty TEXT CHECK (difficulty IN ('beginner', 'intermediate', 'advanced')),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 4. Lesson to Career Mapping
+CREATE TABLE learning_lesson_careers (
+  lesson_id UUID REFERENCES learning_lessons(id) ON DELETE CASCADE,
+  career_id UUID REFERENCES careers(id) ON DELETE CASCADE,
+  PRIMARY KEY (lesson_id, career_id)
+);
+
+-- 5. Lesson Prerequisites
+CREATE TABLE learning_lesson_prerequisites (
+  lesson_id UUID REFERENCES learning_lessons(id) ON DELETE CASCADE,
+  required_lesson_id UUID REFERENCES learning_lessons(id) ON DELETE CASCADE,
+  PRIMARY KEY (lesson_id, required_lesson_id)
+);
+
+-- 6. Interactive Content: Examples
+CREATE TABLE learning_examples (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  lesson_id UUID REFERENCES learning_lessons(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  code TEXT NOT NULL,
+  explanation TEXT
+);
+
+-- 7. Interactive Content: Exercises
+CREATE TABLE learning_exercises (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  lesson_id UUID REFERENCES learning_lessons(id) ON DELETE CASCADE,
+  statement TEXT NOT NULL,
+  difficulty TEXT CHECK (difficulty IN ('beginner', 'intermediate', 'advanced')),
+  starter_code TEXT,
+  expected_output TEXT NOT NULL,
+  hint TEXT,
+  solution TEXT NOT NULL
+);
+
+-- 8. Quizzes
+CREATE TABLE learning_quizzes (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  chapter_id UUID REFERENCES learning_chapters(id) ON DELETE CASCADE,
+  question TEXT NOT NULL,
+  options_json JSONB NOT NULL,
+  correct_index INTEGER NOT NULL,
+  explanation TEXT,
+  difficulty TEXT CHECK (difficulty IN ('beginner', 'intermediate', 'advanced'))
+);
+
+-- 9. Projects
+CREATE TABLE learning_projects (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  chapter_id UUID REFERENCES learning_chapters(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  starter_code TEXT,
+  solution TEXT,
+  difficulty TEXT CHECK (difficulty IN ('beginner', 'intermediate', 'advanced'))
+);
+
+-- 10. Resources
+CREATE TABLE learning_resources (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  lesson_id UUID REFERENCES learning_lessons(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  url TEXT NOT NULL,
+  type TEXT,
+  platform TEXT,
+  rating INTEGER CHECK (rating >= 1 AND rating <= 5)
+);
+
+-- 11. User Progress
+CREATE TABLE learning_progress (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  entity_id UUID NOT NULL,
+  entity_type TEXT CHECK (entity_type IN ('lesson', 'quiz', 'project')),
+  completed_at TIMESTAMPTZ DEFAULT NOW(),
+  xp_earned INTEGER DEFAULT 0,
+  UNIQUE(user_id, entity_id, entity_type)
+);
+
+-- 12. Editor State (Auto-save)
+CREATE TABLE learning_editor_state (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  lesson_id UUID REFERENCES learning_lessons(id) ON DELETE CASCADE,
+  current_code TEXT NOT NULL,
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(user_id, lesson_id)
+);
+
+-- 13. Bookmarks
+CREATE TABLE learning_bookmarks (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  lesson_id UUID REFERENCES learning_lessons(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(user_id, lesson_id)
+);
+
+-- 14. Notes
+CREATE TABLE learning_notes (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  lesson_id UUID REFERENCES learning_lessons(id) ON DELETE CASCADE,
+  note_content TEXT NOT NULL,
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(user_id, lesson_id)
+);
+
+-- 15. Gamification (XP & Streaks)
+CREATE TABLE user_gamification (
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE PRIMARY KEY,
+  total_xp INTEGER DEFAULT 0,
+  current_streak INTEGER DEFAULT 0,
+  longest_streak INTEGER DEFAULT 0,
+  last_active_date DATE
+);
+
+-- 16. AI Future-Proofing Tables
+CREATE TABLE learning_ai_explanations (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  lesson_id UUID REFERENCES learning_lessons(id) ON DELETE CASCADE,
+  code_snippet TEXT NOT NULL,
+  explanation_provided TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE learning_ai_sessions (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  context JSONB,
+  started_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE learning_hint_history (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  exercise_id UUID REFERENCES learning_exercises(id) ON DELETE CASCADE,
+  hint_requested_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ==========================================
+-- ENABLE RLS FOR ALL LEARNING TABLES
+-- ==========================================
+ALTER TABLE learning_courses ENABLE ROW LEVEL SECURITY;
+ALTER TABLE learning_chapters ENABLE ROW LEVEL SECURITY;
+ALTER TABLE learning_lessons ENABLE ROW LEVEL SECURITY;
+ALTER TABLE learning_lesson_careers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE learning_lesson_prerequisites ENABLE ROW LEVEL SECURITY;
+ALTER TABLE learning_examples ENABLE ROW LEVEL SECURITY;
+ALTER TABLE learning_exercises ENABLE ROW LEVEL SECURITY;
+ALTER TABLE learning_quizzes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE learning_projects ENABLE ROW LEVEL SECURITY;
+ALTER TABLE learning_resources ENABLE ROW LEVEL SECURITY;
+ALTER TABLE learning_progress ENABLE ROW LEVEL SECURITY;
+ALTER TABLE learning_editor_state ENABLE ROW LEVEL SECURITY;
+ALTER TABLE learning_bookmarks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE learning_notes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_gamification ENABLE ROW LEVEL SECURITY;
+ALTER TABLE learning_ai_explanations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE learning_ai_sessions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE learning_hint_history ENABLE ROW LEVEL SECURITY;
+
+-- Base Policies (Public Read)
+CREATE POLICY "Public read access" ON learning_courses FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON learning_chapters FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON learning_lessons FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON learning_lesson_careers FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON learning_lesson_prerequisites FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON learning_examples FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON learning_exercises FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON learning_quizzes FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON learning_projects FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON learning_resources FOR SELECT USING (true);
+
+-- User-specific Policies (Users can only manage their own data)
+CREATE POLICY "Users can manage their progress" ON learning_progress FOR ALL USING (auth.uid() = user_id);
+CREATE POLICY "Users can manage their editor state" ON learning_editor_state FOR ALL USING (auth.uid() = user_id);
+CREATE POLICY "Users can manage their bookmarks" ON learning_bookmarks FOR ALL USING (auth.uid() = user_id);
+CREATE POLICY "Users can manage their notes" ON learning_notes FOR ALL USING (auth.uid() = user_id);
+CREATE POLICY "Users can view their gamification" ON user_gamification FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "System can manage user gamification" ON user_gamification FOR ALL USING (true); -- Requires secure RPCs in production
+
+-- Admin Policies for Content Management
+-- Assuming role IN ('admin', 'super admin', 'superadmin')
+-- Note: A secure production system would duplicate these for every content table, 
+-- but since this is seed-driven initially, we keep it simple.

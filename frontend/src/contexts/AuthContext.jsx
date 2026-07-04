@@ -62,10 +62,10 @@ export function AuthProvider({ children }) {
   const value = {
     signUp: (data) => supabase.auth.signUp(data),
     signIn: (data) => supabase.auth.signInWithPassword(data),
-    signInWithGoogle: () => supabase.auth.signInWithOAuth({
+    signInWithGoogle: (customRedirect) => supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/dashboard`
+        redirectTo: customRedirect || `${window.location.origin}/dashboard`
       }
     }),
     signOut: () => {

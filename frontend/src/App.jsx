@@ -17,6 +17,11 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import AboutUs from './pages/AboutUs';
 
+// Learn Pages
+import LearnCatalog from './pages/LearnCatalog';
+import LearnCourseOverview from './pages/LearnCourseOverview';
+import InteractiveWorkspace from './pages/InteractiveWorkspace';
+
 // Protected User Pages
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
@@ -58,6 +63,11 @@ function App() {
             <Route path="/about" element={<AboutUs />} />
             <Route path="/skills" element={<SkillExplorer />} />
             <Route path="/skill/:name" element={<SkillDetails />} />
+            
+            {/* Learn Routes */}
+            <Route path="/learn" element={<LearnCatalog />} />
+            <Route path="/learn/:courseSlug" element={<LearnCourseOverview />} />
+            <Route path="/learn/:courseSlug/:lessonId" element={<ProtectedRoute><InteractiveWorkspace /></ProtectedRoute>} />
 
             {/* Protected User Routes */}
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />

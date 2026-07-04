@@ -19,7 +19,8 @@ export default function Login() {
     try {
       setError('');
       setLoading(true);
-      const { error } = await signInWithGoogle();
+      const redirectUrl = from ? `${window.location.origin}${from}` : `${window.location.origin}/dashboard`;
+      const { error } = await signInWithGoogle(redirectUrl);
       if (error) throw error;
     } catch (err) {
       setError(err.message);
