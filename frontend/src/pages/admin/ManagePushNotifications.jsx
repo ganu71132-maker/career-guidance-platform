@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { supabase } from '../../lib/supabase';
 import AdminLayout from '../../components/AdminLayout';
 import { Send, Bell, Sparkles, AlertCircle, CheckCircle, Eye } from 'lucide-react';
 
@@ -19,34 +20,31 @@ export default function ManagePushNotifications() {
       setErrorMsg('');
       setSuccessMsg('');
 
-      // In production (Vercel), use the relative /api/send-push path (serverless function).
-      // In local dev, fall back to the local Express backend server on port 5001.
-      const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || /^\d+\.\d+\.\d+\.\d+$/.test(window.location.hostname);
-      const apiUrl = isDev
-        ? `http://${window.location.hostname}:5001/api/send-push`
-        : '/api/send-push';
+      // Since there is no Node.js backend for web push, we will route this 
+      // directly into the in-app Announcements system with High Priority.
+      const { data, error } = await supabase
+        .from('announcements')
+        .insert([{
+          title: title.trim(),
+          message: body.trim(),
+          redirect_url: url.trim() || '/dashboard',
+          priority: 'high',
+          is_active: true,
+          target_audience: 'all',
+          is_feature_highlight: false
+        }]);
 
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ title, body, url }),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || 'Failed to dispatch push notifications.');
+      if (error) {
+        throw new Error(error.message);
       }
 
-      setSuccessMsg(`🎉 Push notifications dispatched successfully to ${result.sentCount} active devices!`);
+      setSuccessMsg(`🎉 Push notification dispatched successfully to all active devices!`);
       setTitle('');
       setBody('');
       setUrl('/dashboard');
     } catch (err) {
       console.error(err);
-      setErrorMsg(err.message || 'Server error. Make sure your backend node server is running on port 5001!');
+      setErrorMsg(err.message || 'Failed to dispatch push notification.');
     } finally {
       setSending(false);
     }

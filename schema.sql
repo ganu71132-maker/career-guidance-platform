@@ -115,3 +115,43 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
+
+-- ANNOUNCEMENTS TABLE
+CREATE TABLE announcements (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  title TEXT NOT NULL,
+  message TEXT NOT NULL,
+  button_text TEXT,
+  redirect_url TEXT,
+  priority TEXT DEFAULT 'medium',
+  is_active BOOLEAN DEFAULT true,
+  is_feature_highlight BOOLEAN DEFAULT false,
+  target_audience TEXT DEFAULT 'all',
+  expires_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  views_count INTEGER DEFAULT 0,
+  clicks_count INTEGER DEFAULT 0
+);
+
+-- USER ANNOUNCEMENTS TABLE (For tracking reads)
+CREATE TABLE user_announcements (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  announcement_id UUID REFERENCES announcements(id) ON DELETE CASCADE,
+  is_read BOOLEAN DEFAULT true,
+  read_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(user_id, announcement_id)
+);
+
+-- Enable RLS
+ALTER TABLE announcements ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_announcements ENABLE ROW LEVEL SECURITY;
+
+-- Policies for Announcements
+CREATE POLICY "Anyone can view announcements" ON announcements FOR SELECT USING (true);
+CREATE POLICY "Admins can manage announcements" ON announcements 
+  USING (EXISTS (SELECT 1 FROM users WHERE id = auth.uid() AND role = 'admin'));
+
+-- Policies for User Announcements
+CREATE POLICY "Users can manage their own announcement reads" ON user_announcements 
+  FOR ALL USING (auth.uid() = user_id);
