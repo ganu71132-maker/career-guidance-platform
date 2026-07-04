@@ -1,0 +1,48 @@
+{
+  "course": {
+    "title": "JavaScript Basics",
+    "slug": "javascript",
+    "language": "javascript",
+    "description": "Learn the programming language of the web."
+  },
+  "chapter": {
+    "title": "Getting Started with JS",
+    "description": "Introduction to JavaScript syntax and console logging.",
+    "order_index": 1
+  },
+  "lessons": [
+    {
+      "title": "Hello, Console!",
+      "objectives": [
+        "Learn what JavaScript is",
+        "Print text to the console"
+      ],
+      "explanation": "JavaScript is the programming language that powers the interactive elements on websites. \n\nTo see what your code is doing, you can print messages to the console using `console.log()`.",
+      "analogy": "If HTML is the skeleton and CSS is the skin, JavaScript is the muscle that makes everything move.",
+      "syntax": "console.log(\"Hello, World!\");",
+      "common_mistakes": [
+        "Forgetting quotes around text.",
+        "Typing `Console.log` with a capital C."
+      ],
+      "best_practices": [
+        "End your statements with a semicolon (`;`), although modern JavaScript can often figure it out without them."
+      ],
+      "summary": "You can print output using `console.log()`.",
+      "order_index": 1,
+      "version": "1.0",
+      "tags": ["javascript", "basics"],
+      "estimated_time": 5,
+      "difficulty": "beginner",
+      "careers": ["Frontend Developer", "Full Stack Developer"],
+      "exercises": [
+        {
+          "statement": "Write a JavaScript command to print 'I love JS!' to the console.",
+          "starter_code": "// Write your code below\n",
+          "expected_output": "I love JS!",
+          "hint": "Use console.log(\"I love JS!\");",
+          "solution": "console.log(\"I love JS!\");"
+        }
+      ]
+    }
+  ]
+}

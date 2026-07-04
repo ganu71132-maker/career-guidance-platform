@@ -1,0 +1,47 @@
+{
+  "course": {
+    "title": "HTML & CSS",
+    "slug": "html-css",
+    "language": "html",
+    "description": "Learn to build and style beautiful websites."
+  },
+  "chapter": {
+    "title": "HTML Basics",
+    "description": "Introduction to the structure of the web.",
+    "order_index": 1
+  },
+  "lessons": [
+    {
+      "title": "Your First Webpage",
+      "objectives": [
+        "Understand HTML tags",
+        "Create headings and paragraphs"
+      ],
+      "explanation": "HTML stands for HyperText Markup Language. It is the standard markup language for creating Web pages.\n\nHTML elements are the building blocks of HTML pages, represented by tags. Tags normally come in pairs like `<p>` and `</p>`.",
+      "analogy": "HTML is the skeleton of your web page. It defines where the head, body, and limbs go.",
+      "syntax": "<h1>This is a heading</h1>\n<p>This is a paragraph.</p>",
+      "common_mistakes": [
+        "Forgetting to close a tag (e.g., using `<h1>Heading` without the closing `</h1>`)."
+      ],
+      "best_practices": [
+        "Always use proper nesting of tags."
+      ],
+      "summary": "You build webpages using HTML tags like `<h1>` and `<p>`.",
+      "order_index": 1,
+      "version": "1.0",
+      "tags": ["html", "css", "web"],
+      "estimated_time": 5,
+      "difficulty": "beginner",
+      "careers": ["Frontend Developer", "Web Designer", "Full Stack Developer"],
+      "exercises": [
+        {
+          "statement": "Write an `<h1>` tag that says 'Hello World'.",
+          "starter_code": "<!-- Write your HTML below -->\n",
+          "expected_output": "<h1>Hello World</h1>",
+          "hint": "Type <h1>Hello World</h1>",
+          "solution": "<h1>Hello World</h1>"
+        }
+      ]
+    }
+  ]
+}

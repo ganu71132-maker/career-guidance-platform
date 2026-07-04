@@ -1,37 +1,44 @@
-export class JavaScriptRunner {
+export class JavascriptRunner {
   static async run(code) {
     return new Promise((resolve) => {
       let output = [];
+      
+      // Override console.log
       const originalConsoleLog = console.log;
       const originalConsoleError = console.error;
       const originalConsoleWarn = console.warn;
-      const originalConsoleInfo = console.info;
-
-      const captureLog = (...args) => {
-        const msg = args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' ');
-        output.push(msg);
+      
+      console.log = (...args) => {
+        output.push(args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' '));
+      };
+      
+      console.error = (...args) => {
+        output.push('Error: ' + args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' '));
+      };
+      
+      console.warn = (...args) => {
+        output.push('Warn: ' + args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' '));
       };
 
-      console.log = captureLog;
-      console.error = captureLog;
-      console.warn = captureLog;
-      console.info = captureLog;
-
       try {
-        // Execute the code using a new Function to provide basic scoping
-        const executor = new Function(code);
-        executor();
+        // Use a function constructor to run the code in a slightly isolated scope
+        const runCode = new Function(code);
+        const result = runCode();
+        
+        // If there's a return value and nothing was logged, output the return value
+        if (result !== undefined && output.length === 0) {
+          output.push(typeof result === 'object' ? JSON.stringify(result) : String(result));
+        }
       } catch (error) {
-        output.push(`Error: ${error.message}`);
+        output.push(`Runtime Error:\n${error.message}`);
       } finally {
         // Restore console
         console.log = originalConsoleLog;
         console.error = originalConsoleError;
         console.warn = originalConsoleWarn;
-        console.info = originalConsoleInfo;
-        
-        resolve(output.join('\n'));
       }
+      
+      resolve(output.join('\n') || "Code executed successfully (no output).");
     });
   }
 }

@@ -4,6 +4,8 @@ import { supabase } from '../lib/supabase';
 import { ArrowLeft, ArrowRight, Play, Check, X, RefreshCcw, Sparkles, BookOpen, ChevronRight, Bookmark } from 'lucide-react';
 import CodeEditor from '../components/coding/CodeEditor';
 import { PythonRunner } from '../components/coding/runners/PythonRunner';
+import { JavascriptRunner } from '../components/coding/runners/JavascriptRunner';
+import { SqlRunner } from '../components/coding/runners/SqlRunner';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function InteractiveWorkspace() {
@@ -109,18 +111,41 @@ export default function InteractiveWorkspace() {
     setPassed(false);
     
     try {
-      const res = await PythonRunner.run(code);
-      setOutput({ type: 'text', content: res });
+      const language = lesson?.learning_chapters?.learning_courses?.language || 'python';
+      let res;
+      
+      if (language === 'html' || language === 'css') {
+        // HTML/CSS doesn't run through a typical runner, we just set the output type to html
+        res = code;
+        setOutput({ type: 'html', content: res });
+      } else {
+        if (language === 'javascript' || language === 'js') {
+          res = await JavascriptRunner.run(code);
+        } else if (language === 'sql') {
+          res = await SqlRunner.run(code);
+        } else {
+          res = await PythonRunner.run(code);
+        }
+        setOutput({ type: 'text', content: res });
+      }
 
       // Verify if there is an active exercise
       const currentExercise = exercises[currentExerciseIdx];
       if (currentExercise && currentExercise.expected_output) {
-        const actual = res.trim();
         const expected = currentExercise.expected_output.trim();
         
-        if (actual === expected || actual.includes(expected)) {
-          setPassed(true);
-          handleMarkComplete();
+        if (language === 'html' || language === 'css') {
+           // For HTML, a simple includes check on the code itself (since execution output is visual)
+           if (code.toLowerCase().includes(expected.toLowerCase())) {
+             setPassed(true);
+             handleMarkComplete();
+           }
+        } else {
+           const actual = res.trim();
+           if (actual === expected || actual.includes(expected)) {
+             setPassed(true);
+             handleMarkComplete();
+           }
         }
       }
     } catch (err) {
@@ -331,13 +356,21 @@ export default function InteractiveWorkspace() {
                 </div>
               )}
             </div>
-            <div className="flex-grow p-4 overflow-y-auto font-mono text-sm custom-scrollbar">
+            <div className="flex-grow p-4 overflow-y-auto font-mono text-sm custom-scrollbar relative">
               {!output && <span className="text-slate-600 italic">Output will appear here...</span>}
               {output && output.type === 'error' && <span className="text-red-400 whitespace-pre-wrap">{output.content}</span>}
               {output && output.type === 'text' && (
                 <span className={`whitespace-pre-wrap ${output.content.includes('Error') ? 'text-red-400' : 'text-slate-300'}`}>
                   {output.content}
                 </span>
+              )}
+              {output && output.type === 'html' && (
+                <iframe 
+                  title="HTML Preview"
+                  sandbox="allow-scripts"
+                  srcDoc={output.content}
+                  className="w-full h-full bg-white border-0 rounded-md"
+                />
               )}
             </div>
           </div>

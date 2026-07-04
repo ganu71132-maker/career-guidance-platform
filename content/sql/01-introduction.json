@@ -1,0 +1,47 @@
+{
+  "course": {
+    "title": "SQL Databases",
+    "slug": "sql",
+    "language": "sql",
+    "description": "Learn to store, query, and manipulate data."
+  },
+  "chapter": {
+    "title": "Basic Queries",
+    "description": "Introduction to querying databases with SELECT.",
+    "order_index": 1
+  },
+  "lessons": [
+    {
+      "title": "Selecting Data",
+      "objectives": [
+        "Understand tables and rows",
+        "Use the SELECT statement"
+      ],
+      "explanation": "SQL (Structured Query Language) is used to communicate with databases.\n\nData in a relational database is stored in **Tables**, which consist of rows and columns. To retrieve data, you use the `SELECT` statement.\n\nNote: For this interactive sandbox, we will create a temporary table for you in the starter code, so you have data to query!",
+      "analogy": "A database table is just like a spreadsheet. `SELECT` is how you ask the spreadsheet to show you specific columns.",
+      "syntax": "SELECT column_name FROM table_name;",
+      "common_mistakes": [
+        "Forgetting the semicolon at the end of the query."
+      ],
+      "best_practices": [
+        "Capitalize SQL keywords (like SELECT, FROM) to make your queries easier to read."
+      ],
+      "summary": "Use SELECT to retrieve data from a table.",
+      "order_index": 1,
+      "version": "1.0",
+      "tags": ["sql", "databases", "basics"],
+      "estimated_time": 5,
+      "difficulty": "beginner",
+      "careers": ["Data Analyst", "Backend Developer", "Data Scientist"],
+      "exercises": [
+        {
+          "statement": "Write a query to SELECT all columns (*) from the 'users' table.",
+          "starter_code": "CREATE TABLE users (id INT, name STRING);\nINSERT INTO users VALUES (1, 'Alice'), (2, 'Bob');\n\n-- Write your SELECT query below\n",
+          "expected_output": "Alice",
+          "hint": "Use SELECT * FROM users;",
+          "solution": "CREATE TABLE users (id INT, name STRING);\nINSERT INTO users VALUES (1, 'Alice'), (2, 'Bob');\n\nSELECT * FROM users;"
+        }
+      ]
+    }
+  ]
+}

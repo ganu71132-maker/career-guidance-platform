@@ -1,74 +1,48 @@
-let SQL = null;
-let db = null;
-let isLoading = false;
-let initPromise = null;
+import alasql from 'alasql';
 
 export class SqlRunner {
-  static async init() {
-    if (db) return db;
-    if (isLoading) return initPromise;
-
-    isLoading = true;
-    initPromise = new Promise(async (resolve, reject) => {
+  static async run(code) {
+    return new Promise((resolve) => {
       try {
-        if (!window.initSqlJs) {
-          await new Promise((res, rej) => {
-            const script = document.createElement('script');
-            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js';
-            script.onload = res;
-            script.onerror = () => rej(new Error('Failed to load SQL.js'));
-            document.head.appendChild(script);
-          });
-        }
-
-        SQL = await window.initSqlJs({
-          locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}`
-        });
+        // Reset the alasql database instance before each run to ensure a clean slate
+        alasql('DROP DATABASE IF EXISTS testdb; CREATE DATABASE testdb; USE testdb;');
         
-        db = new SQL.Database();
-        resolve(db);
+        // Execute the user's code
+        const results = alasql(code);
+        
+        // Format the output
+        if (results === undefined || results === null || results.length === 0) {
+          resolve("Query executed successfully (no results returned).");
+        } else {
+          // Attempt to render as a table if it's an array of objects
+          if (Array.isArray(results) && results.length > 0) {
+            
+            // If alasql returns an array of arrays (multiple queries), take the last one
+            let finalResultSet = results;
+            if (Array.isArray(results[0]) || (results.length > 1 && !results[0].hasOwnProperty)) {
+               finalResultSet = results[results.length - 1];
+            }
+
+            if (Array.isArray(finalResultSet) && finalResultSet.length > 0 && typeof finalResultSet[0] === 'object') {
+              const headers = Object.keys(finalResultSet[0]);
+              let outputStr = headers.join(' | ') + '\n';
+              outputStr += headers.map(() => '---').join('-+-') + '\n';
+              
+              finalResultSet.forEach(row => {
+                outputStr += headers.map(h => row[h]).join(' | ') + '\n';
+              });
+              
+              resolve(outputStr.trim());
+            } else {
+              resolve(JSON.stringify(results, null, 2));
+            }
+          } else {
+            resolve(JSON.stringify(results, null, 2));
+          }
+        }
       } catch (error) {
-        reject(error);
-      } finally {
-        isLoading = false;
+        resolve(`SQL Error:\n${error.message}`);
       }
     });
-
-    return initPromise;
-  }
-
-  static async run(code) {
-    try {
-      const database = await this.init();
-      
-      const results = database.exec(code);
-      
-      if (results.length === 0) {
-        return { type: 'text', content: 'Command executed successfully.' };
-      }
-
-      // Format the result as an array of objects to render a table
-      const formattedResults = results.map(result => {
-        return {
-          columns: result.columns,
-          values: result.values
-        };
-      });
-
-      return { type: 'table', content: formattedResults };
-    } catch (error) {
-      return { type: 'text', content: `Error:\n${error.message}` };
-    }
-  }
-
-  static async reset() {
-    if (db) {
-      db.close();
-    }
-    db = null;
-    isLoading = false;
-    initPromise = null;
-    await this.init();
-    return { type: 'text', content: 'SQL Database has been successfully reset.' };
   }
 }
