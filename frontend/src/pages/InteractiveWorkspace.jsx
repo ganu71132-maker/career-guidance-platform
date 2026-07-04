@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase';
 import { ArrowLeft, ArrowRight, Play, Check, X, RefreshCcw, Sparkles, BookOpen, ChevronRight, Bookmark } from 'lucide-react';
 import CodeEditor from '../components/coding/CodeEditor';
 import { PythonRunner } from '../components/coding/runners/PythonRunner';
-import { JavascriptRunner } from '../components/coding/runners/JavascriptRunner';
+import { JavaScriptRunner } from '../components/coding/runners/JavaScriptRunner';
 import { SqlRunner } from '../components/coding/runners/SqlRunner';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -121,7 +121,7 @@ export default function InteractiveWorkspace() {
         setOutput({ type: 'html', content: res });
       } else {
         if (language === 'javascript' || language === 'js') {
-          res = await JavascriptRunner.run(code);
+          res = await JavaScriptRunner.run(code);
         } else if (language === 'sql') {
           res = await SqlRunner.run(code);
         } else {
