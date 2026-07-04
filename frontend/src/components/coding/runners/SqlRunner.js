@@ -17,10 +17,12 @@ export class SqlRunner {
           // Attempt to render as a table if it's an array of objects
           if (Array.isArray(results) && results.length > 0) {
             
-            // If alasql returns an array of arrays (multiple queries), take the last one
+            // Alasql returns an array of results for multiple statements. Find the final array result (like a SELECT)
             let finalResultSet = results;
-            if (Array.isArray(results[0]) || (results.length > 1 && !results[0].hasOwnProperty)) {
-               finalResultSet = results[results.length - 1];
+            const arrayResults = results.filter(r => Array.isArray(r));
+            
+            if (arrayResults.length > 0) {
+              finalResultSet = arrayResults[arrayResults.length - 1];
             }
 
             if (Array.isArray(finalResultSet) && finalResultSet.length > 0 && typeof finalResultSet[0] === 'object') {
@@ -34,7 +36,8 @@ export class SqlRunner {
               
               resolve(outputStr.trim());
             } else {
-              resolve(JSON.stringify(results, null, 2));
+              // If there's no tabular data, just indicate success
+              resolve("Query executed successfully. " + JSON.stringify(finalResultSet));
             }
           } else {
             resolve(JSON.stringify(results, null, 2));
