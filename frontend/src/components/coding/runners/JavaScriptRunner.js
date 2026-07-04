@@ -1,4 +1,4 @@
-export class JavascriptRunner {
+export class JavaScriptRunner {
   static async run(code) {
     return new Promise((resolve) => {
       let output = [];
