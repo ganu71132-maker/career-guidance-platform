@@ -20,6 +20,9 @@ export default function InteractiveWorkspace() {
   const [isRunning, setIsRunning] = useState(false);
   const [loading, setLoading] = useState(true);
   const [passed, setPassed] = useState(false);
+  
+  const [showHint, setShowHint] = useState(false);
+  const [showSolution, setShowSolution] = useState(false);
 
   useEffect(() => {
     fetchLesson();
@@ -227,7 +230,37 @@ export default function InteractiveWorkspace() {
             {currentExercise ? (
               <div className="flex-grow">
                 <span className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1 block">Exercise</span>
-                <p className="text-sm text-slate-300 m-0">{currentExercise.statement}</p>
+                <p className="text-sm text-slate-300 m-0 mb-2">{currentExercise.statement}</p>
+                <div className="flex flex-wrap gap-2">
+                  {currentExercise.hint && (
+                    <button 
+                      onClick={() => setShowHint(!showHint)}
+                      className="text-[11px] font-bold px-2.5 py-1 rounded-md border border-amber-500/30 text-amber-500 hover:bg-amber-500/10 transition-colors"
+                    >
+                      {showHint ? 'Hide Hint' : 'Show Hint'}
+                    </button>
+                  )}
+                  {currentExercise.solution && (
+                    <button 
+                      onClick={() => setShowSolution(!showSolution)}
+                      className="text-[11px] font-bold px-2.5 py-1 rounded-md border border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/10 transition-colors"
+                    >
+                      {showSolution ? 'Hide Solution' : 'Show Solution'}
+                    </button>
+                  )}
+                </div>
+                {showHint && currentExercise.hint && (
+                  <div className="mt-3 p-3 bg-amber-900/10 border border-amber-900/30 rounded-lg text-amber-200 text-sm">
+                    <span className="font-bold uppercase tracking-wider text-[10px] block mb-1">Hint</span>
+                    {currentExercise.hint}
+                  </div>
+                )}
+                {showSolution && currentExercise.solution && (
+                  <div className="mt-3 p-3 bg-emerald-900/10 border border-emerald-900/30 rounded-lg text-emerald-200 text-sm font-mono whitespace-pre-wrap">
+                    <span className="font-bold uppercase tracking-wider text-[10px] block mb-1 font-sans">Solution</span>
+                    {currentExercise.solution}
+                  </div>
+                )}
               </div>
             ) : (
               <div className="text-sm text-slate-400 italic">Sandbox mode: Write and run any Python code.</div>
