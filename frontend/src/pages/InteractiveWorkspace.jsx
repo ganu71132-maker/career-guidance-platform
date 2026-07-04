@@ -127,7 +127,12 @@ export default function InteractiveWorkspace() {
         } else {
           res = await PythonRunner.run(code);
         }
-        setOutput({ type: 'text', content: res });
+        
+        if (typeof res === 'object' && res !== null && res.type) {
+          setOutput(res);
+        } else {
+          setOutput({ type: 'text', content: res });
+        }
       }
 
       // Verify if there is an active exercise
@@ -372,6 +377,30 @@ export default function InteractiveWorkspace() {
                   srcDoc={output.content}
                   className="w-full h-full bg-white border-0 rounded-md"
                 />
+              )}
+              {output && output.type === 'table' && (
+                <div className="overflow-x-auto w-full">
+                  {output.content.map((table, i) => (
+                    <table key={i} className="min-w-full text-left border-collapse border border-slate-700 mb-4">
+                      <thead>
+                        <tr>
+                          {table.columns.map((col, j) => (
+                            <th key={j} className="border border-slate-700 px-4 py-2 bg-slate-800 text-slate-200">{col}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {table.values.map((row, j) => (
+                          <tr key={j} className="hover:bg-slate-800/50">
+                            {row.map((val, k) => (
+                              <td key={k} className="border border-slate-700 px-4 py-2 text-slate-400">{val}</td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ))}
+                </div>
               )}
             </div>
           </div>

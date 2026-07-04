@@ -12,7 +12,7 @@ export class SqlRunner {
         
         // Format the output
         if (results === undefined || results === null || results.length === 0) {
-          resolve("Query executed successfully (no results returned).");
+          resolve({ type: 'text', content: "Query executed successfully (no results returned)." });
         } else {
           // Attempt to render as a table if it's an array of objects
           if (Array.isArray(results) && results.length > 0) {
@@ -27,24 +27,25 @@ export class SqlRunner {
 
             if (Array.isArray(finalResultSet) && finalResultSet.length > 0 && typeof finalResultSet[0] === 'object') {
               const headers = Object.keys(finalResultSet[0]);
-              let outputStr = headers.join(' | ') + '\n';
-              outputStr += headers.map(() => '---').join('-+-') + '\n';
+              const rows = finalResultSet.map(row => headers.map(h => row[h]));
               
-              finalResultSet.forEach(row => {
-                outputStr += headers.map(h => row[h]).join(' | ') + '\n';
+              resolve({
+                type: 'table',
+                content: [{
+                  columns: headers,
+                  values: rows
+                }]
               });
-              
-              resolve(outputStr.trim());
             } else {
               // If there's no tabular data, just indicate success
-              resolve("Query executed successfully. " + JSON.stringify(finalResultSet));
+              resolve({ type: 'text', content: "Query executed successfully.\n" + JSON.stringify(finalResultSet) });
             }
           } else {
-            resolve(JSON.stringify(results, null, 2));
+            resolve({ type: 'text', content: JSON.stringify(results, null, 2) });
           }
         }
-      } catch (error) {
-        resolve(`SQL Error:\n${error.message}`);
+      } catch (err) {
+        resolve({ type: 'error', content: err.message });
       }
     });
   }
