@@ -147,7 +147,8 @@ export default function InteractiveWorkspace() {
              handleMarkComplete();
            }
         } else {
-           const actual = res.trim();
+           const actualText = typeof res === 'object' && res !== null && res.content ? JSON.stringify(res.content) : String(res);
+           const actual = actualText.trim();
            if (actual === expected || actual.includes(expected)) {
              setPassed(true);
              handleMarkComplete();
