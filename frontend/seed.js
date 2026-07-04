@@ -154,15 +154,16 @@ async function seed() {
         if (lessonData.exercises) {
           await supabase.from('learning_exercises').delete().eq('lesson_id', lesson.id);
           for (const ex of lessonData.exercises) {
-            await supabase.from('learning_exercises').insert({
+            const exRes = await supabase.from('learning_exercises').insert({
               lesson_id: lesson.id,
               statement: ex.statement,
               difficulty: ex.difficulty || 'beginner',
               starter_code: ex.starter_code || '',
               expected_output: ex.expected_output,
               hint: ex.hint || '',
-              solution: ex.solution
+              solution: ex.solution || ''
             });
+            if (exRes.error) console.error(`Failed to insert exercise for ${lessonData.title}:`, exRes.error);
           }
         }
 
