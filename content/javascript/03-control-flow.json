@@ -1,0 +1,51 @@
+{
+  "course": {
+    "title": "JavaScript Basics",
+    "slug": "javascript",
+    "language": "javascript",
+    "description": "Learn the fundamentals of JavaScript, the programming language of the web."
+  },
+  "chapter": {
+    "title": "Control Flow and Conditionals",
+    "description": "Learn how to make decisions in your code using if/else statements.",
+    "order_index": 3
+  },
+  "lessons": [
+    {
+      "title": "If and Else Statements",
+      "objectives": ["Write conditional logic", "Understand boolean expressions"],
+      "explanation": "Use `if` to specify a block of code to be executed, if a specified condition is true. Use `else` to specify a block of code to be executed, if the same condition is false.",
+      "syntax": "if (condition) {\n  // block of code to be executed if the condition is true\n} else {\n  // block of code to be executed if the condition is false\n}",
+      "order_index": 1,
+      "estimated_time": 15,
+      "difficulty": "beginner",
+      "exercises": [
+        {
+          "statement": "Write an `if/else` statement that checks if the variable `score` is greater than 50. If it is, print 'Pass', otherwise print 'Fail'.",
+          "expected_output": "Pass",
+          "starter_code": "let score = 75;\n\n// Write your if/else statement below\n",
+          "hint": "Use if (score > 50) { ... } else { ... }",
+          "solution": "let score = 75;\nif (score > 50) {\n  console.log('Pass');\n} else {\n  console.log('Fail');\n}"
+        }
+      ]
+    },
+    {
+      "title": "Loops: For and While",
+      "objectives": ["Execute code repeatedly using loops"],
+      "explanation": "Loops can execute a block of code a number of times. The `for` loop is often used when you know how many times the script should run.",
+      "syntax": "for (let i = 0; i < 5; i++) {\n  console.log(i);\n}",
+      "order_index": 2,
+      "estimated_time": 20,
+      "difficulty": "intermediate",
+      "exercises": [
+        {
+          "statement": "Write a `for` loop that prints the numbers from 1 to 3.",
+          "expected_output": "1\n2\n3",
+          "starter_code": "// Write your for loop below\n",
+          "hint": "The loop should start with let i = 1 and run as long as i <= 3.",
+          "solution": "for (let i = 1; i <= 3; i++) {\n  console.log(i);\n}"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "course": {
+    "title": "JavaScript Basics",
+    "slug": "javascript",
+    "language": "javascript",
+    "description": "Learn the fundamentals of JavaScript, the programming language of the web."
+  },
+  "chapter": {
+    "title": "Variables and Data Types",
+    "description": "Learn how to store and manipulate different types of data in JavaScript.",
+    "order_index": 2
+  },
+  "lessons": [
+    {
+      "title": "Working with Variables",
+      "objectives": ["Declare variables using let and const", "Assign values to variables"],
+      "explanation": "Variables are containers for storing data values. Use `let` for values that might change, and `const` for values that will never change.",
+      "syntax": "let age = 25;\nconst name = 'Alice';\nage = 26; // Valid",
+      "order_index": 1,
+      "estimated_time": 10,
+      "difficulty": "beginner",
+      "exercises": [
+        {
+          "statement": "Declare a variable named `city` using `let` and assign it the value 'New York'. Then print it.",
+          "expected_output": "New York",
+          "starter_code": "// Write your code below\n\nconsole.log(city);",
+          "hint": "Use: let city = 'New York';",
+          "solution": "let city = 'New York';\nconsole.log(city);"
+        }
+      ]
+    },
+    {
+      "title": "Basic Math Operations",
+      "objectives": ["Perform addition, subtraction, multiplication, and division"],
+      "explanation": "JavaScript can perform basic math operations using standard operators like `+`, `-`, `*`, and `/`.",
+      "syntax": "let sum = 5 + 3;\nlet difference = 10 - 4;\nlet product = 2 * 6;\nlet quotient = 20 / 4;",
+      "order_index": 2,
+      "estimated_time": 15,
+      "difficulty": "beginner",
+      "exercises": [
+        {
+          "statement": "Calculate the product of 7 and 8, store it in a variable called `result`, and print it.",
+          "expected_output": "56",
+          "starter_code": "// Write your code below\n",
+          "hint": "Use the * operator for multiplication.",
+          "solution": "let result = 7 * 8;\nconsole.log(result);"
+        }
+      ]
+    }
+  ]
+}

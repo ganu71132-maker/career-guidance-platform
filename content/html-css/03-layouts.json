@@ -1,0 +1,51 @@
+{
+  "course": {
+    "title": "HTML & CSS Fundamentals",
+    "slug": "html-css",
+    "language": "html/css",
+    "description": "Learn the building blocks of the web: HTML for structure and CSS for styling."
+  },
+  "chapter": {
+    "title": "Layouts and Images",
+    "description": "Learn how to structure your page with divs and add images.",
+    "order_index": 3
+  },
+  "lessons": [
+    {
+      "title": "Working with Images",
+      "objectives": ["Add images to your webpage", "Understand the alt attribute"],
+      "explanation": "The `<img>` tag is used to embed an image in a web page. It is an empty tag (no closing tag). The `src` attribute specifies the path to the image, and the `alt` attribute provides alternate text for screen readers.",
+      "syntax": "<img src=\"image.jpg\" alt=\"A beautiful scenery\">",
+      "order_index": 1,
+      "estimated_time": 10,
+      "difficulty": "beginner",
+      "exercises": [
+        {
+          "statement": "Add an image with the source 'https://picsum.photos/200' and an alt text of 'Random Image'.",
+          "expected_output": "Random Image",
+          "starter_code": "<!-- Write your image tag below -->\n",
+          "hint": "Use the <img> tag with src and alt attributes.",
+          "solution": "<img src=\"https://picsum.photos/200\" alt=\"Random Image\">"
+        }
+      ]
+    },
+    {
+      "title": "Structuring with Divs",
+      "objectives": ["Group elements using the div tag"],
+      "explanation": "The `<div>` tag defines a division or a section in an HTML document. It is used as a container for HTML elements, which is then styled with CSS or manipulated with JavaScript.",
+      "syntax": "<div>\n  <h2>Title</h2>\n  <p>Content goes here.</p>\n</div>",
+      "order_index": 2,
+      "estimated_time": 15,
+      "difficulty": "beginner",
+      "exercises": [
+        {
+          "statement": "Create a `<div>` container. Inside it, place a heading `<h3>` that says 'Box' and a paragraph `<p>` that says 'This is inside a div'.",
+          "expected_output": "Box",
+          "starter_code": "<!-- Create your div container below -->\n",
+          "hint": "Wrap the h3 and p tags inside a <div> tag.",
+          "solution": "<div>\n  <h3>Box</h3>\n  <p>This is inside a div</p>\n</div>"
+        }
+      ]
+    }
+  ]
+}

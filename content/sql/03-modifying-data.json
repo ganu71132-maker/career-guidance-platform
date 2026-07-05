@@ -1,0 +1,51 @@
+{
+  "course": {
+    "title": "SQL Database Fundamentals",
+    "slug": "sql",
+    "language": "sql",
+    "description": "Learn SQL to query, manage, and analyze data in relational databases."
+  },
+  "chapter": {
+    "title": "Modifying Data",
+    "description": "Learn how to insert new data, update existing data, and delete data.",
+    "order_index": 3
+  },
+  "lessons": [
+    {
+      "title": "Inserting New Rows",
+      "objectives": ["Add new records to a table using INSERT INTO"],
+      "explanation": "The `INSERT INTO` statement is used to insert new records in a table.",
+      "syntax": "INSERT INTO table_name (column1, column2) VALUES (value1, value2);",
+      "order_index": 1,
+      "estimated_time": 10,
+      "difficulty": "beginner",
+      "exercises": [
+        {
+          "statement": "Insert a new row into the `employees` table with an id of 4, name 'David', and role 'Designer'. Then SELECT all rows to verify.",
+          "expected_output": "Designer",
+          "starter_code": "-- Creating sample data (do not modify)\nCREATE TABLE employees (id INT, name TEXT, role TEXT);\nINSERT INTO employees VALUES (1, 'Alice', 'Engineer'), (2, 'Bob', 'Analyst');\n\n-- Write your INSERT and SELECT query below\n",
+          "hint": "Use INSERT INTO employees (id, name, role) VALUES (4, 'David', 'Designer'); followed by a SELECT query.",
+          "solution": "INSERT INTO employees (id, name, role) VALUES (4, 'David', 'Designer');\nSELECT * FROM employees;"
+        }
+      ]
+    },
+    {
+      "title": "Updating Existing Rows",
+      "objectives": ["Modify existing records using UPDATE"],
+      "explanation": "The `UPDATE` statement is used to modify the existing records in a table. Be careful! If you omit the WHERE clause, ALL records will be updated!",
+      "syntax": "UPDATE table_name SET column1 = value1 WHERE condition;",
+      "order_index": 2,
+      "estimated_time": 10,
+      "difficulty": "intermediate",
+      "exercises": [
+        {
+          "statement": "Update the `employees` table to change Alice's role to 'Senior Engineer'. Her id is 1. Then SELECT all rows to verify.",
+          "expected_output": "Senior Engineer",
+          "starter_code": "-- Creating sample data (do not modify)\nCREATE TABLE employees (id INT, name TEXT, role TEXT);\nINSERT INTO employees VALUES (1, 'Alice', 'Engineer'), (2, 'Bob', 'Analyst');\n\n-- Write your UPDATE and SELECT query below\n",
+          "hint": "Use UPDATE employees SET role = 'Senior Engineer' WHERE id = 1;",
+          "solution": "UPDATE employees SET role = 'Senior Engineer' WHERE id = 1;\nSELECT * FROM employees;"
+        }
+      ]
+    }
+  ]
+}

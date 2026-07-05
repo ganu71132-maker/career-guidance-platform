@@ -1,0 +1,51 @@
+{
+  "course": {
+    "title": "HTML & CSS Fundamentals",
+    "slug": "html-css",
+    "language": "html/css",
+    "description": "Learn the building blocks of the web: HTML for structure and CSS for styling."
+  },
+  "chapter": {
+    "title": "Basic Elements and Styling",
+    "description": "Learn how to create paragraphs, links, and apply basic colors and styles.",
+    "order_index": 2
+  },
+  "lessons": [
+    {
+      "title": "Working with Text and Links",
+      "objectives": ["Create paragraphs and headings", "Create hyperlinks to other pages"],
+      "explanation": "HTML uses tags like `<p>` for paragraphs and `<a>` for links. The `<a>` tag requires an `href` attribute to specify the destination URL.",
+      "syntax": "<p>This is a paragraph.</p>\n<a href=\"https://example.com\">Visit Example</a>",
+      "order_index": 1,
+      "estimated_time": 10,
+      "difficulty": "beginner",
+      "exercises": [
+        {
+          "statement": "Create a link that says 'Click Me' and points to 'https://google.com'.",
+          "expected_output": "google.com",
+          "starter_code": "<!-- Write your link below -->\n",
+          "hint": "Use the <a> tag with the href attribute.",
+          "solution": "<a href=\"https://google.com\">Click Me</a>"
+        }
+      ]
+    },
+    {
+      "title": "Introduction to CSS Colors",
+      "objectives": ["Change text color", "Change background color"],
+      "explanation": "You can use inline CSS with the `style` attribute to change colors. Use `color` for text and `background-color` for backgrounds.",
+      "syntax": "<p style=\"color: red;\">Red text</p>\n<div style=\"background-color: blue;\">Blue background</div>",
+      "order_index": 2,
+      "estimated_time": 15,
+      "difficulty": "beginner",
+      "exercises": [
+        {
+          "statement": "Create a paragraph that says 'Warning' and has red text.",
+          "expected_output": "Warning",
+          "starter_code": "<!-- Write your styled paragraph below -->\n",
+          "hint": "Use the style attribute: style=\"color: red;\"",
+          "solution": "<p style=\"color: red;\">Warning</p>"
+        }
+      ]
+    }
+  ]
+}

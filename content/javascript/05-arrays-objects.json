@@ -1,0 +1,51 @@
+{
+  "course": {
+    "title": "JavaScript Basics",
+    "slug": "javascript",
+    "language": "javascript",
+    "description": "Learn the fundamentals of JavaScript, the programming language of the web."
+  },
+  "chapter": {
+    "title": "Arrays and Objects",
+    "description": "Learn how to store multiple values in a single variable using arrays and objects.",
+    "order_index": 5
+  },
+  "lessons": [
+    {
+      "title": "Introduction to Arrays",
+      "objectives": ["Create an array", "Access elements in an array"],
+      "explanation": "An array is a special variable, which can hold more than one value at a time. You can access an array element by referring to the index number (starting at 0).",
+      "syntax": "let cars = ['Ford', 'Volvo', 'BMW'];\nconsole.log(cars[0]); // Prints 'Ford'",
+      "order_index": 1,
+      "estimated_time": 15,
+      "difficulty": "intermediate",
+      "exercises": [
+        {
+          "statement": "Create an array called `fruits` containing 'Apple', 'Banana', and 'Cherry'. Then print the second element (Banana) to the console.",
+          "expected_output": "Banana",
+          "starter_code": "// Create your array below\n\n\n// Print the second element\n",
+          "hint": "Remember that array indexes start at 0, so the second element is at index 1.",
+          "solution": "let fruits = ['Apple', 'Banana', 'Cherry'];\nconsole.log(fruits[1]);"
+        }
+      ]
+    },
+    {
+      "title": "Introduction to Objects",
+      "objectives": ["Create a JavaScript object", "Access object properties"],
+      "explanation": "Objects are variables too. But objects can contain many values. The values are written as name:value pairs (name and value separated by a colon).",
+      "syntax": "let person = { firstName: 'John', lastName: 'Doe', age: 50 };\nconsole.log(person.firstName); // Prints 'John'",
+      "order_index": 2,
+      "estimated_time": 20,
+      "difficulty": "intermediate",
+      "exercises": [
+        {
+          "statement": "Create an object called `car` with properties `make` ('Toyota') and `model` ('Corolla'). Print the `make` property to the console.",
+          "expected_output": "Toyota",
+          "starter_code": "// Create your object below\n\n\n// Print the make property\n",
+          "hint": "Use dot notation: console.log(car.make);",
+          "solution": "let car = { make: 'Toyota', model: 'Corolla' };\nconsole.log(car.make);"
+        }
+      ]
+    }
+  ]
+}

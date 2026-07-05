@@ -1,0 +1,51 @@
+{
+  "course": {
+    "title": "HTML & CSS Fundamentals",
+    "slug": "html-css",
+    "language": "html/css",
+    "description": "Learn the building blocks of the web: HTML for structure and CSS for styling."
+  },
+  "chapter": {
+    "title": "Intermediate CSS: Classes and IDs",
+    "description": "Learn how to target specific elements with CSS classes and IDs for advanced styling.",
+    "order_index": 4
+  },
+  "lessons": [
+    {
+      "title": "Using CSS Classes",
+      "objectives": ["Apply styles to multiple elements using classes", "Understand the difference between classes and inline styles"],
+      "explanation": "A CSS class allows you to define a style once and apply it to multiple elements. In HTML, you use the `class` attribute. In your `<style>` block, you target a class using a period (`.`) followed by the class name.",
+      "syntax": "<style>\n  .highlight { color: orange; font-weight: bold; }\n</style>\n<p class=\"highlight\">This text is highlighted.</p>\n<p class=\"highlight\">This one is too!</p>",
+      "order_index": 1,
+      "estimated_time": 15,
+      "difficulty": "beginner",
+      "exercises": [
+        {
+          "statement": "Create a CSS class called `.alert` that sets the text color to red. Apply this class to a paragraph `<p>` that says 'Danger!'.",
+          "expected_output": "Danger!",
+          "starter_code": "<style>\n  /* Define your .alert class below */\n  \n</style>\n\n<!-- Apply the class to this paragraph -->\n<p>Danger!</p>",
+          "hint": "In the style block, write .alert { color: red; }. Then add class=\"alert\" to the <p> tag.",
+          "solution": "<style>\n  .alert { color: red; }\n</style>\n<p class=\"alert\">Danger!</p>"
+        }
+      ]
+    },
+    {
+      "title": "Using CSS IDs",
+      "objectives": ["Apply styles to a unique element using IDs", "Understand when to use IDs vs Classes"],
+      "explanation": "A CSS ID is used to style a single, unique element on a page (an ID should only be used once per page). In HTML, you use the `id` attribute. In CSS, you target an ID using a hash (`#`) followed by the ID name.",
+      "syntax": "<style>\n  #header { background-color: black; color: white; }\n</style>\n<div id=\"header\">My Website Header</div>",
+      "order_index": 2,
+      "estimated_time": 15,
+      "difficulty": "beginner",
+      "exercises": [
+        {
+          "statement": "Create a CSS ID called `#main-title` that sets the font-size to 40px. Apply this ID to an `<h1>` tag that says 'Welcome'.",
+          "expected_output": "Welcome",
+          "starter_code": "<style>\n  /* Define your #main-title ID below */\n  \n</style>\n\n<!-- Apply the ID to this heading -->\n<h1>Welcome</h1>",
+          "hint": "In the style block, write #main-title { font-size: 40px; }. Then add id=\"main-title\" to the <h1> tag.",
+          "solution": "<style>\n  #main-title { font-size: 40px; }\n</style>\n<h1 id=\"main-title\">Welcome</h1>"
+        }
+      ]
+    }
+  ]
+}

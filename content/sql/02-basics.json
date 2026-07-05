@@ -1,0 +1,51 @@
+{
+  "course": {
+    "title": "SQL Database Fundamentals",
+    "slug": "sql",
+    "language": "sql",
+    "description": "Learn SQL to query, manage, and analyze data in relational databases."
+  },
+  "chapter": {
+    "title": "Filtering and Sorting Data",
+    "description": "Learn how to filter data with WHERE clauses and sort data with ORDER BY.",
+    "order_index": 2
+  },
+  "lessons": [
+    {
+      "title": "Filtering with WHERE",
+      "objectives": ["Use the WHERE clause to filter rows", "Understand basic comparison operators"],
+      "explanation": "The `WHERE` clause is used to extract only those records that fulfill a specified condition.",
+      "syntax": "SELECT column1 FROM table_name WHERE condition;\n-- Example:\nSELECT * FROM users WHERE age > 18;",
+      "order_index": 1,
+      "estimated_time": 10,
+      "difficulty": "beginner",
+      "exercises": [
+        {
+          "statement": "Select all columns from the `products` table where the `price` is greater than 50. (Assume the table is created and populated for you).",
+          "expected_output": "Smartphone",
+          "starter_code": "-- Creating sample data (do not modify)\nCREATE TABLE products (id INT, name TEXT, price INT);\nINSERT INTO products VALUES (1, 'Mouse', 20), (2, 'Keyboard', 45), (3, 'Smartphone', 500);\n\n-- Write your SELECT query below\n",
+          "hint": "Use: WHERE price > 50",
+          "solution": "SELECT * FROM products WHERE price > 50;"
+        }
+      ]
+    },
+    {
+      "title": "Sorting with ORDER BY",
+      "objectives": ["Sort data in ascending or descending order"],
+      "explanation": "The `ORDER BY` keyword is used to sort the result-set in ascending (ASC) or descending (DESC) order.",
+      "syntax": "SELECT * FROM table_name ORDER BY column_name ASC|DESC;",
+      "order_index": 2,
+      "estimated_time": 15,
+      "difficulty": "beginner",
+      "exercises": [
+        {
+          "statement": "Select all columns from the `scores` table and sort them by `score` in descending order. (Assume the table is created and populated).",
+          "expected_output": "95",
+          "starter_code": "-- Creating sample data (do not modify)\nCREATE TABLE scores (name TEXT, score INT);\nINSERT INTO scores VALUES ('Alice', 85), ('Bob', 95), ('Charlie', 70);\n\n-- Write your SELECT query below\n",
+          "hint": "Use: ORDER BY score DESC",
+          "solution": "SELECT * FROM scores ORDER BY score DESC;"
+        }
+      ]
+    }
+  ]
+}

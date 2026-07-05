@@ -1,0 +1,51 @@
+{
+  "course": {
+    "title": "HTML & CSS Fundamentals",
+    "slug": "html-css",
+    "language": "html/css",
+    "description": "Learn the building blocks of the web: HTML for structure and CSS for styling."
+  },
+  "chapter": {
+    "title": "Advanced Layouts: Flexbox",
+    "description": "Learn how to use CSS Flexbox to build modern, responsive layouts.",
+    "order_index": 5
+  },
+  "lessons": [
+    {
+      "title": "Introduction to Flexbox",
+      "objectives": ["Understand the flex container and items", "Use display: flex"],
+      "explanation": "The Flexible Box Layout Module (Flexbox) makes it easier to design flexible responsive layout structure without using float or positioning. To start using the Flexbox model, you need to first define a flex container using `display: flex;`.",
+      "syntax": "<style>\n  .container { display: flex; }\n</style>\n<div class=\"container\">\n  <div>1</div>\n  <div>2</div>\n</div>",
+      "order_index": 1,
+      "estimated_time": 20,
+      "difficulty": "intermediate",
+      "exercises": [
+        {
+          "statement": "Turn the `.box-container` into a flex container.",
+          "expected_output": "Item 1",
+          "starter_code": "<style>\n  .box-container {\n    /* Make this a flex container */\n    \n    background-color: #eee;\n    padding: 10px;\n  }\n  .item {\n    background: lightblue;\n    margin: 5px;\n    padding: 10px;\n  }\n</style>\n\n<div class=\"box-container\">\n  <div class=\"item\">Item 1</div>\n  <div class=\"item\">Item 2</div>\n</div>",
+          "hint": "Add display: flex; to the .box-container rule.",
+          "solution": "<style>\n  .box-container {\n    display: flex;\n    background-color: #eee;\n    padding: 10px;\n  }\n  .item {\n    background: lightblue;\n    margin: 5px;\n    padding: 10px;\n  }\n</style>\n<div class=\"box-container\">\n  <div class=\"item\">Item 1</div>\n  <div class=\"item\">Item 2</div>\n</div>"
+        }
+      ]
+    },
+    {
+      "title": "Justify Content",
+      "objectives": ["Align items horizontally using justify-content"],
+      "explanation": "The `justify-content` property is used to align the flex items along the main axis (horizontally by default). Common values are `center`, `space-between`, and `space-around`.",
+      "syntax": ".container {\n  display: flex;\n  justify-content: center;\n}",
+      "order_index": 2,
+      "estimated_time": 15,
+      "difficulty": "intermediate",
+      "exercises": [
+        {
+          "statement": "Use `justify-content` to center the items inside the `.navbar`.",
+          "expected_output": "Home",
+          "starter_code": "<style>\n  .navbar {\n    display: flex;\n    /* Center the items below */\n    \n    background-color: #333;\n  }\n  .nav-item {\n    color: white;\n    padding: 15px;\n  }\n</style>\n\n<div class=\"navbar\">\n  <div class=\"nav-item\">Home</div>\n  <div class=\"nav-item\">About</div>\n</div>",
+          "hint": "Add justify-content: center; to the .navbar rule.",
+          "solution": "<style>\n  .navbar {\n    display: flex;\n    justify-content: center;\n    background-color: #333;\n  }\n  .nav-item {\n    color: white;\n    padding: 15px;\n  }\n</style>\n<div class=\"navbar\">\n  <div class=\"nav-item\">Home</div>\n  <div class=\"nav-item\">About</div>\n</div>"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "course": {
+    "title": "SQL Database Fundamentals",
+    "slug": "sql",
+    "language": "sql",
+    "description": "Learn SQL to query, manage, and analyze data in relational databases."
+  },
+  "chapter": {
+    "title": "Aggregate Functions",
+    "description": "Learn how to perform calculations on multiple rows using MIN, MAX, COUNT, AVG, and SUM.",
+    "order_index": 5
+  },
+  "lessons": [
+    {
+      "title": "MIN and MAX Functions",
+      "objectives": ["Find the smallest and largest values in a column"],
+      "explanation": "The `MIN()` function returns the smallest value of the selected column. The `MAX()` function returns the largest value of the selected column.",
+      "syntax": "SELECT MIN(column_name) FROM table_name;\nSELECT MAX(column_name) FROM table_name;",
+      "order_index": 1,
+      "estimated_time": 10,
+      "difficulty": "beginner",
+      "exercises": [
+        {
+          "statement": "Find the highest (MAX) price in the `products` table.",
+          "expected_output": "500",
+          "starter_code": "-- Creating sample data (do not modify)\nCREATE TABLE products (id INT, name TEXT, price INT);\nINSERT INTO products VALUES (1, 'Mouse', 20), (2, 'Keyboard', 45), (3, 'Smartphone', 500);\n\n-- Write your MAX query below\n",
+          "hint": "Use SELECT MAX(price) FROM products;",
+          "solution": "SELECT MAX(price) FROM products;"
+        }
+      ]
+    },
+    {
+      "title": "COUNT, AVG, and SUM",
+      "objectives": ["Count rows", "Calculate average and total sums"],
+      "explanation": "The `COUNT()` function returns the number of rows that matches a specified criterion. `AVG()` returns the average value of a numeric column. `SUM()` returns the total sum of a numeric column.",
+      "syntax": "SELECT COUNT(column_name) FROM table_name;\nSELECT AVG(column_name) FROM table_name;\nSELECT SUM(column_name) FROM table_name;",
+      "order_index": 2,
+      "estimated_time": 15,
+      "difficulty": "intermediate",
+      "exercises": [
+        {
+          "statement": "Calculate the total sum of the `quantity` column in the `orders` table.",
+          "expected_output": "15",
+          "starter_code": "-- Creating sample data (do not modify)\nCREATE TABLE orders (id INT, item TEXT, quantity INT);\nINSERT INTO orders VALUES (1, 'Apples', 5), (2, 'Bananas', 3), (3, 'Oranges', 7);\n\n-- Write your SUM query below\n",
+          "hint": "Use SELECT SUM(quantity) FROM orders;",
+          "solution": "SELECT SUM(quantity) FROM orders;"
+        }
+      ]
+    }
+  ]
+}

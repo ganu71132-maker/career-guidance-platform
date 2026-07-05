@@ -67,9 +67,12 @@ export default function ResumeBuilder() {
   };
 
   // ======== LOAD SAVED RESUME FROM SUPABASE ========
+  const initialLoadDone = React.useRef(false);
+  
   useEffect(() => {
     async function loadResume() {
-      if (!user) return;
+      if (!user || initialLoadDone.current) return;
+      initialLoadDone.current = true;
       setLoading(true);
       try {
         // Fetch profile
@@ -166,7 +169,7 @@ export default function ResumeBuilder() {
       }
     }
     loadResume();
-  }, [user]);
+  }, [user?.id]);
 
   // ======== SAVE RESUME TO SUPABASE ========
   const handleSaveResume = async () => {

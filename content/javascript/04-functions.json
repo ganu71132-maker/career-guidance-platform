@@ -1,0 +1,51 @@
+{
+  "course": {
+    "title": "JavaScript Basics",
+    "slug": "javascript",
+    "language": "javascript",
+    "description": "Learn the fundamentals of JavaScript, the programming language of the web."
+  },
+  "chapter": {
+    "title": "Functions",
+    "description": "Learn how to write reusable blocks of code using functions.",
+    "order_index": 4
+  },
+  "lessons": [
+    {
+      "title": "Introduction to Functions",
+      "objectives": ["Define and call a simple function", "Understand the concept of reusable code"],
+      "explanation": "A JavaScript function is a block of code designed to perform a particular task. A function is executed when 'something' invokes it (calls it).",
+      "syntax": "function greet() {\n  console.log('Hello!');\n}\n\n// Call the function\ngreet();",
+      "order_index": 1,
+      "estimated_time": 15,
+      "difficulty": "beginner",
+      "exercises": [
+        {
+          "statement": "Define a function named `sayHi` that prints 'Hi there!' to the console. Then call the function.",
+          "expected_output": "Hi there!",
+          "starter_code": "// Define your function below\n\n\n// Call your function below\n",
+          "hint": "Use function sayHi() { console.log('Hi there!'); } and then write sayHi(); to call it.",
+          "solution": "function sayHi() {\n  console.log('Hi there!');\n}\nsayHi();"
+        }
+      ]
+    },
+    {
+      "title": "Function Parameters and Returns",
+      "objectives": ["Pass data into functions using parameters", "Return data from functions"],
+      "explanation": "Functions can take inputs called parameters, and they can send data back to where they were called using the `return` keyword.",
+      "syntax": "function add(a, b) {\n  return a + b;\n}\n\nlet sum = add(3, 4);\nconsole.log(sum); // Prints 7",
+      "order_index": 2,
+      "estimated_time": 20,
+      "difficulty": "intermediate",
+      "exercises": [
+        {
+          "statement": "Write a function named `multiply` that takes two parameters, multiplies them together, and returns the result. Then call it with the numbers 5 and 6, and print the result.",
+          "expected_output": "30",
+          "starter_code": "// Write your function below\n\n\n// Call the function and print the result\n",
+          "hint": "The function should use the * operator and the return keyword.",
+          "solution": "function multiply(a, b) {\n  return a * b;\n}\nlet result = multiply(5, 6);\nconsole.log(result);"
+        }
+      ]
+    }
+  ]
+}
