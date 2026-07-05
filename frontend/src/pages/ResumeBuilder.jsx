@@ -470,6 +470,7 @@ export default function ResumeBuilder() {
     <div className="min-h-screen lg:h-screen flex flex-col md:flex-row relative bg-slate-50 lg:overflow-hidden print:overflow-visible print:h-auto print:bg-white">
       {/* Dynamic CSS styles loaded dynamically for custom printing overrides */}
       <style>{`
+        @page { size: auto; margin: 0mm; }
         @media print {
           body, html {
             background-color: white !important;
