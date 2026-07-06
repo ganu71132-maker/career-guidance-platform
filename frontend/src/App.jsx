@@ -5,6 +5,7 @@ import { DataProvider } from './contexts/DataContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AdminRoute } from './components/AdminRoute';
 import InstallPrompt from './components/InstallPrompt';
+import ScrollToTop from './components/ScrollToTop';
 
 // Public Pages
 import Home from './pages/Home';
@@ -48,6 +49,7 @@ function App() {
       <AuthProvider>
         <DataProvider>
           <Router>
+            <ScrollToTop />
             <InstallPrompt />
             <Routes>
             {/* Public Routes */}
