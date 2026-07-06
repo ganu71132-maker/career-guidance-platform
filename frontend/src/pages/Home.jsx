@@ -86,7 +86,7 @@ export default function Home() {
             ) : (
               <>
                 <Link to="/login" className="text-xs sm:text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors">Log in</Link>
-                <Link to="/register" className="text-xs sm:text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg transition-all shadow-md shadow-emerald-600/20">
+                <Link to="/login" className="text-xs sm:text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg transition-all shadow-md shadow-emerald-600/20">
                   Get Started
                 </Link>
               </>
@@ -118,7 +118,7 @@ export default function Home() {
                   Go to Dashboard
                 </Link>
               ) : (
-                <Link to="/register" className="flex items-center justify-center px-6 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base font-semibold text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl transition-all shadow-lg shadow-indigo-600/20 hover:scale-105 hover:shadow-xl cursor-pointer">
+                <Link to="/login" className="flex items-center justify-center px-6 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base font-semibold text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl transition-all shadow-lg shadow-indigo-600/20 hover:scale-105 hover:shadow-xl cursor-pointer">
                   Get Started Free
                 </Link>
               )}
@@ -281,7 +281,7 @@ export default function Home() {
         <section className="py-16 sm:py-24 px-4 sm:px-6 max-w-4xl mx-auto text-center">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 text-slate-800">Ready to Start Your Career Journey?</h2>
           <p className="text-base sm:text-xl text-slate-500 mb-8 sm:mb-10">Join thousands of students who discovered their career path and started learning with structured roadmaps.</p>
-          <Link to="/register" className="inline-flex items-center px-8 sm:px-10 py-3.5 sm:py-4 text-base sm:text-lg font-semibold text-white bg-emerald-600 hover:bg-emerald-500 rounded-xl transition-all shadow-lg shadow-emerald-600/20 hover:scale-105 hover:shadow-xl">
+          <Link to="/login" className="inline-flex items-center px-8 sm:px-10 py-3.5 sm:py-4 text-base sm:text-lg font-semibold text-white bg-emerald-600 hover:bg-emerald-500 rounded-xl transition-all shadow-lg shadow-emerald-600/20 hover:scale-105 hover:shadow-xl">
             Create Free Account <ArrowRight className="ml-2 h-4 sm:h-5 w-4 sm:w-5" />
           </Link>
         </section>
@@ -302,7 +302,7 @@ export default function Home() {
             <h4 className="font-bold mb-3 sm:mb-4 text-slate-800 text-sm sm:text-base">Platform</h4>
             <ul className="space-y-2 text-slate-500 text-xs sm:text-sm">
               <li><Link to="/explorer" className="hover:text-emerald-600 transition-colors">Explore Careers</Link></li>
-              <li><Link to="/register" className="hover:text-emerald-600 transition-colors">Get Started</Link></li>
+              <li><Link to="/login" className="hover:text-emerald-600 transition-colors">Get Started</Link></li>
               <li><Link to="/login" className="hover:text-emerald-600 transition-colors">Login</Link></li>
             </ul>
           </div>

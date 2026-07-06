@@ -9,7 +9,6 @@ import InstallPrompt from './components/InstallPrompt';
 // Public Pages
 import Home from './pages/Home';
 import Login from './pages/Login';
-import Register from './pages/Register';
 import CareerExplorer from './pages/CareerExplorer';
 import CareerDetails from './pages/CareerDetails';
 import CodingPlayground from './pages/CodingPlayground';
@@ -54,7 +53,6 @@ function App() {
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
             <Route path="/explorer" element={<CareerExplorer />} />
             <Route path="/career/:id" element={<CareerDetails />} />
             <Route path="/sandbox" element={<CodingPlayground />} />
