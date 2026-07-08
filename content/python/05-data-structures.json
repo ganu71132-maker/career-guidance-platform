@@ -7,7 +7,7 @@
   },
   "chapter": {
     "title": "5. Data Structures",
-    "description": "Store, organize, and manipulate collections of data using Lists, Tuples, Dictionaries, and Sets.",
+    "description": "Store, organize, and manipulate collections of data using Lists, Tuples, Dictionaries, Sets, and advanced techniques.",
     "order_index": 5
   },
   "lessons": [
@@ -88,6 +88,167 @@
           "expected_output": "1964\n",
           "hint": "Use curly braces {} and separate keys and values with colons :",
           "solution": "car = {'brand': 'Ford', 'year': 1964}\nprint(car['year'])"
+        }
+      ]
+    },
+    {
+      "title": "Tuples",
+      "objectives": [
+        "Understand what a tuple is and how it differs from a list",
+        "Create and access tuples",
+        "Learn about tuple unpacking"
+      ],
+      "explanation": "A Tuple is a collection which is ordered and **unchangeable** (immutable). Once a tuple is created, you cannot add, remove, or change its items. Tuples are written with round brackets `()`. They are faster and more memory-efficient than lists.",
+      "analogy": "If a list is like a whiteboard where you can erase and rewrite things, a tuple is like a carved stone tablet. Once the data is carved in, it cannot be altered.",
+      "syntax": "my_tuple = (\"apple\", \"banana\", \"cherry\")",
+      "common_mistakes": [
+        "Trying to change an item in a tuple: `my_tuple[0] = 'orange'` will cause a TypeError.",
+        "Creating a single-item tuple without a trailing comma: `t = ('apple')` creates a string, not a tuple. You must use `t = ('apple',)`."
+      ],
+      "best_practices": [
+        "Use tuples for heterogeneous (different) data types and lists for homogeneous (similar) data types.",
+        "Use tuples to protect data that should not be changed."
+      ],
+      "summary": "Tuples provide a way to store multiple items securely, ensuring they are not accidentally modified throughout your program.",
+      "order_index": 3,
+      "estimated_time": 10,
+      "difficulty": "beginner",
+      "tags": ["python", "data-structures", "tuples"],
+      "careers": ["Data Science", "Backend Development"],
+      "examples": [
+        {
+          "title": "Tuple Unpacking",
+          "code": "coordinates = (10, 20)\n\n# Unpacking the tuple into variables\nx, y = coordinates\n\nprint(f\"X is {x} and Y is {y}\")",
+          "explanation": "We can extract the values back into separate variables. This is called 'unpacking' and is highly common when working with geographic coordinates, RGB colors, or functions that return multiple values."
+        }
+      ],
+      "exercises": [
+        {
+          "statement": "Create a tuple called `dimensions` containing the numbers 800 and 600. Unpack them into variables `width` and `height`, and print the `width`.",
+          "difficulty": "beginner",
+          "starter_code": "# Create your tuple and unpack it\n",
+          "expected_output": "800\n",
+          "hint": "Use parentheses () to create a tuple, then do `width, height = dimensions`.",
+          "solution": "dimensions = (800, 600)\nwidth, height = dimensions\nprint(width)"
+        }
+      ]
+    },
+    {
+      "title": "Sets",
+      "objectives": [
+        "Understand the properties of Sets",
+        "Perform mathematical set operations like Union and Intersection"
+      ],
+      "explanation": "A Set is an unordered collection that contains **no duplicate elements**. Sets are used to store multiple items in a single variable, and they are written with curly brackets `{}`, similar to dictionaries but without key-value pairs. They are highly optimized for checking if a specific item is present.",
+      "analogy": "A Set is like an exclusive club's guest list. It doesn't matter what order the names are written in, and a person's name can only appear on the list once.",
+      "syntax": "my_set = {\"apple\", \"banana\", \"cherry\"}",
+      "common_mistakes": [
+        "Trying to access a set item by index (e.g., `my_set[0]`). Sets are unordered, so they do not support indexing.",
+        "Creating an empty set using `{}` (that creates an empty dictionary). You must use `set()`."
+      ],
+      "best_practices": [
+        "Use sets when you need to ensure there are no duplicate items.",
+        "Use sets for fast membership testing (e.g., `if 'apple' in my_set`)."
+      ],
+      "summary": "Sets are powerful data structures for mathematical operations, deduplication, and fast membership testing.",
+      "order_index": 4,
+      "estimated_time": 15,
+      "difficulty": "intermediate",
+      "tags": ["python", "data-structures", "sets"],
+      "careers": ["Data Science", "Backend Development"],
+      "examples": [
+        {
+          "title": "Removing Duplicates and Set Operations",
+          "code": "numbers_list = [1, 2, 2, 3, 4, 4, 5]\nunique_numbers = set(numbers_list)\nprint(\"Unique:\", unique_numbers)\n\nset_a = {1, 2, 3}\nset_b = {3, 4, 5}\nprint(\"Intersection:\", set_a.intersection(set_b))",
+          "explanation": "Converting a list to a set automatically removes duplicates. We can also find the intersection (common elements) between two sets."
+        }
+      ],
+      "exercises": [
+        {
+          "statement": "Given a list `items = ['a', 'b', 'a', 'c', 'b']`, convert it to a set to remove duplicates, and print the set.",
+          "difficulty": "intermediate",
+          "starter_code": "items = ['a', 'b', 'a', 'c', 'b']\n# Convert to set and print\n",
+          "expected_output": "{'a', 'b', 'c'}\n",
+          "hint": "Pass the list into the `set()` function. Note: The order of elements in the output may vary.",
+          "solution": "items = ['a', 'b', 'a', 'c', 'b']\nprint(set(items))"
+        }
+      ]
+    },
+    {
+      "title": "List Comprehensions",
+      "objectives": [
+        "Write concise lists using comprehensions",
+        "Apply conditional logic inside list comprehensions"
+      ],
+      "explanation": "List comprehension offers a shorter, highly readable syntax when you want to create a new list based on the values of an existing list. It condenses a multi-line `for` loop and `.append()` operation into a single elegant line of code.",
+      "analogy": "Instead of saying 'Take a fruit from the basket, peel it, and put it in a new bowl' repeatedly for every fruit, list comprehension is like saying 'Give me a bowl of peeled fruits from that basket'.",
+      "syntax": "newlist = [expression for item in iterable if condition == True]",
+      "common_mistakes": [
+        "Making list comprehensions too complex. If your comprehension spans multiple lines and is hard to read, use a traditional `for` loop instead."
+      ],
+      "best_practices": [
+        "Use list comprehensions for simple transformations and filtering."
+      ],
+      "summary": "Mastering list comprehensions will make your Python code look professional and idiomatic ('Pythonic').",
+      "order_index": 5,
+      "estimated_time": 15,
+      "difficulty": "advanced",
+      "tags": ["python", "data-structures", "list-comprehension"],
+      "careers": ["Data Science", "Backend Development", "AI Engineering"],
+      "examples": [
+        {
+          "title": "Traditional Loop vs Comprehension",
+          "code": "fruits = [\"apple\", \"banana\", \"cherry\", \"kiwi\", \"mango\"]\n\n# Traditional way to filter fruits with 'a'\nnewlist = []\nfor x in fruits:\n  if \"a\" in x:\n    newlist.append(x)\n\n# The Pythonic way using List Comprehension\npythonic_list = [x for x in fruits if \"a\" in x]\n\nprint(pythonic_list)",
+          "explanation": "Both methods achieve the exact same result, but the list comprehension does it clearly in just one line."
+        }
+      ],
+      "exercises": [
+        {
+          "statement": "Use list comprehension to create a list named `squares` that contains the square (x * x) of every number from 0 to 4. Print the list.",
+          "difficulty": "advanced",
+          "starter_code": "# Use [x * x for x in range(5)]\n",
+          "expected_output": "[0, 1, 4, 9, 16]\n",
+          "hint": "The syntax is `[expression for item in iterable]`. Your iterable is `range(5)`.",
+          "solution": "squares = [x * x for x in range(5)]\nprint(squares)"
+        }
+      ]
+    },
+    {
+      "title": "Stacks and Queues",
+      "objectives": [
+        "Implement a Stack using a List",
+        "Understand LIFO and FIFO concepts"
+      ],
+      "explanation": "While Python doesn't have built-in 'Stack' or 'Queue' objects, you can use existing data structures to simulate them. \n- A **Stack** works on a Last-In, First-Out (LIFO) principle. You can use a Python List for this via `.append()` (to push) and `.pop()` (to pop).\n- A **Queue** works on a First-In, First-Out (FIFO) principle. Using a list for a queue is slow, so Python provides `collections.deque` for fast appends and pops from both ends.",
+      "analogy": "A Stack is like a stack of plates; you add to the top and take from the top (LIFO). A Queue is like a line at the grocery store; the first person in line is the first one served (FIFO).",
+      "syntax": "stack = []\nstack.append('a')\nstack.pop()",
+      "common_mistakes": [
+        "Using `.pop(0)` on a standard list to simulate a queue. This is very slow for large lists. Use `deque` instead."
+      ],
+      "best_practices": [
+        "Import `deque` from the `collections` module when you need a queue."
+      ],
+      "summary": "Understanding Stacks and Queues is fundamental for algorithm interviews and data processing pipelines.",
+      "order_index": 6,
+      "estimated_time": 15,
+      "difficulty": "advanced",
+      "tags": ["python", "data-structures", "algorithms", "queues", "stacks"],
+      "careers": ["Backend Development", "Software Engineering"],
+      "examples": [
+        {
+          "title": "Implementing a Queue with Deque",
+          "code": "from collections import deque\n\nqueue = deque([\"Eric\", \"John\", \"Michael\"])\nqueue.append(\"Terry\")           # Terry arrives\nprint(queue.popleft())          # The first to arrive now leaves\nprint(list(queue))              # Remaining queue",
+          "explanation": "We use `deque` for O(1) performance when removing items from the front of the queue using `popleft()`."
+        }
+      ],
+      "exercises": [
+        {
+          "statement": "Create an empty list called `stack`. Append 'x', then append 'y'. Then use `.pop()` to remove the last item, and print the resulting stack.",
+          "difficulty": "intermediate",
+          "starter_code": "# Create your stack\n",
+          "expected_output": "['x']\n",
+          "hint": "Use the `.append()` method twice, then `.pop()` once.",
+          "solution": "stack = []\nstack.append('x')\nstack.append('y')\nstack.pop()\nprint(stack)"
         }
       ]
     }
