@@ -1,0 +1,95 @@
+{
+  "course": {
+    "title": "Learn Python",
+    "slug": "python",
+    "language": "python",
+    "description": "Master Python from scratch with hands-on interactive coding lessons. From variables to machine learning."
+  },
+  "chapter": {
+    "title": "4. Functions & Scope",
+    "description": "Learn how to write reusable blocks of code using functions and understand variable scope.",
+    "order_index": 4
+  },
+  "lessons": [
+    {
+      "title": "Defining Functions",
+      "objectives": [
+        "Learn what a function is",
+        "Define your own custom functions",
+        "Call a function"
+      ],
+      "explanation": "Functions are reusable blocks of code that perform a specific task. They help keep your code organized, readable, and DRY (Don't Repeat Yourself). You've already used built-in functions like `print()` and `len()`. Now, you'll learn how to create your own using the `def` keyword.",
+      "analogy": "Think of a function like a recipe. You write the recipe once (define the function), and then you can cook the meal (call the function) as many times as you want.",
+      "syntax": "def function_name():\n    # code block",
+      "common_mistakes": [
+        "Forgetting the colon `:` at the end of the `def` line.",
+        "Not indenting the code block inside the function."
+      ],
+      "best_practices": [
+        "Use descriptive lowercase names with underscores for functions (snake_case)."
+      ],
+      "summary": "You've learned how to define and call your own functions, saving you from writing the same code over and over again.",
+      "order_index": 1,
+      "estimated_time": 10,
+      "difficulty": "beginner",
+      "tags": ["python", "functions"],
+      "careers": ["Backend Development", "Software Engineering"],
+      "examples": [
+        {
+          "title": "A Simple Function",
+          "code": "def greet():\n    print(\"Hello there!\")\n\ngreet()\ngreet()",
+          "explanation": "We define a function called `greet` and then call it twice. The output will be \"Hello there!\" printed two times."
+        }
+      ],
+      "exercises": [
+        {
+          "statement": "Define a function named `say_hello` that prints the exact phrase: `Hello, Function!`",
+          "difficulty": "beginner",
+          "starter_code": "# Define your function here\n\n\n# Call it to test\nsay_hello()",
+          "expected_output": "Hello, Function!\n",
+          "hint": "Use the def keyword, remember the colon, and indent the print statement.",
+          "solution": "def say_hello():\n    print(\"Hello, Function!\")\n\nsay_hello()"
+        }
+      ]
+    },
+    {
+      "title": "Arguments and Return Values",
+      "objectives": [
+        "Pass data into functions using arguments",
+        "Return data from a function using the return keyword"
+      ],
+      "explanation": "Functions become truly powerful when they can accept inputs (arguments) and give back outputs (return values). Arguments are variables passed into the function inside the parentheses. The `return` keyword is used to send a result back to whoever called the function, and it also exits the function immediately.",
+      "analogy": "Think of a function like a factory machine. You feed raw materials (arguments) into it, it processes them, and produces a finished product (return value).",
+      "syntax": "def add(a, b):\n    return a + b",
+      "common_mistakes": [
+        "Confusing `print()` with `return`. Print just displays text, return actually gives a value back to the program."
+      ],
+      "best_practices": [
+        "Functions should generally return a value rather than printing it, making them more reusable."
+      ],
+      "summary": "You can now write dynamic functions that accept input data and compute return values.",
+      "order_index": 2,
+      "estimated_time": 15,
+      "difficulty": "beginner",
+      "tags": ["python", "functions", "arguments"],
+      "careers": ["Backend Development", "Software Engineering"],
+      "examples": [
+        {
+          "title": "Function with Arguments and Return",
+          "code": "def multiply(x, y):\n    return x * y\n\nresult = multiply(5, 4)\nprint(result)",
+          "explanation": "We pass 5 and 4 to the function. It multiplies them and returns 20, which we store in the `result` variable and then print."
+        }
+      ],
+      "exercises": [
+        {
+          "statement": "Create a function called `square` that takes one argument `n` and returns its square (n multiplied by itself).",
+          "difficulty": "beginner",
+          "starter_code": "# Define your function here\n\n\nprint(square(5))",
+          "expected_output": "25\n",
+          "hint": "Use the return keyword. Multiply n by n.",
+          "solution": "def square(n):\n    return n * n\n\nprint(square(5))"
+        }
+      ]
+    }
+  ]
+}

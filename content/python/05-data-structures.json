@@ -1,0 +1,95 @@
+{
+  "course": {
+    "title": "Learn Python",
+    "slug": "python",
+    "language": "python",
+    "description": "Master Python from scratch with hands-on interactive coding lessons. From variables to machine learning."
+  },
+  "chapter": {
+    "title": "5. Data Structures",
+    "description": "Store, organize, and manipulate collections of data using Lists, Tuples, Dictionaries, and Sets.",
+    "order_index": 5
+  },
+  "lessons": [
+    {
+      "title": "Lists",
+      "objectives": [
+        "Create and access lists",
+        "Add, remove, and modify list items"
+      ],
+      "explanation": "A List is a built-in data structure that allows you to store multiple items in a single variable. Lists are ordered, changeable, and allow duplicate values. They are defined using square brackets `[]`. You can access items in a list by their index (starting at 0).",
+      "analogy": "A list is like a row of lockers. Each locker has a number (index) and contains an item. You can open any locker to see what's inside, put new things in, or take things out.",
+      "syntax": "my_list = [\"apple\", \"banana\", \"cherry\"]",
+      "common_mistakes": [
+        "Forgetting that list indexes start at 0, not 1.",
+        "Trying to access an index that doesn't exist (IndexError)."
+      ],
+      "best_practices": [
+        "Use lists when you have an ordered collection of items of the same type."
+      ],
+      "summary": "Lists are versatile arrays that can hold any type of data, making them one of the most used data structures in Python.",
+      "order_index": 1,
+      "estimated_time": 15,
+      "difficulty": "beginner",
+      "tags": ["python", "data-structures", "lists"],
+      "careers": ["Data Science", "Backend Development"],
+      "examples": [
+        {
+          "title": "Working with Lists",
+          "code": "fruits = [\"apple\", \"banana\"]\nfruits.append(\"cherry\")\nprint(fruits[0])\nprint(fruits)",
+          "explanation": "We create a list, add 'cherry' to the end using `.append()`, and then print the first item ('apple') and the whole list."
+        }
+      ],
+      "exercises": [
+        {
+          "statement": "Create a list named `colors` containing 'red', 'blue', and 'green'. Print the second item in the list.",
+          "difficulty": "beginner",
+          "starter_code": "# Create your list and print the second item\n",
+          "expected_output": "blue\n",
+          "hint": "Remember that indexes start at 0. The second item is at index 1.",
+          "solution": "colors = ['red', 'blue', 'green']\nprint(colors[1])"
+        }
+      ]
+    },
+    {
+      "title": "Dictionaries",
+      "objectives": [
+        "Understand key-value pairs",
+        "Create and modify dictionaries"
+      ],
+      "explanation": "Dictionaries are used to store data values in key-value pairs. They are unordered, changeable, and do not allow duplicate keys. Dictionaries are written with curly brackets `{}`, and have keys and values separated by a colon.",
+      "analogy": "A dictionary is like a real-world dictionary or a phone book. You look up a specific word or name (the key) to find its definition or phone number (the value).",
+      "syntax": "person = {\"name\": \"Alice\", \"age\": 25}",
+      "common_mistakes": [
+        "Using a mutable object (like a list) as a dictionary key (keys must be immutable, like strings or numbers).",
+        "Trying to access a key that doesn't exist (KeyError)."
+      ],
+      "best_practices": [
+        "Use dictionaries when you need to associate values with unique identifiers (keys)."
+      ],
+      "summary": "Dictionaries provide incredibly fast lookups and are perfect for storing structured data properties.",
+      "order_index": 2,
+      "estimated_time": 15,
+      "difficulty": "beginner",
+      "tags": ["python", "data-structures", "dictionaries"],
+      "careers": ["Data Science", "Backend Development"],
+      "examples": [
+        {
+          "title": "Using Dictionaries",
+          "code": "user = {\"username\": \"admin\", \"role\": \"superuser\"}\nprint(user[\"username\"])\nuser[\"active\"] = True\nprint(user)",
+          "explanation": "We access the 'username' key, and then add a brand new key-value pair ('active': True) to the dictionary."
+        }
+      ],
+      "exercises": [
+        {
+          "statement": "Create a dictionary named `car` with keys 'brand' (value 'Ford') and 'year' (value 1964). Print the value of the 'year' key.",
+          "difficulty": "beginner",
+          "starter_code": "# Create dictionary and print year\n",
+          "expected_output": "1964\n",
+          "hint": "Use curly braces {} and separate keys and values with colons :",
+          "solution": "car = {'brand': 'Ford', 'year': 1964}\nprint(car['year'])"
+        }
+      ]
+    }
+  ]
+}

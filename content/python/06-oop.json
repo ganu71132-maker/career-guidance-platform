@@ -1,0 +1,56 @@
+{
+  "course": {
+    "title": "Learn Python",
+    "slug": "python",
+    "language": "python",
+    "description": "Master Python from scratch with hands-on interactive coding lessons. From variables to machine learning."
+  },
+  "chapter": {
+    "title": "6. Object-Oriented Programming (OOP)",
+    "description": "Model real-world concepts using Classes and Objects in Python.",
+    "order_index": 6
+  },
+  "lessons": [
+    {
+      "title": "Classes and Objects",
+      "objectives": [
+        "Understand OOP concepts",
+        "Define a class using the class keyword",
+        "Instantiate objects from a class"
+      ],
+      "explanation": "Python is an object-oriented programming language. Almost everything in Python is an object, with its properties and methods. A Class is like an object constructor, or a 'blueprint' for creating objects. You define a class using the `class` keyword.",
+      "analogy": "A Class is like an architectural blueprint for a house. An Object is the actual physical house built from that blueprint. You can build many houses (objects) from the same blueprint (class).",
+      "syntax": "class MyClass:\n    pass\n\nobj = MyClass()",
+      "common_mistakes": [
+        "Forgetting the `self` parameter in class methods.",
+        "Confusing class variables with instance variables."
+      ],
+      "best_practices": [
+        "Use PascalCase (capitalizing the first letter of each word) for Class names."
+      ],
+      "summary": "Classes allow you to group data and functions together into single units, making large programs much easier to manage.",
+      "order_index": 1,
+      "estimated_time": 20,
+      "difficulty": "intermediate",
+      "tags": ["python", "oop", "classes"],
+      "careers": ["Software Engineering"],
+      "examples": [
+        {
+          "title": "Creating a Dog Class",
+          "code": "class Dog:\n    def __init__(self, name):\n        self.name = name\n\n    def bark(self):\n        print(f\"{self.name} says Woof!\")\n\nmy_dog = Dog(\"Buddy\")\nmy_dog.bark()",
+          "explanation": "We create a Dog class with an initialization method `__init__` that sets the name. The `bark` method uses that name. Then we create an instance of Dog named 'Buddy'."
+        }
+      ],
+      "exercises": [
+        {
+          "statement": "Create a class `Cat` with an `__init__` method that accepts a `name`. Create a method `meow` that prints 'Meow!'. Instantiate a Cat named 'Whiskers' and call its meow method.",
+          "difficulty": "intermediate",
+          "starter_code": "# Define Cat class\n\n\n# Instantiate and call meow\n",
+          "expected_output": "Meow!\n",
+          "hint": "Remember to include `self` as the first parameter in both __init__ and meow.",
+          "solution": "class Cat:\n    def __init__(self, name):\n        self.name = name\n    def meow(self):\n        print(\"Meow!\")\n\nc = Cat(\"Whiskers\")\nc.meow()"
+        }
+      ]
+    }
+  ]
+}

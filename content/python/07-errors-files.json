@@ -1,0 +1,54 @@
+{
+  "course": {
+    "title": "Learn Python",
+    "slug": "python",
+    "language": "python",
+    "description": "Master Python from scratch with hands-on interactive coding lessons. From variables to machine learning."
+  },
+  "chapter": {
+    "title": "7. Error Handling & Files",
+    "description": "Learn to gracefully handle errors and read/write to files.",
+    "order_index": 7
+  },
+  "lessons": [
+    {
+      "title": "Try Except Blocks",
+      "objectives": [
+        "Prevent programs from crashing",
+        "Catch and handle specific exceptions"
+      ],
+      "explanation": "When an error occurs, Python normally stops and generates an error message (an Exception). You can handle these exceptions using a `try...except` block, allowing your program to continue running or fail gracefully.",
+      "analogy": "A try block is like a safety net for a trapeze artist. If the trick (the code) fails and they fall (an error occurs), the safety net (except block) catches them so the show can go on.",
+      "syntax": "try:\n    # risky code\nexcept Exception:\n    # code to run if error occurs",
+      "common_mistakes": [
+        "Using a bare `except:` without specifying the error type, which can hide unexpected bugs."
+      ],
+      "best_practices": [
+        "Always try to catch specific exceptions (like ValueError or ZeroDivisionError) rather than all exceptions."
+      ],
+      "summary": "Try and Except blocks are critical for building robust applications that don't crash when users provide bad input.",
+      "order_index": 1,
+      "estimated_time": 10,
+      "difficulty": "intermediate",
+      "tags": ["python", "errors", "exceptions"],
+      "careers": ["Software Engineering"],
+      "examples": [
+        {
+          "title": "Handling Division by Zero",
+          "code": "try:\n    result = 10 / 0\nexcept ZeroDivisionError:\n    print(\"You cannot divide by zero!\")\n\nprint(\"Program continues...\")",
+          "explanation": "Normally, 10/0 would crash the program. The try/except catches the ZeroDivisionError, prints a friendly message, and lets the program continue."
+        }
+      ],
+      "exercises": [
+        {
+          "statement": "Write a try/except block that tries to print an undefined variable named `unknown_var`. Catch the `NameError` and print 'Variable not found'.",
+          "difficulty": "intermediate",
+          "starter_code": "# Write try/except block below\n",
+          "expected_output": "Variable not found\n",
+          "hint": "Put `print(unknown_var)` inside the try block.",
+          "solution": "try:\n    print(unknown_var)\nexcept NameError:\n    print(\"Variable not found\")"
+        }
+      ]
+    }
+  ]
+}
