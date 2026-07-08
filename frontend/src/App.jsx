@@ -24,6 +24,8 @@ import InteractiveWorkspace from './pages/InteractiveWorkspace';
 
 // Protected User Pages
 import Dashboard from './pages/Dashboard';
+import Leaderboard from './pages/Leaderboard';
+import DailyChallenge from './pages/DailyChallenge';
 import Profile from './pages/Profile';
 import ResumeBuilder from './pages/ResumeBuilder';
 import SkillExplorer from './pages/SkillExplorer';
@@ -71,6 +73,8 @@ function App() {
 
             {/* Protected User Routes */}
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
+            <Route path="/daily" element={<ProtectedRoute><DailyChallenge /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/resume" element={<ProtectedRoute><ResumeBuilder /></ProtectedRoute>} />
 
