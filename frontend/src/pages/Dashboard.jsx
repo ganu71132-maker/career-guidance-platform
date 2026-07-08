@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useData } from '../contexts/DataContext';
-import { Compass, Bookmark, CheckCircle, TrendingUp, LogOut, Map, BookOpen, User, ArrowRight, FileText, Megaphone, Code2, Clock } from 'lucide-react';
+import { Compass, Bookmark, CheckCircle, TrendingUp, LogOut, Map, BookOpen, User, ArrowRight, FileText, Megaphone, Code2, Clock, Star } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import NotificationBell from '../components/NotificationBell';
