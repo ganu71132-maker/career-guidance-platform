@@ -183,7 +183,7 @@ sys.stdout = io.StringIO()
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white">Loading challenges...</div>;
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-900 text-slate-200 font-sans">
+    <div className="h-screen flex flex-col bg-slate-900 text-slate-200 font-sans">
       {showConfetti && <Confetti recycle={false} numberOfPieces={200} />}
       
       {/* Header */}
