@@ -32,7 +32,8 @@ export default function DailyChallenge() {
       
       if (cData) {
         setChallenge(cData);
-        setCode(cData.starter_code || '');
+        const savedDraft = localStorage.getItem(`daily_challenge_draft_day_${dayNumber}`);
+        setCode(savedDraft || cData.starter_code || '');
       }
 
       if (user) {
@@ -69,6 +70,12 @@ export default function DailyChallenge() {
     loadChallenge();
     initPyodide();
   }, [user]);
+
+  useEffect(() => {
+    if (challenge && !alreadyCompleted) {
+      localStorage.setItem(`daily_challenge_draft_day_${challenge.day_number}`, code);
+    }
+  }, [code, challenge, alreadyCompleted]);
 
   const runCode = async () => {
     if (!pyodideRef.current) {
