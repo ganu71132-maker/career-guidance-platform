@@ -34,6 +34,7 @@ export default function Dashboard() {
   const [savedCodes, setSavedCodes] = useState([]);
   const [selectedSnippet, setSelectedSnippet] = useState(null);
   const [gamification, setGamification] = useState(null);
+  const [challengeProgress, setChallengeProgress] = useState({ completed: 0, total: 30 });
 
   useEffect(() => {
     if (!user) return;
@@ -69,6 +70,13 @@ export default function Dashboard() {
         .eq('user_id', user.id)
         .single();
       if (data) setGamification(data);
+
+      const { count } = await supabase
+        .from('user_challenge_completions')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id);
+      
+      setChallengeProgress(prev => ({ ...prev, completed: count || 0 }));
     }
 
     fetchRecent();
@@ -469,26 +477,26 @@ export default function Dashboard() {
         )}
 
         {/* Daily Challenge Banner */}
-        <div className="mb-8 sm:mb-10 p-6 rounded-3xl bg-gradient-to-r from-indigo-900 to-slate-900 border border-indigo-800 shadow-xl shadow-indigo-900/20 text-white relative overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div className="mb-8 sm:mb-10 p-6 rounded-3xl bg-gradient-to-r from-indigo-900 via-slate-900 to-indigo-950 border border-indigo-800 shadow-xl shadow-indigo-900/20 text-white relative overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="absolute right-0 top-0 opacity-10 pointer-events-none text-9xl leading-none font-black translate-x-1/4 -translate-y-1/4">
             {"{ }"}
           </div>
           <div className="relative z-10 space-y-2 text-center sm:text-left">
             <div className="flex items-center justify-center sm:justify-start gap-2 text-indigo-300 font-bold text-xs uppercase tracking-widest mb-1">
-              <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" /> Today's Challenge
+              <Trophy className="h-4 w-4 text-yellow-500 fill-yellow-500" /> 30-Day Python Track
             </div>
-            <h2 className="text-2xl sm:text-3xl font-black">Daily Coding Challenge</h2>
-            <p className="text-slate-300 text-sm max-w-md">Solve today's puzzle to earn 50 XP, build your streak, and climb the global leaderboard.</p>
+            <h2 className="text-2xl sm:text-3xl font-black">Coding Challenge Path</h2>
+            <p className="text-slate-300 text-sm max-w-md">Solve Python challenges in order, unlock rewards, and climb the ranks. {challengeProgress.completed} / {challengeProgress.total} completed.</p>
           </div>
           
           <div className="relative z-10 shrink-0">
-            {gamification?.last_daily_completed && new Date(gamification.last_daily_completed).toLocaleDateString() === new Date().toLocaleDateString() ? (
+            {challengeProgress.completed >= challengeProgress.total ? (
               <div className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 px-6 py-3 rounded-xl font-bold flex items-center gap-2">
-                <CheckCircle className="h-5 w-5" /> Completed for Today!
+                <CheckCircle className="h-5 w-5" /> Completed the Whole Track! 🎉
               </div>
             ) : (
               <Link to="/daily" className="bg-indigo-500 hover:bg-indigo-400 text-white px-8 py-3.5 rounded-xl font-black text-sm shadow-lg shadow-indigo-500/30 transition-all hover:scale-105 active:scale-95 flex items-center gap-2 group">
-                Play Now <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                Resume Path <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             )}
           </div>
