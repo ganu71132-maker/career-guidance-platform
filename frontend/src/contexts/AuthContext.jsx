@@ -18,6 +18,52 @@ export function AuthProvider({ children }) {
         .eq('id', userId)
         .single();
         
+      if (error && error.code === 'PGRST116') {
+        // Self-healing: Profile doesn't exist in public.users, let's create it!
+        console.log('Auth: Profile not found, attempting to create one...');
+        const { data: { session } } = await supabase.auth.getSession();
+        const currentUser = session?.user;
+        if (currentUser) {
+          const email = currentUser.email;
+          const fullName = currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || email.split('@')[0];
+          
+          // Insert into users
+          const { data: newProfile, error: insertError } = await supabase
+            .from('users')
+            .insert({
+              id: userId,
+              full_name: fullName,
+              email: email,
+              role: 'user'
+            })
+            .select()
+            .single();
+          
+          if (insertError) {
+            console.error('Auth: Failed to self-heal profile:', insertError);
+            throw insertError;
+          }
+
+          // Insert into user_gamification
+          const { error: gamificationError } = await supabase
+            .from('user_gamification')
+            .insert({
+              user_id: userId,
+              total_xp: 0,
+              current_streak: 0,
+              longest_streak: 0
+            });
+          
+          if (gamificationError) {
+            console.error('Auth: Failed to create gamification row:', gamificationError);
+          }
+
+          console.log('Auth: Profile self-healed successfully:', newProfile);
+          setProfile(newProfile);
+          return newProfile;
+        }
+      }
+      
       if (error) {
         console.error('Auth: Supabase error fetching profile:', error);
         throw error;
