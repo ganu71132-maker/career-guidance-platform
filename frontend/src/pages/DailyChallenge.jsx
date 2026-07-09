@@ -18,6 +18,7 @@ export default function DailyChallenge() {
   const [status, setStatus] = useState('idle'); // idle, running, success, fail
   const [showConfetti, setShowConfetti] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [activeTab, setActiveTab] = useState('instructions'); // instructions, editor, output
   const pyodideRef = useRef(null);
 
   useEffect(() => {

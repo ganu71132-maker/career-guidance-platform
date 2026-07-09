@@ -7,8 +7,11 @@ export class SqlRunner {
         // Reset the alasql database instance before each run to ensure a clean slate
         alasql('DROP DATABASE IF EXISTS testdb; CREATE DATABASE testdb; USE testdb;');
         
+        // Auto-drop custom databases to prevent "already exists" errors on re-runs
+        const processedCode = code.replace(/CREATE\s+DATABASE\s+([a-zA-Z0-9_]+)/gi, 'DROP DATABASE IF EXISTS $1; CREATE DATABASE $1');
+
         // Execute the user's code
-        const results = alasql(code);
+        const results = alasql(processedCode);
         
         // Format the output
         if (results === undefined || results === null || results.length === 0) {
