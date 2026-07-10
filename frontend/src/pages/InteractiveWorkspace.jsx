@@ -358,7 +358,7 @@ export default function InteractiveWorkspace() {
           </div>
 
           {/* Monaco Editor */}
-          <div className="flex-grow relative min-h-0">
+          <div className="flex-grow relative min-h-[250px]">
             <CodeEditor 
               language={lesson.learning_chapters?.learning_courses?.language || 'python'} 
               value={code} 
