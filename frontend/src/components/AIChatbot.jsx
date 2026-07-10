@@ -39,45 +39,45 @@ export default function AIChatbot() {
         return;
       }
 
-      const ai = new GoogleGenAI({ apiKey });
-
       // Construct the system prompt based on context
-      let systemInstruction = "You are a friendly, helpful AI assistant for the NextraPath Career Platform. Be concise, encouraging, and format your responses nicely in markdown.";
+      let systemInstruction = "You are a friendly, helpful AI assistant for the NextraPath Career Platform. Be concise, encouraging, and keep responses short.";
       
       if (contextData?.type === 'code') {
         systemInstruction = `You are an expert coding tutor. The user is working on a challenge: "${contextData.data?.challengeTitle || 'Unknown'}". 
-        Here is their current code:
-        \`\`\`
-        ${contextData.data?.code || ''}
-        \`\`\`
-        Here is the output/error they got:
-        \`\`\`
-        ${contextData.data?.output || ''}
-        \`\`\`
-        Help them understand what is wrong and how to fix it. Do NOT just give them the final code; guide them to the solution. Keep it brief.`;
+        Here is their current code:\n${contextData.data?.code || '(no code yet)'}
+        Here is the output/error they got:\n${contextData.data?.output || '(no output yet)'}
+        Help them understand what is wrong and guide them to the solution. Do NOT just give the final code directly. Keep it brief.`;
       } else if (contextData?.type === 'resume') {
         systemInstruction = `You are an expert tech recruiter and resume reviewer. The user is building their resume. 
-        Here is their current resume data (JSON):
-        ${JSON.stringify(contextData.data, null, 2)}
-        
-        Review this data and provide constructive, actionable feedback to make it better and more hirable.`;
+        Here is their resume data: ${JSON.stringify(contextData.data, null, 2)}
+        Review this and provide 3 specific, actionable tips to improve it.`;
       }
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: [
-          { role: 'user', parts: [{ text: userMessage }] }
-        ],
-        config: {
-          systemInstruction: systemInstruction,
-          temperature: 0.7,
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            system_instruction: { parts: [{ text: systemInstruction }] },
+            contents: [{ role: 'user', parts: [{ text: userMessage }] }],
+            generationConfig: { temperature: 0.7, maxOutputTokens: 800 }
+          })
         }
-      });
+      );
 
-      addMessage({ role: 'model', content: response.text });
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData?.error?.message || 'API request failed');
+      }
+
+      const data = await response.json();
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "I couldn't generate a response. Please try again.";
+      addMessage({ role: 'model', content: text });
     } catch (error) {
       console.error("AI Error:", error);
-      addMessage({ role: 'model', content: "Oops, something went wrong while thinking. Please try again later." });
+      addMessage({ role: 'model', content: `Error: ${error.message || "Something went wrong. Please try again."}` });
+
     } finally {
       setLoading(false);
     }
