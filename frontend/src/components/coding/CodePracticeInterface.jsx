@@ -6,6 +6,7 @@ import { SqlRunner } from './runners/SqlRunner';
 import WebPreview from './runners/WebPreview';
 import { Play, RotateCcw, Trash2, Copy, Download, Save, Code, Sparkles, Clock } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useChat } from '../../contexts/ChatContext';
 import { supabase } from '../../lib/supabase';
 
 const STARTER_CODE = {
@@ -24,6 +25,7 @@ const CHALLENGES = {
 
 export default function CodePracticeInterface({ initialLanguage = 'python', initialCode = null, onClose = null }) {
   const { user } = useAuth();
+  const { openChatWithContext } = useChat();
   const [language, setLanguage] = useState(initialLanguage);
   const [code, setCode] = useState(initialCode || STARTER_CODE[initialLanguage]);
   const [output, setOutput] = useState(null);
@@ -123,6 +125,23 @@ export default function CodePracticeInterface({ initialLanguage = 'python', init
     }
   };
 
+  const askAIHelper = (mode) => {
+    let modeText = "Explain this code and help me improve it.";
+    if (mode === 'error') {
+      modeText = "I ran my code and encountered an issue. Can you look at my code and tell me what is wrong?";
+    } else if (mode === 'optimize') {
+      modeText = "Can you help me optimize this code to run faster or be more readable?";
+    }
+    openChatWithContext({
+      type: 'code',
+      data: {
+        code,
+        output: typeof output?.content === 'object' ? JSON.stringify(output.content) : output?.content,
+        challengeTitle: `Sandbox (${language})`
+      }
+    });
+  };
+
   return (
     <div className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-2xl flex flex-col h-[700px] text-slate-300 font-sans">
       
@@ -175,18 +194,18 @@ export default function CodePracticeInterface({ initialLanguage = 'python', init
 
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
         {/* Left Side: Editor & Challenge */}
-        <div className="w-full lg:w-1/2 flex flex-col border-r border-slate-800">
+        <div className="w-full lg:w-1/2 flex flex-col border-r border-slate-800 min-h-[350px]">
           <div className="bg-slate-800/50 p-4 border-b border-slate-800">
             <div className="text-xs text-emerald-400 font-bold uppercase tracking-wider mb-1">Challenge: {CHALLENGES[language].title}</div>
             <div className="text-sm text-slate-300">{CHALLENGES[language].description}</div>
           </div>
-          <div className="flex-1 p-4">
+          <div className="flex-1 p-4 min-h-[300px]">
             <CodeEditor language={language} value={code} onChange={setCode} />
           </div>
         </div>
 
         {/* Right Side: Output */}
-        <div className="w-full lg:w-1/2 flex flex-col bg-black/40">
+        <div className="w-full lg:w-1/2 flex flex-col bg-black/40 min-h-[250px]">
           <div className="bg-slate-900 p-3 border-b border-slate-800 flex items-center justify-between">
             <div className="text-sm font-medium text-slate-400 uppercase tracking-wider">Output</div>
             <div className="flex items-center gap-4">
@@ -237,13 +256,22 @@ export default function CodePracticeInterface({ initialLanguage = 'python', init
 
           {/* AI Features Placeholder */}
           <div className="p-3 border-t border-slate-800 bg-slate-900 flex gap-2 overflow-x-auto">
-            <button className="whitespace-nowrap px-3 py-1.5 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20 text-xs font-medium flex items-center gap-1.5 transition-colors">
+            <button 
+              onClick={() => askAIHelper('explain')}
+              className="whitespace-nowrap px-3 py-1.5 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20 text-xs font-medium flex items-center gap-1.5 transition-colors"
+            >
               <Sparkles className="h-3 w-3" /> Explain Code
             </button>
-            <button className="whitespace-nowrap px-3 py-1.5 rounded-lg bg-orange-500/10 text-orange-400 border border-orange-500/20 hover:bg-orange-500/20 text-xs font-medium flex items-center gap-1.5 transition-colors">
+            <button 
+              onClick={() => askAIHelper('error')}
+              className="whitespace-nowrap px-3 py-1.5 rounded-lg bg-orange-500/10 text-orange-400 border border-orange-500/20 hover:bg-orange-500/20 text-xs font-medium flex items-center gap-1.5 transition-colors"
+            >
               <Sparkles className="h-3 w-3" /> Find Error
             </button>
-            <button className="whitespace-nowrap px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 text-xs font-medium flex items-center gap-1.5 transition-colors">
+            <button 
+              onClick={() => askAIHelper('optimize')}
+              className="whitespace-nowrap px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 text-xs font-medium flex items-center gap-1.5 transition-colors"
+            >
               <Sparkles className="h-3 w-3" /> Optimize Code
             </button>
           </div>
