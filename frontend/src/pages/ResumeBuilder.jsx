@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useData } from '../contexts/DataContext';
 import { supabase } from '../lib/supabase';
+import { useChat } from '../contexts/ChatContext';
 import { Link } from 'react-router-dom';
 import { 
   ArrowLeft, User, Briefcase, GraduationCap, Code, Lightbulb, 
@@ -11,6 +12,7 @@ import {
 
 export default function ResumeBuilder() {
   const { user } = useAuth();
+  const { openChatWithContext } = useChat();
   const { careers: careersData, completedSteps, savedCareers } = useData();
 
   // Tab State
@@ -544,6 +546,12 @@ export default function ResumeBuilder() {
           </div>
           
           <div className="flex items-center gap-2 sm:gap-3">
+            <button 
+              onClick={() => openChatWithContext({ type: 'resume', data: { personalInfo, summary, experience, education, projects, technicalSkills, softSkills } })}
+              className="flex items-center gap-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 px-2.5 sm:px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-sm cursor-pointer transition-all duration-300"
+            >
+              <Sparkles className="h-4 w-4" /> <span className="hidden sm:inline">Review with AI</span>
+            </button>
             <button 
               onClick={handleSaveResume}
               disabled={loading}

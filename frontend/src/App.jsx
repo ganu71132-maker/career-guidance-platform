@@ -2,10 +2,12 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { DataProvider } from './contexts/DataContext';
+import { ChatProvider } from './contexts/ChatContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AdminRoute } from './components/AdminRoute';
 import InstallPrompt from './components/InstallPrompt';
 import ScrollToTop from './components/ScrollToTop';
+import AIChatbot from './components/AIChatbot';
 
 // Public Pages
 import Home from './pages/Home';
@@ -50,52 +52,55 @@ function App() {
     <HelmetProvider>
       <AuthProvider>
         <DataProvider>
-          <Router>
-            <ScrollToTop />
-            <InstallPrompt />
-            <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/explorer" element={<CareerExplorer />} />
-            <Route path="/career/:id" element={<CareerDetails />} />
-            <Route path="/sandbox" element={<CodingPlayground />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/about" element={<AboutUs />} />
-            <Route path="/skills" element={<SkillExplorer />} />
-            <Route path="/skill/:name" element={<SkillDetails />} />
-            
-            {/* Learn Routes */}
-            <Route path="/learn" element={<LearnCatalog />} />
-            <Route path="/learn/:courseSlug" element={<LearnCourseOverview />} />
-            <Route path="/learn/:courseSlug/:lessonId" element={<ProtectedRoute><InteractiveWorkspace /></ProtectedRoute>} />
+          <ChatProvider>
+            <Router>
+              <ScrollToTop />
+              <InstallPrompt />
+              <AIChatbot />
+              <Routes>
+              {/* Public Routes */}
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/explorer" element={<CareerExplorer />} />
+              <Route path="/career/:id" element={<CareerDetails />} />
+              <Route path="/sandbox" element={<CodingPlayground />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/about" element={<AboutUs />} />
+              <Route path="/skills" element={<SkillExplorer />} />
+              <Route path="/skill/:name" element={<SkillDetails />} />
+              
+              {/* Learn Routes */}
+              <Route path="/learn" element={<LearnCatalog />} />
+              <Route path="/learn/:courseSlug" element={<LearnCourseOverview />} />
+              <Route path="/learn/:courseSlug/:lessonId" element={<ProtectedRoute><InteractiveWorkspace /></ProtectedRoute>} />
 
-            {/* Protected User Routes */}
-            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
-            <Route path="/daily" element={<ProtectedRoute><DailyChallenge /></ProtectedRoute>} />
-            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-            <Route path="/resume" element={<ProtectedRoute><ResumeBuilder /></ProtectedRoute>} />
+              {/* Protected User Routes */}
+              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
+              <Route path="/daily" element={<ProtectedRoute><DailyChallenge /></ProtectedRoute>} />
+              <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+              <Route path="/resume" element={<ProtectedRoute><ResumeBuilder /></ProtectedRoute>} />
 
-            {/* Admin Routes */}
-            <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
-            <Route path="/admin/careers" element={<AdminRoute><ManageCareers /></AdminRoute>} />
-            <Route path="/admin/roadmaps" element={<AdminRoute><ManageRoadmaps /></AdminRoute>} />
-            <Route path="/admin/resources" element={<AdminRoute><ManageResources /></AdminRoute>} />
-            <Route path="/admin/career-resources" element={<AdminRoute><ManageCareerResources /></AdminRoute>} />
-            <Route path="/admin/users" element={<AdminRoute superAdminOnly={true}><ManageUsers /></AdminRoute>} />
-            <Route path="/admin/announcements" element={<AdminRoute superAdminOnly={true}><ManageAnnouncements /></AdminRoute>} />
-            <Route path="/admin/notifications" element={<AdminRoute superAdminOnly={true}><ManagePushNotifications /></AdminRoute>} />
-            <Route path="/admin/skills" element={<AdminRoute><ManageSkills /></AdminRoute>} />
-            <Route path="/admin/skill-roadmaps" element={<AdminRoute><ManageSkillRoadmaps /></AdminRoute>} />
+              {/* Admin Routes */}
+              <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+              <Route path="/admin/careers" element={<AdminRoute><ManageCareers /></AdminRoute>} />
+              <Route path="/admin/roadmaps" element={<AdminRoute><ManageRoadmaps /></AdminRoute>} />
+              <Route path="/admin/resources" element={<AdminRoute><ManageResources /></AdminRoute>} />
+              <Route path="/admin/career-resources" element={<AdminRoute><ManageCareerResources /></AdminRoute>} />
+              <Route path="/admin/users" element={<AdminRoute superAdminOnly={true}><ManageUsers /></AdminRoute>} />
+              <Route path="/admin/announcements" element={<AdminRoute superAdminOnly={true}><ManageAnnouncements /></AdminRoute>} />
+              <Route path="/admin/notifications" element={<AdminRoute superAdminOnly={true}><ManagePushNotifications /></AdminRoute>} />
+              <Route path="/admin/skills" element={<AdminRoute><ManageSkills /></AdminRoute>} />
+              <Route path="/admin/skill-roadmaps" element={<AdminRoute><ManageSkillRoadmaps /></AdminRoute>} />
 
-            {/* Catch all */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Router>
-      </DataProvider>
-    </AuthProvider>
+              {/* Catch all */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Router>
+          </ChatProvider>
+        </DataProvider>
+      </AuthProvider>
     </HelmetProvider>
   );
 }

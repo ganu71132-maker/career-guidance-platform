@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { useChat } from '../contexts/ChatContext';
 import { ArrowLeft, ArrowRight, Play, Check, X, RefreshCcw, Sparkles, BookOpen, ChevronRight, Bookmark } from 'lucide-react';
 import CodeEditor from '../components/coding/CodeEditor';
 import { PythonRunner } from '../components/coding/runners/PythonRunner';
@@ -11,6 +12,7 @@ import { useAuth } from '../contexts/AuthContext';
 export default function InteractiveWorkspace() {
   const { courseSlug, lessonId } = useParams();
   const { user } = useAuth();
+  const { openChatWithContext } = useChat();
   const navigate = useNavigate();
   
   const [lesson, setLesson] = useState(null);
@@ -320,14 +322,22 @@ export default function InteractiveWorkspace() {
               <div className="text-sm text-slate-400 italic">Sandbox mode: Write and run any Python code.</div>
             )}
             
-            <button 
-              onClick={handleRunCode}
-              disabled={isRunning}
-              className="flex shrink-0 items-center gap-2 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white px-5 py-2 rounded-lg font-bold text-sm transition-all shadow-lg shadow-blue-900/20"
-            >
-              {isRunning ? <RefreshCcw className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4 fill-current" />}
-              {isRunning ? 'Running...' : `Run ${language === 'sql' ? 'Query' : 'Code'}`}
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => openChatWithContext({ type: 'code', data: { code, output: typeof output?.content === 'object' ? JSON.stringify(output.content) : output?.content, challengeTitle: lesson?.title } })}
+                className="flex shrink-0 items-center gap-2 bg-indigo-600/90 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg font-bold text-sm transition-all shadow-lg shadow-indigo-900/20"
+              >
+                <Sparkles className="w-4 h-4" /> Ask AI
+              </button>
+              <button 
+                onClick={handleRunCode}
+                disabled={isRunning}
+                className="flex shrink-0 items-center gap-2 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white px-5 py-2 rounded-lg font-bold text-sm transition-all shadow-lg shadow-blue-900/20"
+              >
+                {isRunning ? <RefreshCcw className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4 fill-current" />}
+                {isRunning ? 'Running...' : `Run ${language === 'sql' ? 'Query' : 'Code'}`}
+              </button>
+            </div>
           </div>
 
           {/* Monaco Editor */}

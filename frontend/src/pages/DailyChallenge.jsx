@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
-import { ArrowLeft, Play, CheckCircle, Trophy, Star, Lock, ChevronRight, Menu, X } from 'lucide-react';
+import { useChat } from '../contexts/ChatContext';
+import { ArrowLeft, Play, CheckCircle, Trophy, Star, Lock, ChevronRight, Menu, X, Sparkles } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import Editor from '@monaco-editor/react';
 import Confetti from 'react-confetti';
 
 export default function DailyChallenge() {
   const { user } = useAuth();
+  const { openChatWithContext } = useChat();
   const navigate = useNavigate();
   const [challenges, setChallenges] = useState([]);
   const [activeChallenge, setActiveChallenge] = useState(null);
@@ -307,13 +309,21 @@ sys.stdout = io.StringIO()
                   options={{ minimap: { enabled: false }, fontSize: 14, readOnly: completions.includes(activeChallenge.id) }}
                 />
                 {!completions.includes(activeChallenge.id) && (
-                  <button
-                    onClick={runCode}
-                    disabled={status === 'running'}
-                    className="absolute bottom-6 right-6 bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-emerald-950/60 flex items-center gap-2 transition-transform hover:scale-105 active:scale-95 disabled:opacity-50"
-                  >
-                    <Play className="h-4 w-4 text-white fill-white" /> Run & Submit
-                  </button>
+                  <div className="absolute bottom-6 right-6 flex gap-3">
+                    <button
+                      onClick={() => openChatWithContext({ type: 'code', data: { code, output, challengeTitle: activeChallenge.title } })}
+                      className="bg-indigo-600/90 hover:bg-indigo-500 text-white px-5 py-3 rounded-xl font-bold shadow-lg shadow-indigo-950/60 flex items-center gap-2 transition-transform hover:scale-105 active:scale-95"
+                    >
+                      <Sparkles className="h-4 w-4 text-white" /> Ask AI Tutor
+                    </button>
+                    <button
+                      onClick={runCode}
+                      disabled={status === 'running'}
+                      className="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-emerald-950/60 flex items-center gap-2 transition-transform hover:scale-105 active:scale-95 disabled:opacity-50"
+                    >
+                      <Play className="h-4 w-4 text-white fill-white" /> Run & Submit
+                    </button>
+                  </div>
                 )}
               </div>
               
