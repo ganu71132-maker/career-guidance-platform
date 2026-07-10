@@ -306,7 +306,13 @@ sys.stdout = io.StringIO()
                   theme="vs-dark"
                   value={code}
                   onChange={setCode}
-                  options={{ minimap: { enabled: false }, fontSize: 14, readOnly: completions.includes(activeChallenge.id) }}
+                  options={{ 
+                    minimap: { enabled: false }, 
+                    fontSize: 14, 
+                    wordWrap: "on", 
+                    automaticLayout: true,
+                    readOnly: completions.includes(activeChallenge.id) 
+                  }}
                 />
                 {!completions.includes(activeChallenge.id) && (
                   <div className="absolute bottom-6 right-6 flex gap-3">

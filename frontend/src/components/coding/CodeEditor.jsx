@@ -24,6 +24,8 @@ export default function CodeEditor({ language, value, onChange }) {
           cursorBlinking: "smooth",
           cursorSmoothCaretAnimation: "on",
           formatOnPaste: true,
+          wordWrap: "on",
+          automaticLayout: true,
           fontFamily: "'JetBrains Mono', 'Fira Code', monospace"
         }}
         loading={
