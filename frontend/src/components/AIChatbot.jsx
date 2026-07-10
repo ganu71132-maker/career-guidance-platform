@@ -17,7 +17,20 @@ export default function AIChatbot() {
     scrollToBottom();
   }, [messages, isOpen]);
 
-  if (!isOpen) return null;
+  if (!isOpen) {
+    return (
+      <button
+        onClick={() => setIsOpen(true)}
+        className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full shadow-2xl flex items-center justify-center text-white hover:scale-105 active:scale-95 transition-transform z-50 group border border-indigo-400/30"
+        title="Open AI Tutor"
+      >
+        <Sparkles className="w-6 h-6 animate-pulse" />
+        <span className="absolute right-16 bg-slate-900 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-700/50 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-xl">
+          Chat with AI Tutor
+        </span>
+      </button>
+    );
+  }
 
   const handleSend = async (e) => {
     e.preventDefault();
