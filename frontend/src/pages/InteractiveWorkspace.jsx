@@ -234,6 +234,7 @@ export default function InteractiveWorkspace() {
             <Sparkles className="w-3.5 h-3.5" /> AI Explain Code
           </button>
         </div>
+      </header>
 
       {/* Mobile Tab Switcher */}
       <div className="md:hidden flex border-b border-slate-800 bg-slate-950 shrink-0">
