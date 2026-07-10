@@ -29,6 +29,7 @@ export default function InteractiveWorkspace() {
   const [showSolution, setShowSolution] = useState(false);
 
   const [nextLessonId, setNextLessonId] = useState(null);
+  const [activeTab, setActiveTab] = useState('lesson');
 
   useEffect(() => {
     fetchLesson();
@@ -233,14 +234,29 @@ export default function InteractiveWorkspace() {
             <Sparkles className="w-3.5 h-3.5" /> AI Explain Code
           </button>
         </div>
-      </header>
+
+      {/* Mobile Tab Switcher */}
+      <div className="md:hidden flex border-b border-slate-800 bg-slate-950 shrink-0">
+        <button
+          onClick={() => setActiveTab('lesson')}
+          className={`flex-1 py-3 text-center text-xs font-bold border-b-2 transition-all ${activeTab === 'lesson' ? 'border-blue-500 text-blue-400 bg-blue-500/5' : 'border-transparent text-slate-400'}`}
+        >
+          📄 Lesson Content
+        </button>
+        <button
+          onClick={() => setActiveTab('editor')}
+          className={`flex-1 py-3 text-center text-xs font-bold border-b-2 transition-all ${activeTab === 'editor' ? 'border-blue-500 text-blue-400 bg-blue-500/5' : 'border-transparent text-slate-400'}`}
+        >
+          💻 Code Editor & Console
+        </button>
+      </div>
 
       {/* Main Workspace */}
-      <div className="flex-grow flex overflow-hidden">
+      <div className="flex-grow flex flex-col md:flex-row overflow-hidden">
         
         {/* Left Pane: Content */}
-        <div className="w-1/3 min-w-[350px] bg-slate-900 border-r border-slate-800 overflow-y-auto custom-scrollbar p-8">
-          <h1 className="text-3xl font-extrabold text-white mb-6">{lesson.title}</h1>
+        <div className={`w-full md:w-1/3 md:min-w-[350px] bg-slate-900 border-r border-slate-800 overflow-y-auto custom-scrollbar p-6 sm:p-8 ${activeTab === 'lesson' ? 'block' : 'hidden md:block'}`}>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-white mb-6">{lesson.title}</h1>
           
           <div className="prose prose-invert prose-blue max-w-none">
             <p className="text-slate-300 leading-relaxed whitespace-pre-line">{lesson.explanation}</p>
@@ -279,7 +295,7 @@ export default function InteractiveWorkspace() {
         </div>
 
         {/* Right Pane: Editor & Console */}
-        <div className="w-2/3 flex flex-col bg-[#1e1e1e]">
+        <div className={`w-full md:w-2/3 flex flex-col bg-[#1e1e1e] ${activeTab === 'editor' ? 'flex' : 'hidden md:flex'}`}>
           
           {/* Instructions Bar */}
           <div className="h-auto min-h-[60px] max-h-[40vh] overflow-y-auto custom-scrollbar bg-slate-950 border-b border-slate-800 p-4 shrink-0 flex items-start sm:items-center justify-between gap-4 flex-col sm:flex-row">
