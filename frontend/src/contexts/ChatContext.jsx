@@ -9,9 +9,7 @@ export function useChat() {
 export function ChatProvider({ children }) {
   const [isOpen, setIsOpen] = useState(false);
   const [contextData, setContextData] = useState(null); // { type: 'code'|'resume', data: any }
-  const [messages, setMessages] = useState([
-    { role: 'model', content: "Hi! I'm your AI assistant. How can I help you today?" }
-  ]);
+  const [messages, setMessages] = useState([]);
 
   const toggleChat = () => setIsOpen(prev => !prev);
   
@@ -25,7 +23,7 @@ export function ChatProvider({ children }) {
   };
 
   const clearMessages = () => {
-    setMessages([{ role: 'model', content: "Hi! I'm your AI assistant. How can I help you today?" }]);
+    setMessages([]);
   };
 
   return (
