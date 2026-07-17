@@ -208,11 +208,13 @@ export function DataProvider({ children }) {
 
     // Listen to user auth state
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setCurrentUser(session?.user ?? null);
+      const u = session?.user ?? null;
+      setCurrentUser(prev => (prev?.id === u?.id ? prev : u));
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setCurrentUser(session?.user ?? null);
+      const u = session?.user ?? null;
+      setCurrentUser(prev => (prev?.id === u?.id ? prev : u));
     });
 
     return () => subscription.unsubscribe();

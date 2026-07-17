@@ -146,8 +146,8 @@ export default function CodePracticeInterface({ initialLanguage = 'python', init
     <div className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-2xl flex flex-col h-[700px] text-slate-300 font-sans">
       
       {/* Top Toolbar */}
-      <div className="bg-slate-950 p-4 border-b border-slate-800 flex items-center justify-between">
-        <div className="flex items-center gap-4">
+      <div className="bg-slate-950 p-4 border-b border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-4 flex-wrap">
           <div className="flex items-center gap-2 text-emerald-400 font-bold text-lg">
             <Code className="h-5 w-5" /> Coding Practice
           </div>
@@ -163,7 +163,7 @@ export default function CodePracticeInterface({ initialLanguage = 'python', init
           </select>
         </div>
         
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           {onClose && (
             <button onClick={onClose} className="px-3 py-1.5 mr-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 hover:text-white transition-colors text-sm font-bold border border-slate-700">
               Close Editor

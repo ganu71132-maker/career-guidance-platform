@@ -80,11 +80,14 @@ export function AuthProvider({ children }) {
   }
 
   useEffect(() => {
+    let lastUserId = null;
+
     // Check active session
     supabase.auth.getSession().then(({ data: { session } }) => {
       const currentUser = session?.user ?? null;
-      setUser(currentUser);
+      setUser(prev => (prev?.id === currentUser?.id ? prev : currentUser));
       if (currentUser) {
+        lastUserId = currentUser.id;
         fetchProfile(currentUser.id).then(() => setLoading(false));
       } else {
         setLoading(false);
@@ -92,12 +95,19 @@ export function AuthProvider({ children }) {
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       const currentUser = session?.user ?? null;
-      setUser(currentUser);
+      
+      // Update user state only if the user ID has changed to prevent unnecessary re-renders
+      setUser(prev => (prev?.id === currentUser?.id ? prev : currentUser));
+      
       if (currentUser) {
-        fetchProfile(currentUser.id);
+        if (currentUser.id !== lastUserId) {
+          lastUserId = currentUser.id;
+          fetchProfile(currentUser.id);
+        }
       } else {
+        lastUserId = null;
         setProfile(null);
       }
     });

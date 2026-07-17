@@ -190,7 +190,7 @@ export default function AIChatbot() {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full shadow-2xl flex items-center justify-center text-white hover:scale-110 active:scale-95 transition-all duration-200 z-50 group border border-indigo-400/30"
+        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-14 h-14 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full shadow-2xl flex items-center justify-center text-white hover:scale-110 active:scale-95 transition-all duration-200 z-50 group border border-indigo-400/30"
         title="Open AI Tutor"
         aria-label="Open AI Tutor Chat"
       >
@@ -287,7 +287,7 @@ Provide **3 specific, actionable tips** in Markdown bullet format to improve it.
 
   const windowClasses = isExpanded
     ? 'fixed inset-4 sm:inset-6 lg:inset-12'
-    : 'fixed bottom-6 right-6 w-[26rem] max-w-[calc(100vw-2rem)] h-[580px] max-h-[80vh]';
+    : 'fixed bottom-4 right-4 left-4 sm:left-auto sm:bottom-6 sm:right-6 w-auto sm:w-[26rem] h-[550px] sm:h-[580px] max-h-[85vh] sm:max-h-[80vh]';
 
   return (
     <div
@@ -442,7 +442,7 @@ Provide **3 specific, actionable tips** in Markdown bullet format to improve it.
                 e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
               }}
               onKeyDown={handleKeyDown}
-              placeholder="Ask me anything… (Enter to send, Shift+Enter for new line)"
+              placeholder="Ask me anything..."
               disabled={loading}
               className="w-full bg-slate-800/80 border border-slate-700/60 focus:border-indigo-500/80 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500/30 resize-none transition-all leading-relaxed disabled:opacity-50"
               style={{ minHeight: '42px', maxHeight: '120px', scrollbarWidth: 'none' }}
