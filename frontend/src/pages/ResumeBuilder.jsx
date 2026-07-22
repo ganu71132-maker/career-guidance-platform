@@ -467,29 +467,41 @@ export default function ResumeBuilder() {
   const renderFormattedText = (text, baseClassName = "text-slate-600 leading-relaxed") => {
     if (!text || !text.trim()) return null;
 
-    const lines = text
+    let normalizedText = text.trim();
+
+    // Convert inline bullet markers (like " • ", " •", "• ") into newlines so inline pasted bullets break into separate points
+    normalizedText = normalizedText.replace(/([^\n])\s*[•\u2022]\s*/g, '$1\n• ');
+    // Convert inline dashes/asterisks preceded by sentence ending punctuation into newlines (e.g. "end. - Point 2")
+    normalizedText = normalizedText.replace(/([\.\!\?])\s*[\-\*]\s+/g, '$1\n- ');
+
+    const rawLines = normalizedText
       .split(/\r?\n/)
       .map(line => line.trim())
       .filter(line => line.length > 0);
 
-    if (lines.length === 0) return null;
+    if (rawLines.length === 0) return null;
 
-    const hasBulletsOrMultipleLines = lines.length > 1 || lines.some(l => /^[•\-\*\d+\.\>\-]\s*/.test(l));
+    // Check if the text was intended as bullet points or multi-line entries
+    const isBulletList = rawLines.length > 1 || /^[•\u2022\-\*\d+\.\>\-]\s*/.test(text.trim());
 
-    if (!hasBulletsOrMultipleLines) {
+    if (!isBulletList) {
       return <p className={baseClassName}>{text}</p>;
     }
 
+    // Clean each line of leading bullet characters
+    const cleanLines = rawLines
+      .map(line => line.replace(/^[•\u2022\-\*\d+\.\>\-]\s*/, '').trim())
+      .filter(line => line.length > 0);
+
+    if (cleanLines.length === 0) return null;
+
     return (
-      <ul className="list-disc list-outside ml-4 space-y-0.5 my-1">
-        {lines.map((line, idx) => {
-          const cleanLine = line.replace(/^[•\-\*\d+\.\>\-]\s*/, '');
-          return (
-            <li key={idx} className={`${baseClassName} pl-0.5`}>
-              {cleanLine}
-            </li>
-          );
-        })}
+      <ul className="list-disc list-outside ml-4 space-y-1.5 my-1">
+        {cleanLines.map((line, idx) => (
+          <li key={idx} className={`${baseClassName} pl-0.5`}>
+            {line}
+          </li>
+        ))}
       </ul>
     );
   };
