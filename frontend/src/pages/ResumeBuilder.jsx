@@ -516,11 +516,17 @@ export default function ResumeBuilder() {
       {/* Dynamic CSS styles loaded dynamically for custom printing overrides */}
       <style>{`
         @media print {
+          @page {
+            margin: 0;
+            size: auto;
+          }
           body, html {
             background-color: white !important;
             background: white !important;
+            margin: 0 !important;
+            padding: 0 !important;
           }
-          nav, aside, button, .print-hidden {
+          header, nav, aside, button, .print-hidden {
             display: none !important;
             width: 0 !important;
             height: 0 !important;
@@ -538,10 +544,11 @@ export default function ResumeBuilder() {
           }
           .resume-sheet {
             margin: 0 !important;
-            padding: 0 !important;
+            padding: 12mm 15mm !important;
             border: none !important;
             box-shadow: none !important;
             width: 100% !important;
+            max-width: 100% !important;
           }
         }
       `}</style>
