@@ -463,9 +463,35 @@ export default function ResumeBuilder() {
     setSoftSkills(softSkills.filter(s => s !== skill));
   };
 
-  // Trigger Print dialogue
-  const handlePrint = () => {
-    window.print();
+  // Helper function to render text as point-wise bullet lists or formatted paragraphs
+  const renderFormattedText = (text, baseClassName = "text-slate-600 leading-relaxed") => {
+    if (!text || !text.trim()) return null;
+
+    const lines = text
+      .split(/\r?\n/)
+      .map(line => line.trim())
+      .filter(line => line.length > 0);
+
+    if (lines.length === 0) return null;
+
+    const hasBulletsOrMultipleLines = lines.length > 1 || lines.some(l => /^[•\-\*\d+\.\>\-]\s*/.test(l));
+
+    if (!hasBulletsOrMultipleLines) {
+      return <p className={baseClassName}>{text}</p>;
+    }
+
+    return (
+      <ul className="list-disc list-outside ml-4 space-y-0.5 my-1">
+        {lines.map((line, idx) => {
+          const cleanLine = line.replace(/^[•\-\*\d+\.\>\-]\s*/, '');
+          return (
+            <li key={idx} className={`${baseClassName} pl-0.5`}>
+              {cleanLine}
+            </li>
+          );
+        })}
+      </ul>
+    );
   };
 
   return (
@@ -843,12 +869,13 @@ export default function ResumeBuilder() {
                         <div className="col-span-2">
                           <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Key Responsibilities / Accomplishments</label>
                           <textarea 
-                            rows={3}
-                            placeholder="Detail key responsibilities, languages used, and value driven..."
+                            rows={4}
+                            placeholder="• Built scalable web backend using Node.js & Supabase&#10;• Improved page load performance by 40%&#10;• Led team of 3 developers in agile sprints..."
                             value={exp.description} 
                             onChange={(e) => updateExperienceField(exp.id, 'description', e.target.value)}
-                            className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 leading-relaxed"
+                            className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 leading-relaxed font-sans"
                           />
+                          <p className="text-[11px] text-slate-400 mt-1">💡 <strong>Tip:</strong> Paste bullet points or type each point on a new line. They will automatically render as clean bullet points in your ATS template!</p>
                         </div>
                       </div>
                     </div>
@@ -987,12 +1014,13 @@ export default function ResumeBuilder() {
                         <div className="col-span-2">
                           <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Project Description / Accomplishments</label>
                           <textarea 
-                            rows={3}
-                            placeholder="Briefly describe what you built, integration setups, and metrics achieved..."
+                            rows={4}
+                            placeholder="• Developed full-stack web application with React and Supabase&#10;• Integrated AI Chatbot powered by Llama 3.1 & Groq API&#10;• Designed responsive ATS resume builder..."
                             value={proj.description} 
                             onChange={(e) => updateProjectField(proj.id, 'description', e.target.value)}
-                            className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 leading-relaxed"
+                            className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 leading-relaxed font-sans"
                           />
+                          <p className="text-[11px] text-slate-400 mt-1">💡 <strong>Tip:</strong> Paste bullet points or type each point on a new line. They will automatically render as clean bullet points in your ATS template!</p>
                         </div>
                       </div>
                     </div>
@@ -1147,7 +1175,7 @@ export default function ResumeBuilder() {
                               <span>{exp.role || 'Role'} · <span className="text-slate-500 font-semibold">{exp.company || 'Company'}</span></span>
                               <span className="text-slate-400 font-normal">{exp.startDate || 'Start'} - {exp.endDate || 'End'}</span>
                             </div>
-                            {exp.description && <p className="text-slate-600 whitespace-pre-line leading-relaxed">{exp.description}</p>}
+                            {exp.description && renderFormattedText(exp.description, "text-slate-600 leading-relaxed")}
                           </div>
                         ))}
                       </div>
@@ -1165,7 +1193,7 @@ export default function ResumeBuilder() {
                               <span>{proj.title}</span>
                               {proj.technologies && <span className="text-emerald-600 font-medium text-[11px]">{proj.technologies}</span>}
                             </div>
-                            {proj.description && <p className="text-slate-600 leading-relaxed">{proj.description}</p>}
+                            {proj.description && renderFormattedText(proj.description, "text-slate-600 leading-relaxed")}
                           </div>
                         ))}
                       </div>
@@ -1235,7 +1263,7 @@ export default function ResumeBuilder() {
                               <span className="font-normal text-slate-600">{exp.startDate || 'Start'} - {exp.endDate || 'End'}</span>
                             </div>
                             <div className="italic text-slate-700">{exp.role || 'Role'}</div>
-                            {exp.description && <p className="text-slate-600 whitespace-pre-line text-justify pl-1">{exp.description}</p>}
+                            {exp.description && renderFormattedText(exp.description, "text-slate-700 leading-relaxed")}
                           </div>
                         ))}
                       </div>
@@ -1252,7 +1280,7 @@ export default function ResumeBuilder() {
                             <div className="flex justify-between font-bold">
                               <span>{proj.title} {proj.technologies && <span className="font-normal text-slate-500">({proj.technologies})</span>}</span>
                             </div>
-                            {proj.description && <p className="text-slate-600 text-justify pl-1">{proj.description}</p>}
+                            {proj.description && renderFormattedText(proj.description, "text-slate-700 leading-relaxed")}
                           </div>
                         ))}
                       </div>
@@ -1349,7 +1377,7 @@ export default function ResumeBuilder() {
                               <span>&gt; {proj.title}</span>
                               <span className="text-indigo-600 text-[11px] font-semibold font-sans">#{proj.technologies || 'Code'}</span>
                             </div>
-                            {proj.description && <p className="text-slate-600 leading-relaxed">{proj.description}</p>}
+                            {proj.description && renderFormattedText(proj.description, "text-slate-600 leading-relaxed")}
                           </div>
                         ))}
                       </div>
@@ -1367,7 +1395,7 @@ export default function ResumeBuilder() {
                               <span>{exp.role} @ {exp.company}</span>
                               <span className="text-slate-400 font-normal">{exp.startDate} - {exp.endDate}</span>
                             </div>
-                            {exp.description && <p className="text-slate-600 leading-relaxed whitespace-pre-line">{exp.description}</p>}
+                            {exp.description && renderFormattedText(exp.description, "text-slate-600 leading-relaxed")}
                           </div>
                         ))}
                       </div>
@@ -1446,7 +1474,7 @@ export default function ResumeBuilder() {
                               <span>{proj.title}</span>
                               <span className="text-teal-700 font-semibold text-[11px]">{proj.technologies}</span>
                             </div>
-                            {proj.description && <p className="text-slate-600 leading-relaxed">{proj.description}</p>}
+                            {proj.description && renderFormattedText(proj.description, "text-slate-600 leading-relaxed")}
                           </div>
                         ))}
                       </div>
@@ -1464,7 +1492,7 @@ export default function ResumeBuilder() {
                               <span>{exp.role} @ {exp.company}</span>
                               <span className="text-slate-400 font-normal">{exp.startDate} - {exp.endDate}</span>
                             </div>
-                            {exp.description && <p className="text-slate-600 leading-relaxed whitespace-pre-line">{exp.description}</p>}
+                            {exp.description && renderFormattedText(exp.description, "text-slate-600 leading-relaxed")}
                           </div>
                         ))}
                       </div>
@@ -1569,7 +1597,7 @@ export default function ResumeBuilder() {
                               <span>{proj.title}</span>
                               {proj.technologies && <span className="text-slate-500 font-medium text-[10px]">({proj.technologies})</span>}
                             </div>
-                            {proj.description && <p className="text-slate-600 leading-relaxed text-justify">{proj.description}</p>}
+                            {proj.description && renderFormattedText(proj.description, "text-slate-600 leading-relaxed")}
                           </div>
                         ))}
                       </div>
@@ -1587,7 +1615,7 @@ export default function ResumeBuilder() {
                               <span>{exp.role} — <span className="text-slate-500">{exp.company}</span></span>
                               <span className="text-slate-400 font-normal">{exp.startDate} - {exp.endDate}</span>
                             </div>
-                            {exp.description && <p className="text-slate-600 whitespace-pre-line leading-relaxed text-justify">{exp.description}</p>}
+                            {exp.description && renderFormattedText(exp.description, "text-slate-600 leading-relaxed")}
                           </div>
                         ))}
                       </div>
