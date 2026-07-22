@@ -463,6 +463,11 @@ export default function ResumeBuilder() {
     setSoftSkills(softSkills.filter(s => s !== skill));
   };
 
+  // Trigger Print dialogue
+  const handlePrint = () => {
+    window.print();
+  };
+
   // Helper function to render text as point-wise bullet lists or formatted paragraphs
   const renderFormattedText = (text, baseClassName = "text-slate-600 leading-relaxed") => {
     if (!text || !text.trim()) return null;
