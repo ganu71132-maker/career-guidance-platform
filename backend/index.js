@@ -4,6 +4,8 @@ const fs = require('fs');
 const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
 const webpush = require('web-push');
+const studyNotesRouter = require('./studyNotesRoutes');
+
 
 const app = express();
 app.use(cors());
