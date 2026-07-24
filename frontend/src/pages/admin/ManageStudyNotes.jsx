@@ -44,11 +44,11 @@ export default function ManageStudyNotes() {
         { data: rtData }
       ] = await Promise.all([
         supabase.from('branches').select('*').order('name'),
-        supabase.from('semesters').select('*, branches(name)').order('semester_number'),
-        supabase.from('subjects').select('*, semesters(semester_number, branches(name))').order('name'),
-        supabase.from('units').select('*, subjects(name)').order('unit_number'),
-        supabase.from('chapters').select('*, units(title, subjects(name))').order('chapter_number'),
-        supabase.from('chapter_resources').select('*, chapters(title), resource_types(name)').order('created_at', { ascending: false }),
+        supabase.from('semesters').select('*, branches(name)').order('number'),
+        supabase.from('subjects').select('*, semesters(number, branches(name))').order('name'),
+        supabase.from('units').select('*, subjects(name)').order('number'),
+        supabase.from('chapters').select('*, units(title, subjects(name))').order('number'),
+        supabase.from('chapter_resources').select('*, chapters(title), resource_types(name)').order('uploaded_at', { ascending: false }),
         supabase.from('resource_types').select('*').order('name')
       ]);
 
@@ -101,6 +101,7 @@ export default function ManageStudyNotes() {
       setBranchForm({ name: '' });
       fetchData();
     } catch (error) {
+      console.error(error);
       showMessage('Failed to add branch', 'error');
     }
     setLoading(false);
@@ -111,12 +112,16 @@ export default function ManageStudyNotes() {
     if (!semesterForm.branch_id || !semesterForm.semester_number) return;
     setLoading(true);
     try {
-      const { error } = await supabase.from('semesters').insert([semesterForm]);
+      const { error } = await supabase.from('semesters').insert([{
+        branch_id: semesterForm.branch_id,
+        number: parseInt(semesterForm.semester_number, 10)
+      }]);
       if (error) throw error;
       showMessage('Semester added successfully');
       setSemesterForm({ branch_id: '', semester_number: '' });
       fetchData();
     } catch (error) {
+      console.error(error);
       showMessage('Failed to add semester', 'error');
     }
     setLoading(false);
@@ -127,12 +132,16 @@ export default function ManageStudyNotes() {
     if (!subjectForm.semester_id || !subjectForm.name) return;
     setLoading(true);
     try {
-      const { error } = await supabase.from('subjects').insert([subjectForm]);
+      const { error } = await supabase.from('subjects').insert([{
+        semester_id: subjectForm.semester_id,
+        name: subjectForm.name
+      }]);
       if (error) throw error;
       showMessage('Subject added successfully');
       setSubjectForm({ semester_id: '', name: '', code: '' });
       fetchData();
     } catch (error) {
+      console.error(error);
       showMessage('Failed to add subject', 'error');
     }
     setLoading(false);
@@ -143,12 +152,17 @@ export default function ManageStudyNotes() {
     if (!unitForm.subject_id || !unitForm.title || !unitForm.unit_number) return;
     setLoading(true);
     try {
-      const { error } = await supabase.from('units').insert([unitForm]);
+      const { error } = await supabase.from('units').insert([{
+        subject_id: unitForm.subject_id,
+        title: unitForm.title,
+        number: parseInt(unitForm.unit_number, 10)
+      }]);
       if (error) throw error;
       showMessage('Unit added successfully');
       setUnitForm({ subject_id: '', title: '', unit_number: '' });
       fetchData();
     } catch (error) {
+      console.error(error);
       showMessage('Failed to add unit', 'error');
     }
     setLoading(false);
@@ -159,12 +173,18 @@ export default function ManageStudyNotes() {
     if (!chapterForm.unit_id || !chapterForm.title || !chapterForm.chapter_number) return;
     setLoading(true);
     try {
-      const { error } = await supabase.from('chapters').insert([chapterForm]);
+      const { error } = await supabase.from('chapters').insert([{
+        unit_id: chapterForm.unit_id,
+        title: chapterForm.title,
+        number: parseInt(chapterForm.chapter_number, 10),
+        difficulty: chapterForm.difficulty_level
+      }]);
       if (error) throw error;
       showMessage('Chapter added successfully');
       setChapterForm({ unit_id: '', title: '', chapter_number: '', difficulty_level: 'Medium' });
       fetchData();
     } catch (error) {
+      console.error(error);
       showMessage('Failed to add chapter', 'error');
     }
     setLoading(false);
@@ -185,24 +205,23 @@ export default function ManageStudyNotes() {
         
       if (uploadErr) throw uploadErr;
 
-      const { error: insertErr } = await supabase.from('chapter_resources').insert({
+      const { error: dbErr } = await supabase.from('chapter_resources').insert([{
         chapter_id: resourceForm.chapter_id,
         type_id: resourceForm.type_id,
         file_path: filePath,
         file_name: file.name,
-        mime_type: file.type || 'application/octet-stream',
-        size_bytes: file.size,
-      });
+        mime_type: file.type || 'application/pdf',
+        size_bytes: file.size
+      }]);
 
-      if (insertErr) throw insertErr;
+      if (dbErr) throw dbErr;
 
       showMessage('Resource uploaded successfully');
       setResourceForm({ chapter_id: '', type_id: '', file: null });
-      document.getElementById('file-upload').value = '';
       fetchData();
     } catch (error) {
       console.error(error);
-      showMessage('Failed to upload resource', 'error');
+      showMessage('Failed to upload resource: ' + (error.message || 'Error'), 'error');
     }
     setLoading(false);
   };
@@ -213,14 +232,14 @@ export default function ManageStudyNotes() {
     { id: 'subjects', label: 'Subjects', icon: BookOpen },
     { id: 'units', label: 'Units', icon: Book },
     { id: 'chapters', label: 'Chapters', icon: Bookmark },
-    { id: 'resources', label: 'Resources', icon: FileText }
+    { id: 'resources', label: 'Resources', icon: FileText },
   ];
 
   if (initialLoading) {
     return (
       <AdminLayout>
-        <div className="flex h-screen items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
+        <div className="flex items-center justify-center min-h-[400px]">
+          <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
         </div>
       </AdminLayout>
     );
@@ -228,24 +247,25 @@ export default function ManageStudyNotes() {
 
   return (
     <AdminLayout>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900">Manage Study Notes</h1>
-            <p className="mt-1 text-sm text-slate-500">Organize branches, semesters, subjects, and study materials.</p>
-          </div>
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">Manage Study Notes</h1>
+          <p className="text-sm text-slate-500">Organize branches, semesters, subjects, and study materials.</p>
         </div>
 
+        {/* Message Banner */}
         {message.text && (
-          <div className={`mb-4 p-4 rounded-md flex items-center gap-2 ${message.type === 'error' ? 'bg-red-50 text-red-700' : 'bg-emerald-50 text-emerald-700'}`}>
-            {message.type === 'error' ? <AlertCircle className="h-5 w-5" /> : <CheckCircle2 className="h-5 w-5" />}
-            {message.text}
+          <div className={`p-4 rounded-lg flex items-center gap-3 ${
+            message.type === 'error' ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+          }`}>
+            {message.type === 'error' ? <AlertCircle className="h-5 w-5 shrink-0" /> : <CheckCircle2 className="h-5 w-5 shrink-0" />}
+            <span className="text-sm font-medium">{message.text}</span>
           </div>
         )}
 
         {/* Tabs */}
-        <div className="mb-8 border-b border-slate-200">
-          <nav className="-mb-px flex space-x-8 overflow-x-auto" aria-label="Tabs">
+        <div className="border-b border-slate-200">
+          <nav className="-mb-px flex space-x-8 overflow-x-auto">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               return (
@@ -324,6 +344,7 @@ export default function ManageStudyNotes() {
                       type="number"
                       required
                       min="1"
+                      max="8"
                       className="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm"
                       value={semesterForm.semester_number}
                       onChange={(e) => setSemesterForm({...semesterForm, semester_number: e.target.value})}
@@ -353,7 +374,7 @@ export default function ManageStudyNotes() {
                       <option value="">Select Semester</option>
                       {semesters.map(s => (
                         <option key={s.id} value={s.id}>
-                          Semester {s.semester_number} - {s.branches?.name}
+                          Semester {s.number} - {s.branches?.name}
                         </option>
                       ))}
                     </select>
@@ -366,15 +387,6 @@ export default function ManageStudyNotes() {
                       className="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm"
                       value={subjectForm.name}
                       onChange={(e) => setSubjectForm({...subjectForm, name: e.target.value})}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700">Subject Code (Optional)</label>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm"
-                      value={subjectForm.code}
-                      onChange={(e) => setSubjectForm({...subjectForm, code: e.target.value})}
                     />
                   </div>
                   <button
@@ -448,7 +460,7 @@ export default function ManageStudyNotes() {
                     >
                       <option value="">Select Unit</option>
                       {units.map(u => (
-                        <option key={u.id} value={u.id}>Unit {u.unit_number}: {u.title} ({u.subjects?.name})</option>
+                        <option key={u.id} value={u.id}>Unit {u.number}: {u.title} ({u.subjects?.name})</option>
                       ))}
                     </select>
                   </div>
@@ -584,7 +596,7 @@ export default function ManageStudyNotes() {
                 {activeTab === 'semesters' && semesters.map(item => (
                   <li key={item.id} className="px-6 py-4 flex items-center justify-between hover:bg-slate-50">
                     <div>
-                      <p className="text-sm font-medium text-slate-900">Semester {item.semester_number}</p>
+                      <p className="text-sm font-medium text-slate-900">Semester {item.number}</p>
                       <p className="text-xs text-slate-500">{item.branches?.name}</p>
                     </div>
                     <button onClick={() => handleDelete('semesters', item.id)} className="text-red-500 hover:text-red-700 p-1 rounded-md hover:bg-red-50">
@@ -596,8 +608,8 @@ export default function ManageStudyNotes() {
                 {activeTab === 'subjects' && subjects.map(item => (
                   <li key={item.id} className="px-6 py-4 flex items-center justify-between hover:bg-slate-50">
                     <div>
-                      <p className="text-sm font-medium text-slate-900">{item.name} {item.code && <span className="text-slate-500">({item.code})</span>}</p>
-                      <p className="text-xs text-slate-500">Semester {item.semesters?.semester_number} - {item.semesters?.branches?.name}</p>
+                      <p className="text-sm font-medium text-slate-900">{item.name}</p>
+                      <p className="text-xs text-slate-500">Semester {item.semesters?.number} - {item.semesters?.branches?.name}</p>
                     </div>
                     <button onClick={() => handleDelete('subjects', item.id)} className="text-red-500 hover:text-red-700 p-1 rounded-md hover:bg-red-50">
                       <Trash2 className="h-4 w-4" />
@@ -608,7 +620,7 @@ export default function ManageStudyNotes() {
                 {activeTab === 'units' && units.map(item => (
                   <li key={item.id} className="px-6 py-4 flex items-center justify-between hover:bg-slate-50">
                     <div>
-                      <p className="text-sm font-medium text-slate-900">Unit {item.unit_number}: {item.title}</p>
+                      <p className="text-sm font-medium text-slate-900">Unit {item.number}: {item.title}</p>
                       <p className="text-xs text-slate-500">{item.subjects?.name}</p>
                     </div>
                     <button onClick={() => handleDelete('units', item.id)} className="text-red-500 hover:text-red-700 p-1 rounded-md hover:bg-red-50">
@@ -620,12 +632,12 @@ export default function ManageStudyNotes() {
                 {activeTab === 'chapters' && chapters.map(item => (
                   <li key={item.id} className="px-6 py-4 flex items-center justify-between hover:bg-slate-50">
                     <div>
-                      <p className="text-sm font-medium text-slate-900">Ch {item.chapter_number}: {item.title}</p>
+                      <p className="text-sm font-medium text-slate-900">Ch {item.number}: {item.title}</p>
                       <p className="text-xs text-slate-500">{item.units?.subjects?.name} - {item.units?.title}</p>
                     </div>
                     <div className="flex items-center gap-4">
-                      <span className={`text-xs px-2 py-1 rounded-full ${item.difficulty_level === 'Easy' ? 'bg-green-100 text-green-700' : item.difficulty_level === 'Hard' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                        {item.difficulty_level}
+                      <span className={`text-xs px-2 py-1 rounded-full ${item.difficulty === 'Easy' ? 'bg-green-100 text-green-700' : item.difficulty === 'Hard' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                        {item.difficulty}
                       </span>
                       <button onClick={() => handleDelete('chapters', item.id)} className="text-red-500 hover:text-red-700 p-1 rounded-md hover:bg-red-50">
                         <Trash2 className="h-4 w-4" />
