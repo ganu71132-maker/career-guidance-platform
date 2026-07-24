@@ -104,16 +104,34 @@ export default function StudyNotesChapter() {
   const handleView = async (resource) => {
     setViewingId(resource.id);
     try {
+      let url = null;
       const { data: signed, error: signErr } = await supabase.storage
         .from('study-notes-private')
         .createSignedUrl(resource.file_path, 3600);
-      if (signErr) throw signErr;
-      // Increment views
-      await supabase.rpc('increment_resource_views', { resource_id: resource.id }).catch(() => {});
-      window.open(signed.signedUrl, '_blank');
+
+      if (!signErr && signed?.signedUrl) {
+        url = signed.signedUrl;
+      } else {
+        // Fallback to backend API route
+        const res = await fetch(`/api/study-notes/resources/${resource.id}/signed-url`);
+        if (res.ok) {
+          const data = await res.json();
+          url = data.url;
+        }
+      }
+
+      if (!url) throw new Error('Could not generate view URL');
+
+      // Increment view counter
+      supabase.from('chapter_resources')
+        .update({ views: (resource.views || 0) + 1 })
+        .eq('id', resource.id)
+        .then(() => {});
+
+      window.open(url, '_blank');
     } catch (e) {
       console.error('Error opening resource:', e);
-      alert('Failed to open resource. Please try again.');
+      alert('Failed to open resource: ' + (e.message || 'Please check storage bucket policies.'));
     } finally {
       setViewingId(null);
     }
@@ -122,21 +140,38 @@ export default function StudyNotesChapter() {
   const handleDownload = async (resource) => {
     setDownloadingId(resource.id);
     try {
+      let url = null;
       const { data: signed, error: signErr } = await supabase.storage
         .from('study-notes-private')
         .createSignedUrl(resource.file_path, 3600, { download: true });
-      if (signErr) throw signErr;
-      // Increment downloads
-      await supabase.rpc('increment_resource_downloads', { resource_id: resource.id }).catch(() => {});
+
+      if (!signErr && signed?.signedUrl) {
+        url = signed.signedUrl;
+      } else {
+        const res = await fetch(`/api/study-notes/resources/${resource.id}/signed-url`);
+        if (res.ok) {
+          const data = await res.json();
+          url = data.url;
+        }
+      }
+
+      if (!url) throw new Error('Could not generate download URL');
+
+      // Increment download counter
+      supabase.from('chapter_resources')
+        .update({ downloads: (resource.downloads || 0) + 1 })
+        .eq('id', resource.id)
+        .then(() => {});
+
       const a = document.createElement('a');
-      a.href = signed.signedUrl;
+      a.href = url;
       a.download = resource.file_name;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
     } catch (e) {
       console.error('Error downloading resource:', e);
-      alert('Failed to download. Please try again.');
+      alert('Failed to download: ' + (e.message || 'Please check storage bucket policies.'));
     } finally {
       setDownloadingId(null);
     }
