@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useData } from '../contexts/DataContext';
-import { Compass, Bookmark, CheckCircle, TrendingUp, LogOut, Map, BookOpen, User, ArrowRight, FileText, Megaphone, Code2, Clock, Star, Trophy } from 'lucide-react';
+import { Compass, Bookmark, CheckCircle, TrendingUp, LogOut, Map, BookOpen, User, ArrowRight, FileText, Megaphone, Code2, Clock, Star, Trophy, PenTool } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import NotificationBell from '../components/NotificationBell';
@@ -365,6 +365,10 @@ export default function Dashboard() {
             <span className="bg-blue-600 text-white text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded-full animate-pulse">New</span>
           </Link>
           <Link to="/sandbox" className="block px-4 py-3 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-xl text-sm transition-all font-medium">Code Sandbox</Link>
+          <Link to="/study-notes" className="flex items-center justify-between px-4 py-3 text-violet-600 font-bold hover:bg-violet-50 rounded-xl text-sm transition-all border border-violet-100 bg-violet-50/50">
+            <div className="flex items-center gap-1.5"><PenTool className="w-4 h-4" /> Study Notes</div>
+            <span className="bg-violet-600 text-white text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded-full animate-pulse">New</span>
+          </Link>
           <Link to="/leaderboard" className="block px-4 py-3 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-xl text-sm transition-all font-medium">🏆 Leaderboard</Link>
           <Link to="/resume" className="block px-4 py-3 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-xl text-sm transition-all font-medium">Resume Builder</Link>
           <Link to="/profile" className="block px-4 py-3 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-xl text-sm transition-all font-medium">Profile</Link>
@@ -418,6 +422,9 @@ export default function Dashboard() {
             </Link>
             <Link to="/learn" className="flex-1 min-w-[65px] text-center text-blue-600 hover:text-blue-700 bg-blue-50/50 hover:bg-blue-100 rounded-lg text-[10px] font-bold py-1.5 transition-colors border border-blue-100 relative flex items-center justify-center gap-0.5">
               Learn <span className="bg-blue-600 text-white text-[8px] font-extrabold uppercase px-1 py-0.5 rounded scale-75 origin-right">New</span>
+            </Link>
+            <Link to="/study-notes" className="flex-1 min-w-[65px] text-center text-violet-600 hover:text-violet-700 bg-violet-50/50 hover:bg-violet-100 rounded-lg text-[10px] font-bold py-1.5 transition-colors border border-violet-100 relative flex items-center justify-center gap-0.5">
+              Notes <span className="bg-violet-600 text-white text-[8px] font-extrabold uppercase px-1 py-0.5 rounded scale-75 origin-right">New</span>
             </Link>
             <Link to="/leaderboard" className="flex-1 min-w-[70px] text-center text-slate-500 hover:text-slate-800 text-[10px] font-semibold py-1.5 transition-colors">
               Leaderboard

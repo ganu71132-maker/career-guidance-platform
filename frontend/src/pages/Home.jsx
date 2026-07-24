@@ -69,6 +69,10 @@ export default function Home() {
             <a href="#how-it-works" className="hover:text-slate-800 transition-colors">How It Works</a>
             <a href="#careers" className="hover:text-slate-800 transition-colors">Careers</a>
             <Link to="/skills" className="hover:text-slate-800 transition-colors">Skills</Link>
+            <Link to="/study-notes" className="flex items-center gap-1.5 text-violet-600 font-bold hover:text-violet-700 hover:bg-violet-50 px-3 py-1.5 rounded-full transition-all border border-transparent hover:border-violet-100">
+              <BookOpen className="w-4 h-4" /> Study Notes
+              <span className="bg-violet-600 text-white text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded-full animate-pulse">New</span>
+            </Link>
             <Link to="/learn" className="flex items-center gap-1.5 text-blue-600 font-bold hover:text-blue-700 hover:bg-blue-50 px-3 py-1.5 rounded-full transition-all border border-transparent hover:border-blue-100">
               <BookOpen className="w-4 h-4" /> Learn to Code
               <span className="bg-blue-600 text-white text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded-full animate-pulse">New</span>
@@ -302,6 +306,7 @@ export default function Home() {
             <h4 className="font-bold mb-3 sm:mb-4 text-slate-800 text-sm sm:text-base">Platform</h4>
             <ul className="space-y-2 text-slate-500 text-xs sm:text-sm">
               <li><Link to="/explorer" className="hover:text-emerald-600 transition-colors">Explore Careers</Link></li>
+              <li><Link to="/study-notes" className="hover:text-emerald-600 transition-colors">Study Notes</Link></li>
               <li><Link to="/login" className="hover:text-emerald-600 transition-colors">Get Started</Link></li>
               <li><Link to="/login" className="hover:text-emerald-600 transition-colors">Login</Link></li>
             </ul>

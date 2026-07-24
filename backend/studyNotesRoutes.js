@@ -172,4 +172,94 @@ router.get('/resources/:rid/signed-url', async (req, res) => {
   res.json({ url: signed?.signedUrl });
 });
 
+/* ---------- Hierarchy ---------- */
+router.get('/hierarchy', async (req, res) => {
+  const supabase = getSupabase(req);
+  
+  const [branchesRes, semestersRes, subjectsRes, unitsRes, chaptersRes] = await Promise.all([
+    supabase.from('branches').select('*'),
+    supabase.from('semesters').select('*'),
+    supabase.from('subjects').select('*'),
+    supabase.from('units').select('*'),
+    supabase.from('chapters').select('*')
+  ]);
+
+  if (branchesRes.error) return res.status(500).json({ error: branchesRes.error.message });
+  if (semestersRes.error) return res.status(500).json({ error: semestersRes.error.message });
+  if (subjectsRes.error) return res.status(500).json({ error: subjectsRes.error.message });
+  if (unitsRes.error) return res.status(500).json({ error: unitsRes.error.message });
+  if (chaptersRes.error) return res.status(500).json({ error: chaptersRes.error.message });
+
+  const branches = branchesRes.data || [];
+  const semesters = semestersRes.data || [];
+  const subjects = subjectsRes.data || [];
+  const units = unitsRes.data || [];
+  const chapters = chaptersRes.data || [];
+
+  const hierarchy = branches.map(branch => {
+    return {
+      id: branch.id,
+      name: branch.name,
+      semesters: semesters
+        .filter(sem => sem.branch_id === branch.id)
+        .map(sem => {
+          return {
+            id: sem.id,
+            number: sem.number,
+            subjects: subjects
+              .filter(sub => sub.semester_id === sem.id)
+              .map(sub => {
+                return {
+                  id: sub.id,
+                  name: sub.name,
+                  units: units
+                    .filter(unit => unit.subject_id === sub.id)
+                    .map(unit => {
+                      return {
+                        id: unit.id,
+                        title: unit.title,
+                        number: unit.number,
+                        chapters: chapters
+                          .filter(chap => chap.unit_id === unit.id)
+                          .map(chap => ({
+                            id: chap.id,
+                            title: chap.title,
+                            number: chap.number,
+                            difficulty: chap.difficulty
+                          }))
+                      };
+                    })
+                };
+              })
+          };
+        })
+    };
+  });
+
+  res.json({ branches: hierarchy });
+});
+
+/* ---------- Chapter Details ---------- */
+router.get('/chapter/:cid', async (req, res) => {
+  const { cid } = req.params;
+  const supabase = getSupabase(req);
+
+  const { data: chapter, error: chapterError } = await supabase
+    .from('chapters')
+    .select('*')
+    .eq('id', cid)
+    .single();
+
+  if (chapterError) return res.status(404).json({ error: 'Chapter not found' });
+
+  const { data: resources, error: resourcesError } = await supabase
+    .from('chapter_resources')
+    .select('*, resource_types(name, icon)')
+    .eq('chapter_id', cid);
+
+  if (resourcesError) return res.status(500).json({ error: resourcesError.message });
+
+  res.json({ chapter, resources });
+});
+
 module.exports = router;

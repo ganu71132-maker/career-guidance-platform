@@ -63,6 +63,9 @@ const supabase = createClient(
   supabaseAnonKey || 'placeholder-key'
 );
 
+app.locals.supabase = supabase;
+app.use('/api/study-notes', studyNotesRouter);
+
 // 3. API Route to send notifications to all subscribed devices
 app.post('/api/send-push', async (req, res) => {
   const { title, body, url } = req.body;
