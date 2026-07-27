@@ -33,10 +33,6 @@ import ResumeBuilder from './pages/ResumeBuilder';
 import SkillExplorer from './pages/SkillExplorer';
 import SkillDetails from './pages/SkillDetails';
 
-// Study Notes Pages
-import StudyNotesIndex from './pages/StudyNotes/Index';
-import StudyNotesChapter from './pages/StudyNotes/Chapter';
-
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
 import ManageCareers from './pages/admin/ManageCareers';
@@ -48,7 +44,6 @@ import ManageAnnouncements from './pages/admin/ManageAnnouncements';
 import ManagePushNotifications from './pages/admin/ManagePushNotifications';
 import ManageSkills from './pages/admin/ManageSkills';
 import ManageSkillRoadmaps from './pages/admin/ManageSkillRoadmaps';
-import ManageStudyNotes from './pages/admin/ManageStudyNotes';
 
 import { HelmetProvider } from 'react-helmet-async';
 
@@ -74,10 +69,6 @@ function App() {
               <Route path="/about" element={<AboutUs />} />
               <Route path="/skills" element={<SkillExplorer />} />
               <Route path="/skill/:name" element={<SkillDetails />} />
-              
-              {/* Study Notes Routes */}
-              <Route path="/study-notes" element={<StudyNotesIndex />} />
-              <Route path="/study-notes/chapter/:cid" element={<StudyNotesChapter />} />
 
               {/* Learn Routes */}
               <Route path="/learn" element={<LearnCatalog />} />
@@ -102,7 +93,6 @@ function App() {
               <Route path="/admin/notifications" element={<AdminRoute superAdminOnly={true}><ManagePushNotifications /></AdminRoute>} />
               <Route path="/admin/skills" element={<AdminRoute><ManageSkills /></AdminRoute>} />
               <Route path="/admin/skill-roadmaps" element={<AdminRoute><ManageSkillRoadmaps /></AdminRoute>} />
-              <Route path="/admin/study-notes" element={<AdminRoute><ManageStudyNotes /></AdminRoute>} />
 
               {/* Catch all */}
               <Route path="*" element={<Navigate to="/" replace />} />

@@ -4,8 +4,6 @@ const fs = require('fs');
 const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
 const webpush = require('web-push');
-const studyNotesRouter = require('./studyNotesRoutes');
-
 
 const app = express();
 app.use(cors());
@@ -62,9 +60,6 @@ const supabase = createClient(
   supabaseUrl || 'https://placeholder.supabase.co',
   supabaseAnonKey || 'placeholder-key'
 );
-
-app.locals.supabase = supabase;
-app.use('/api/study-notes', studyNotesRouter);
 
 // 3. API Route to send notifications to all subscribed devices
 app.post('/api/send-push', async (req, res) => {
