@@ -4,7 +4,10 @@ import { PythonRunner } from './runners/PythonRunner';
 import { JavaScriptRunner } from './runners/JavaScriptRunner';
 import { SqlRunner } from './runners/SqlRunner';
 import WebPreview from './runners/WebPreview';
-import { Play, RotateCcw, Trash2, Copy, Download, Save, Code, Sparkles, Clock } from 'lucide-react';
+import { 
+  Play, RotateCcw, Trash2, Copy, Download, Save, Code, Sparkles, Clock, 
+  BookOpen, X, ChevronRight, CheckCircle2, Lightbulb, Key, Search, Flame, Trophy
+} from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useChat } from '../../contexts/ChatContext';
 import { supabase } from '../../lib/supabase';
@@ -16,12 +19,132 @@ const STARTER_CODE = {
   sql: '-- Create a table\nCREATE TABLE users (id INT, name TEXT);\n\n-- Insert data\nINSERT INTO users VALUES (1, "Alice"), (2, "Bob");\n\n-- Select data\nSELECT * FROM users;'
 };
 
-const CHALLENGES = {
-  python: { title: 'Variables', description: 'Write a program to print your name.' },
-  javascript: { title: 'Console Log', description: 'Log a greeting message to the console.' },
-  'html/css': { title: 'Styling', description: 'Create a button with a blue background and white text.' },
-  sql: { title: 'Select Data', description: 'Select all columns from the users table where id is 1.' }
+const DEFAULT_CHALLENGES = {
+  python: { title: 'Variables & Printing', description: 'Write a program to print a greeting message and your name.' },
+  javascript: { title: 'Console Output', description: 'Log a custom message and calculate a value using console.log.' },
+  'html/css': { title: 'HTML Styling', description: 'Create a styled card with custom background color and white text.' },
+  sql: { title: 'Select Queries', description: 'Select all columns from the users table.' }
 };
+
+// Built-in interactive courses for instant loading inside Sandbox
+const BUILTIN_COURSES = [
+  {
+    id: 'python-basics',
+    title: 'Python Essentials',
+    language: 'python',
+    icon: '🐍',
+    description: 'Learn fundamental Python syntax, variables, conditionals, and loops.',
+    lessons: [
+      {
+        id: 'py-1',
+        title: 'Lesson 1: Printing & Output',
+        instructions: 'Use the print() function to display "Welcome to NextraPath Python!" on the console.',
+        starter_code: 'print("Welcome to NextraPath Python!")',
+        hint: 'Use print("your text here")',
+        solution: 'print("Welcome to NextraPath Python!")'
+      },
+      {
+        id: 'py-2',
+        title: 'Lesson 2: Variables & Data Types',
+        instructions: 'Create two variables: name="Alex" and score=95. Print them together.',
+        starter_code: 'name = "Alex"\nscore = 95\nprint("Student:", name, "| Score:", score)',
+        hint: 'Assign values with = and print them using commas inside print()',
+        solution: 'name = "Alex"\nscore = 95\nprint("Student:", name, "| Score:", score)'
+      },
+      {
+        id: 'py-3',
+        title: 'Lesson 3: If-Else Statements',
+        instructions: 'Write a condition: if score >= 80, print "Passed with Distinction", else print "Keep trying!".',
+        starter_code: 'score = 85\n\nif score >= 80:\n    print("Passed with Distinction")\nelse:\n    print("Keep trying!")',
+        hint: 'Make sure to indent the code inside if and else blocks using 4 spaces.',
+        solution: 'score = 85\nif score >= 80:\n    print("Passed with Distinction")\nelse:\n    print("Keep trying!")'
+      },
+      {
+        id: 'py-4',
+        title: 'Lesson 4: For Loops',
+        instructions: 'Write a for loop using range(1, 6) to print numbers from 1 to 5.',
+        starter_code: 'for i in range(1, 6):\n    print("Count:", i)',
+        hint: 'range(1, 6) generates numbers 1, 2, 3, 4, 5.',
+        solution: 'for i in range(1, 6):\n    print("Count:", i)'
+      },
+      {
+        id: 'py-5',
+        title: 'Lesson 5: Functions',
+        instructions: 'Define a function add_numbers(a, b) that returns their sum. Call it with (10, 20).',
+        starter_code: 'def add_numbers(a, b):\n    return a + b\n\nresult = add_numbers(10, 20)\nprint("Sum is:", result)',
+        hint: 'Use def function_name(param1, param2): followed by return statement.',
+        solution: 'def add_numbers(a, b):\n    return a + b\n\nprint("Sum is:", add_numbers(10, 20))'
+      }
+    ]
+  },
+  {
+    id: 'js-essentials',
+    title: 'JavaScript Web Fundamentals',
+    language: 'javascript',
+    icon: '⚡',
+    description: 'Master JavaScript variables, arrays, arrow functions, and array methods.',
+    lessons: [
+      {
+        id: 'js-1',
+        title: 'Lesson 1: Console & Template Literals',
+        instructions: 'Use console.log and backticks (``) to print a greeting with variable substitution.',
+        starter_code: 'const name = "NextraPath Coder";\nconsole.log(`Hello, ${name}! Welcome to JavaScript.`);',
+        hint: 'Template literals use backticks ` and ${variableName}`',
+        solution: 'const name = "NextraPath Coder";\nconsole.log(`Hello, ${name}! Welcome to JavaScript.`);'
+      },
+      {
+        id: 'js-2',
+        title: 'Lesson 2: Arrays & Iteration',
+        instructions: 'Create an array of 3 programming languages and iterate over them using forEach.',
+        starter_code: 'const languages = ["JavaScript", "Python", "Rust"];\nlanguages.forEach((lang, index) => {\n  console.log(`${index + 1}. ${lang}`);\n});',
+        hint: 'array.forEach((item, index) => { ... })',
+        solution: 'const languages = ["JavaScript", "Python", "Rust"];\nlanguages.forEach((lang, index) => {\n  console.log(`${index + 1}. ${lang}`);\n});'
+      },
+      {
+        id: 'js-3',
+        title: 'Lesson 3: Array Filter & Map',
+        instructions: 'Filter an array of scores to keep only scores >= 70, then map them to double values.',
+        starter_code: 'const scores = [45, 80, 65, 90, 72];\nconst passingScores = scores.filter(score => score >= 70);\nconsole.log("Passing Scores:", passingScores);',
+        hint: 'Use .filter(score => score >= 70)',
+        solution: 'const scores = [45, 80, 65, 90, 72];\nconst passingScores = scores.filter(score => score >= 70);\nconsole.log("Passing Scores:", passingScores);'
+      }
+    ]
+  },
+  {
+    id: 'html-css',
+    title: 'HTML & CSS UI Design',
+    language: 'html/css',
+    icon: '🎨',
+    description: 'Learn modern web component layouts, styling, flexbox, and typography.',
+    lessons: [
+      {
+        id: 'html-1',
+        title: 'Lesson 1: Profile Card Component',
+        instructions: 'Create a dark-themed user profile card with a green badge and rounded corners.',
+        starter_code: '<div style="background: #1e293b; color: white; padding: 24px; border-radius: 16px; font-family: system-ui; max-w-sm; margin: 20px auto; text-align: center; border: 1px solid #334155;">\n  <h2 style="margin: 0; font-size: 20px;">Alex Johnson</h2>\n  <p style="color: #10b981; font-weight: 600; font-size: 14px; margin-top: 4px;">Full Stack Engineer</p>\n  <p style="color: #94a3b8; font-size: 13px;">Building intelligent web applications with NextraPath.</p>\n</div>',
+        hint: 'Use inline CSS style attributes for background, border-radius, and padding.',
+        solution: '<div style="background: #1e293b; color: white; padding: 24px; border-radius: 16px; font-family: system-ui; max-w-sm; margin: 20px auto; text-align: center; border: 1px solid #334155;">\n  <h2 style="margin: 0; font-size: 20px;">Alex Johnson</h2>\n  <p style="color: #10b981; font-weight: 600; font-size: 14px; margin-top: 4px;">Full Stack Engineer</p>\n</div>'
+      }
+    ]
+  },
+  {
+    id: 'sql-db',
+    title: 'SQL Database Queries',
+    language: 'sql',
+    icon: '🛢️',
+    description: 'Learn table creation, data insertion, filtering, and aggregate queries.',
+    lessons: [
+      {
+        id: 'sql-1',
+        title: 'Lesson 1: Table Creation & SELECT',
+        instructions: 'Create a table students, insert records, and query students with grade >= 80.',
+        starter_code: '-- Create Students Table\nCREATE TABLE students (id INT, name TEXT, grade INT);\n\n-- Insert Student Records\nINSERT INTO students VALUES (1, "Alex", 92), (2, "Sam", 74), (3, "Jordan", 88);\n\n-- Select high-performing students\nSELECT * FROM students WHERE grade >= 80;',
+        hint: 'Use SELECT * FROM students WHERE grade >= 80;',
+        solution: 'CREATE TABLE students (id INT, name TEXT, grade INT);\nINSERT INTO students VALUES (1, "Alex", 92), (2, "Sam", 74), (3, "Jordan", 88);\nSELECT * FROM students WHERE grade >= 80;'
+      }
+    ]
+  }
+];
 
 export default function CodePracticeInterface({ initialLanguage = 'python', initialCode = null, onClose = null }) {
   const { user } = useAuth();
@@ -32,9 +155,33 @@ export default function CodePracticeInterface({ initialLanguage = 'python', init
   const [isRunning, setIsRunning] = useState(false);
   const [executionTime, setExecutionTime] = useState(null);
 
+  // Learn to Code Drawer State
+  const [showLearnDrawer, setShowLearnDrawer] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState(BUILTIN_COURSES[0]);
+  const [activeLesson, setActiveLesson] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showHint, setShowHint] = useState(false);
+  const [showSolution, setShowSolution] = useState(false);
+
+  // Db courses if available
+  const [dbCourses, setDbCourses] = useState([]);
+
   useEffect(() => {
-    // Only reset code if initialCode wasn't explicitly passed for this language
-    if (!initialCode) {
+    async function fetchDbCourses() {
+      try {
+        const { data } = await supabase.from('learning_courses').select('*').order('order_index');
+        if (data && data.length > 0) {
+          setDbCourses(data);
+        }
+      } catch (e) {
+        // use builtin fallback
+      }
+    }
+    fetchDbCourses();
+  }, []);
+
+  useEffect(() => {
+    if (!initialCode && !activeLesson) {
       setCode(STARTER_CODE[language]);
     }
     setOutput(null);
@@ -80,7 +227,11 @@ export default function CodePracticeInterface({ initialLanguage = 'python', init
     } else {
       setOutput(null);
     }
-    setCode(STARTER_CODE[language]);
+    if (activeLesson) {
+      setCode(activeLesson.starter_code);
+    } else {
+      setCode(STARTER_CODE[language]);
+    }
     setExecutionTime(null);
   };
 
@@ -114,15 +265,33 @@ export default function CodePracticeInterface({ initialLanguage = 'python', init
       const { error } = await supabase.from('saved_code').insert([{
         user_id: user.id,
         language: language,
-        title: `Saved ${language} Program`,
+        title: activeLesson ? activeLesson.title : `Saved ${language} Program`,
         code: code
       }]);
       if (error) throw error;
       alert('Program saved successfully!');
     } catch (err) {
-      alert('Failed to save code. Note: saved_code table may not exist yet.');
+      alert('Failed to save code.');
       console.error(err);
     }
+  };
+
+  const loadLesson = (course, lesson) => {
+    setSelectedCourse(course);
+    setActiveLesson(lesson);
+    setLanguage(course.language);
+    setCode(lesson.starter_code);
+    setOutput(null);
+    setShowHint(false);
+    setShowSolution(false);
+    setShowLearnDrawer(false);
+  };
+
+  const exitLessonMode = () => {
+    setActiveLesson(null);
+    setCode(STARTER_CODE[language]);
+    setShowHint(false);
+    setShowSolution(false);
   };
 
   const askAIHelper = (mode) => {
@@ -137,22 +306,42 @@ export default function CodePracticeInterface({ initialLanguage = 'python', init
       data: {
         code,
         output: typeof output?.content === 'object' ? JSON.stringify(output.content) : output?.content,
-        challengeTitle: `Sandbox (${language})`
+        challengeTitle: activeLesson ? activeLesson.title : `Sandbox (${language})`
       }
     });
   };
 
+  const filteredCourses = BUILTIN_COURSES.map(c => {
+    if (!searchQuery.trim()) return c;
+    const q = searchQuery.toLowerCase();
+    const matchingLessons = c.lessons.filter(l => l.title.toLowerCase().includes(q) || l.instructions.toLowerCase().includes(q));
+    if (c.title.toLowerCase().includes(q) || matchingLessons.length > 0) {
+      return { ...c, lessons: matchingLessons.length > 0 ? matchingLessons : c.lessons };
+    }
+    return null;
+  }).filter(Boolean);
+
   return (
-    <div className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-2xl flex flex-col h-[700px] text-slate-300 font-sans">
+    <div className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-2xl flex flex-col h-[750px] text-slate-300 font-sans relative">
       
       {/* Top Toolbar */}
       <div className="bg-slate-950 p-4 border-b border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-4 flex-wrap">
+        <div className="flex items-center gap-3 flex-wrap">
           <div className="flex items-center gap-2 text-emerald-400 font-bold text-lg">
-            <Code className="h-5 w-5" /> Coding Practice
+            <Code className="h-5 w-5" /> Code Sandbox
           </div>
+
+          {/* Learn to Code Button */}
+          <button
+            onClick={() => setShowLearnDrawer(true)}
+            className="flex items-center gap-1.5 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 px-3 py-1.5 rounded-lg text-sm font-bold transition-all"
+          >
+            <BookOpen className="w-4 h-4 text-blue-400" /> Learn to Code
+            <span className="bg-blue-600 text-white text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded-full animate-pulse">New</span>
+          </button>
+
           <select 
-            className="bg-slate-800 text-slate-200 border border-slate-700 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="bg-slate-800 text-slate-200 border border-slate-700 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm font-medium"
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
           >
@@ -192,19 +381,83 @@ export default function CodePracticeInterface({ initialLanguage = 'python', init
         </div>
       </div>
 
+      {/* Main Workspace Grid */}
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
-        {/* Left Side: Editor & Challenge */}
+        {/* Left Side: Editor & Active Challenge / Lesson */}
         <div className="w-full lg:w-1/2 flex flex-col border-r border-slate-800 min-h-[350px]">
-          <div className="bg-slate-800/50 p-4 border-b border-slate-800">
-            <div className="text-xs text-emerald-400 font-bold uppercase tracking-wider mb-1">Challenge: {CHALLENGES[language].title}</div>
-            <div className="text-sm text-slate-300">{CHALLENGES[language].description}</div>
+          {/* Challenge / Lesson Info Header */}
+          <div className="bg-slate-800/50 p-4 border-b border-slate-800 relative">
+            {activeLesson ? (
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <div className="flex items-center gap-2">
+                    <span className="bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">
+                      Interactive Lesson
+                    </span>
+                    <span className="text-xs text-blue-400 font-semibold">{selectedCourse.title}</span>
+                  </div>
+                  <button
+                    onClick={exitLessonMode}
+                    className="text-xs text-slate-400 hover:text-white transition-colors bg-slate-800 px-2 py-1 rounded border border-slate-700"
+                  >
+                    Switch to Free Sandbox
+                  </button>
+                </div>
+                <h4 className="text-base font-bold text-white mb-1">{activeLesson.title}</h4>
+                <p className="text-xs text-slate-300 leading-relaxed mb-3">{activeLesson.instructions}</p>
+
+                {/* Hint & Solution Toggles */}
+                <div className="flex items-center gap-3 pt-2 border-t border-slate-700/50">
+                  {activeLesson.hint && (
+                    <button
+                      onClick={() => setShowHint(!showHint)}
+                      className="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 bg-amber-500/10 px-2.5 py-1 rounded-md border border-amber-500/20"
+                    >
+                      <Lightbulb className="h-3.5 w-3.5" /> {showHint ? 'Hide Hint' : 'Show Hint'}
+                    </button>
+                  )}
+                  {activeLesson.solution && (
+                    <button
+                      onClick={() => setShowSolution(!showSolution)}
+                      className="text-xs font-semibold text-cyan-400 hover:text-cyan-300 flex items-center gap-1 bg-cyan-500/10 px-2.5 py-1 rounded-md border border-cyan-500/20"
+                    >
+                      <Key className="h-3.5 w-3.5" /> {showSolution ? 'Hide Solution' : 'Show Solution'}
+                    </button>
+                  )}
+                </div>
+
+                {showHint && (
+                  <div className="mt-2.5 p-3 bg-amber-950/40 border border-amber-500/30 rounded-lg text-xs text-amber-200">
+                    💡 <strong>Hint:</strong> {activeLesson.hint}
+                  </div>
+                )}
+
+                {showSolution && (
+                  <div className="mt-2.5 p-3 bg-cyan-950/40 border border-cyan-500/30 rounded-lg text-xs font-mono text-cyan-200">
+                    🔑 <strong>Solution:</strong>
+                    <pre className="mt-1 whitespace-pre-wrap">{activeLesson.solution}</pre>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div>
+                <div className="text-xs text-emerald-400 font-bold uppercase tracking-wider mb-1">
+                  Challenge: {DEFAULT_CHALLENGES[language]?.title || 'Practice Code'}
+                </div>
+                <div className="text-sm text-slate-300">
+                  {DEFAULT_CHALLENGES[language]?.description || 'Write, test, and debug code.'}
+                </div>
+              </div>
+            )}
           </div>
+
+          {/* Code Editor */}
           <div className="flex-1 p-4 min-h-[300px]">
             <CodeEditor language={language} value={code} onChange={setCode} />
           </div>
         </div>
 
-        {/* Right Side: Output */}
+        {/* Right Side: Output & AI Assistant */}
         <div className="w-full lg:w-1/2 flex flex-col bg-black/40 min-h-[250px]">
           <div className="bg-slate-900 p-3 border-b border-slate-800 flex items-center justify-between">
             <div className="text-sm font-medium text-slate-400 uppercase tracking-wider">Output</div>
@@ -254,7 +507,7 @@ export default function CodePracticeInterface({ initialLanguage = 'python', init
             )}
           </div>
 
-          {/* AI Features Placeholder */}
+          {/* AI Helper Bar */}
           <div className="p-3 border-t border-slate-800 bg-slate-900 flex gap-2 overflow-x-auto">
             <button 
               onClick={() => askAIHelper('explain')}
@@ -277,6 +530,90 @@ export default function CodePracticeInterface({ initialLanguage = 'python', init
           </div>
         </div>
       </div>
+
+      {/* ================= LEARN TO CODE DRAWER OVERLAY ================= */}
+      {showLearnDrawer && (
+        <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex flex-col p-4 sm:p-6 overflow-hidden animate-fade-in">
+          {/* Drawer Header */}
+          <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-blue-600/20 text-blue-400 rounded-xl border border-blue-500/30">
+                <BookOpen className="h-6 w-6" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                  Learn to Code <span className="text-xs bg-blue-600 text-white px-2 py-0.5 rounded-full uppercase">Interactive</span>
+                </h3>
+                <p className="text-xs text-slate-400">Select a course and lesson to load directly into your Sandbox editor.</p>
+              </div>
+            </div>
+            <button 
+              onClick={() => setShowLearnDrawer(false)}
+              className="p-2 hover:bg-slate-800 text-slate-400 hover:text-white rounded-xl transition-colors"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          {/* Search Bar */}
+          <div className="my-4">
+            <div className="relative">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search interactive lessons, Python, JS, SQL..."
+                className="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+              />
+            </div>
+          </div>
+
+          {/* Course List & Lessons Grid */}
+          <div className="flex-1 overflow-y-auto space-y-6 pr-2">
+            {filteredCourses.map(course => (
+              <div key={course.id} className="bg-slate-900/80 rounded-2xl border border-slate-800 p-4 sm:p-5">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="text-2xl">{course.icon}</span>
+                  <div>
+                    <h4 className="text-base font-bold text-white flex items-center gap-2">
+                      {course.title}
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">
+                        {course.language}
+                      </span>
+                    </h4>
+                    <p className="text-xs text-slate-400">{course.description}</p>
+                  </div>
+                </div>
+
+                <div className="grid sm:grid-cols-2 gap-2.5 mt-3">
+                  {course.lessons.map(lesson => (
+                    <button
+                      key={lesson.id}
+                      onClick={() => loadLesson(course, lesson)}
+                      className={`text-left p-3 rounded-xl border transition-all flex items-center justify-between group ${
+                        activeLesson?.id === lesson.id 
+                          ? 'bg-blue-600/20 border-blue-500 text-blue-200'
+                          : 'bg-slate-950/60 border-slate-800/80 hover:bg-slate-800/80 text-slate-300 hover:border-slate-700'
+                      }`}
+                    >
+                      <div className="min-w-0 pr-2">
+                        <div className="text-xs font-bold truncate group-hover:text-blue-400 transition-colors">
+                          {lesson.title}
+                        </div>
+                        <div className="text-[11px] text-slate-500 line-clamp-1 mt-0.5">
+                          {lesson.instructions}
+                        </div>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-slate-500 group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all shrink-0" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
