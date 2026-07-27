@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { Code, ArrowLeft } from 'lucide-react';
+import { Code, BookOpen, ArrowLeft } from 'lucide-react';
 import CodePracticeInterface from '../components/coding/CodePracticeInterface';
 
 export default function CodingPlayground() {
+  const [triggerLearnDrawer, setTriggerLearnDrawer] = useState(0);
+
   return (
     <div className="min-h-screen relative pb-20 animate-fade-in bg-[#f8fafc]">
       <Helmet>
@@ -26,17 +28,29 @@ export default function CodingPlayground() {
       </nav>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
-        <div className="flex items-center gap-3 mb-6 sm:mb-8">
-          <div className="h-10 sm:h-12 w-10 sm:w-12 bg-indigo-100 rounded-xl flex items-center justify-center shrink-0">
-            <Code className="h-5 sm:h-6 w-5 sm:w-6 text-indigo-600" />
+        {/* Header Row: Title on Left, Learn to Code Button on Right */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 sm:mb-8">
+          <div className="flex items-center gap-3">
+            <div className="h-10 sm:h-12 w-10 sm:w-12 bg-indigo-100 rounded-xl flex items-center justify-center shrink-0">
+              <Code className="h-5 sm:h-6 w-5 sm:w-6 text-indigo-600" />
+            </div>
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">Code Sandbox</h1>
+              <p className="text-slate-500 text-sm sm:text-base">Practice algorithms, scripts, and queries directly in your browser.</p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">Code Sandbox</h1>
-            <p className="text-slate-500 text-sm sm:text-base">Practice algorithms, scripts, and queries directly in your browser.</p>
-          </div>
+
+          {/* Learn to Code Button on Right Side */}
+          <button
+            onClick={() => setTriggerLearnDrawer(prev => prev + 1)}
+            className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-5 py-2.5 sm:py-3 rounded-2xl font-bold text-sm shadow-lg shadow-blue-600/20 hover:scale-105 transition-all cursor-pointer shrink-0"
+          >
+            <BookOpen className="w-4.5 h-4.5" /> Learn to Code
+            <span className="bg-white/20 text-white text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full animate-pulse">New</span>
+          </button>
         </div>
         
-        <CodePracticeInterface />
+        <CodePracticeInterface externalLearnTrigger={triggerLearnDrawer} />
       </div>
     </div>
   );

@@ -146,7 +146,7 @@ const BUILTIN_COURSES = [
   }
 ];
 
-export default function CodePracticeInterface({ initialLanguage = 'python', initialCode = null, onClose = null }) {
+export default function CodePracticeInterface({ initialLanguage = 'python', initialCode = null, onClose = null, externalLearnTrigger = 0 }) {
   const { user } = useAuth();
   const { openChatWithContext } = useChat();
   const [language, setLanguage] = useState(initialLanguage);
@@ -162,6 +162,13 @@ export default function CodePracticeInterface({ initialLanguage = 'python', init
   const [searchQuery, setSearchQuery] = useState('');
   const [showHint, setShowHint] = useState(false);
   const [showSolution, setShowSolution] = useState(false);
+
+  // Listen to externalLearnTrigger from page header button
+  useEffect(() => {
+    if (externalLearnTrigger > 0) {
+      setShowLearnDrawer(true);
+    }
+  }, [externalLearnTrigger]);
 
   // Db courses if available
   const [dbCourses, setDbCourses] = useState([]);
