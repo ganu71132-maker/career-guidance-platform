@@ -62,11 +62,17 @@ export default function ResumeBuilder() {
   const [technicalSkills, setTechnicalSkills] = useState([]);
   const [softSkills, setSoftSkills] = useState([]);
   const [languages, setLanguages] = useState([]);
+  const [domainSkills, setDomainSkills] = useState([]);
+  const [toolsTech, setToolsTech] = useState([]);
+  const [currentlyLearning, setCurrentlyLearning] = useState([]);
   
   // Custom Input States
   const [newTechSkill, setNewTechSkill] = useState('');
   const [newSoftSkill, setNewSoftSkill] = useState('');
   const [newLanguage, setNewLanguage] = useState('');
+  const [newDomainSkill, setNewDomainSkill] = useState('');
+  const [newToolTech, setNewToolTech] = useState('');
+  const [newLearningItem, setNewLearningItem] = useState('');
 
   // Toast Trigger Helper
   const showToast = (message, type = 'success') => {
@@ -99,6 +105,9 @@ export default function ResumeBuilder() {
             if (backup.technicalSkills) setTechnicalSkills(backup.technicalSkills);
             if (backup.softSkills) setSoftSkills(backup.softSkills);
             if (backup.languages) setLanguages(backup.languages);
+            if (backup.domainSkills) setDomainSkills(backup.domainSkills);
+            if (backup.toolsTech) setToolsTech(backup.toolsTech);
+            if (backup.currentlyLearning) setCurrentlyLearning(backup.currentlyLearning);
             if (backup.certifications) setCertifications(backup.certifications);
           } catch (e) {
             console.warn('LocalStorage backup parse error:', e);
@@ -182,9 +191,15 @@ export default function ResumeBuilder() {
               const tech = skillData.filter(s => s.skill_type === 'technical').map(s => s.skill_name);
               const soft = skillData.filter(s => s.skill_type === 'soft').map(s => s.skill_name);
               const lang = skillData.filter(s => s.skill_type === 'language').map(s => s.skill_name);
+              const dom = skillData.filter(s => s.skill_type === 'domain').map(s => s.skill_name);
+              const tool = skillData.filter(s => s.skill_type === 'tools').map(s => s.skill_name);
+              const learn = skillData.filter(s => s.skill_type === 'learning').map(s => s.skill_name);
               if (tech.length) setTechnicalSkills(tech);
               if (soft.length) setSoftSkills(soft);
               if (lang.length) setLanguages(lang);
+              if (dom.length) setDomainSkills(dom);
+              if (tool.length) setToolsTech(tool);
+              if (learn.length) setCurrentlyLearning(learn);
             }
           } catch (e) { console.warn('Skills fetch error:', e); }
 
@@ -227,6 +242,9 @@ export default function ResumeBuilder() {
         technicalSkills,
         softSkills,
         languages,
+        domainSkills,
+        toolsTech,
+        currentlyLearning,
         certifications,
         savedAt: new Date().toISOString()
       };
@@ -363,7 +381,10 @@ export default function ResumeBuilder() {
           const skillsPayload = [
             ...technicalSkills.map(s => ({ resume_id: profileId, skill_name: s, skill_type: 'technical' })),
             ...softSkills.map(s => ({ resume_id: profileId, skill_name: s, skill_type: 'soft' })),
-            ...languages.map(s => ({ resume_id: profileId, skill_name: s, skill_type: 'language' }))
+            ...languages.map(s => ({ resume_id: profileId, skill_name: s, skill_type: 'language' })),
+            ...domainSkills.map(s => ({ resume_id: profileId, skill_name: s, skill_type: 'domain' })),
+            ...toolsTech.map(s => ({ resume_id: profileId, skill_name: s, skill_type: 'tools' })),
+            ...currentlyLearning.map(s => ({ resume_id: profileId, skill_name: s, skill_type: 'learning' }))
           ];
           if (skillsPayload.length > 0) {
             await supabase.from('resume_skills').insert(skillsPayload);
@@ -614,6 +635,33 @@ export default function ResumeBuilder() {
   const removeLanguage = (lang) => {
     setLanguages(languages.filter(l => l !== lang));
   };
+
+  const addDomainSkill = (e) => {
+    if (e) e.preventDefault();
+    if (newDomainSkill.trim() && !domainSkills.includes(newDomainSkill.trim())) {
+      setDomainSkills([...domainSkills, newDomainSkill.trim()]);
+      setNewDomainSkill('');
+    }
+  };
+  const removeDomainSkill = (s) => setDomainSkills(domainSkills.filter(item => item !== s));
+
+  const addToolTech = (e) => {
+    if (e) e.preventDefault();
+    if (newToolTech.trim() && !toolsTech.includes(newToolTech.trim())) {
+      setToolsTech([...toolsTech, newToolTech.trim()]);
+      setNewToolTech('');
+    }
+  };
+  const removeToolTech = (s) => setToolsTech(toolsTech.filter(item => item !== s));
+
+  const addCurrentlyLearning = (e) => {
+    if (e) e.preventDefault();
+    if (newLearningItem.trim() && !currentlyLearning.includes(newLearningItem.trim())) {
+      setCurrentlyLearning([...currentlyLearning, newLearningItem.trim()]);
+      setNewLearningItem('');
+    }
+  };
+  const removeCurrentlyLearning = (s) => setCurrentlyLearning(currentlyLearning.filter(item => item !== s));
 
   // ======== PASSPORT PHOTO HANDLERS ========
   const handlePhotoUpload = (e) => {
@@ -1385,7 +1433,7 @@ export default function ResumeBuilder() {
               {activeTab === 'skills' && (
                 <div className="space-y-6">
                   <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                    <h3 className="font-bold text-slate-800 text-sm flex items-center gap-2"><Code className="h-4 w-4 text-emerald-500" /> Core Skills</h3>
+                    <h3 className="font-bold text-slate-800 text-sm flex items-center gap-2"><Code className="h-4 w-4 text-emerald-500" /> Skills & Competencies</h3>
                     <button 
                       onClick={handleImportSkills}
                       className="flex items-center gap-1 text-[11px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2.5 py-1.5 rounded-lg hover:bg-emerald-100/50 transition-colors cursor-pointer"
@@ -1394,13 +1442,99 @@ export default function ResumeBuilder() {
                     </button>
                   </div>
 
-                  {/* Technical Skills */}
+                  {/* Domain Operations / Functional Expertise */}
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Technical / Hard Skills</label>
+                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Domain Operations / Core Expertise (e.g. HR, Operations, Finance, Design)</label>
+                    <form onSubmit={addDomainSkill} className="flex gap-2 mb-2">
+                      <input 
+                        type="text" 
+                        placeholder="e.g. HR Operations, Employee Onboarding, Recruitment Coordination, Shift Management"
+                        value={newDomainSkill} 
+                        onChange={(e) => setNewDomainSkill(e.target.value)}
+                        className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                      />
+                      <button type="submit" className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 rounded-xl text-xs cursor-pointer">Add</button>
+                    </form>
+                    
+                    {/* Quick Suggestions */}
+                    <div className="mb-3">
+                      <span className="text-[10px] text-slate-400 font-medium block mb-1">Quick Add Popular HR & Ops Skills:</span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {['HR Operations', 'Employee Onboarding', 'Recruitment Coordination', 'Shift Management', 'Grievance Redressal', 'Leave Tracking', 'Policy Compliance', 'HR Reporting'].map(sugg => (
+                          <button
+                            key={sugg}
+                            type="button"
+                            onClick={() => {
+                              if (!domainSkills.includes(sugg)) setDomainSkills([...domainSkills, sugg]);
+                            }}
+                            className="text-[10px] bg-slate-100 hover:bg-emerald-50 text-slate-600 hover:text-emerald-700 px-2 py-0.5 rounded-md font-medium transition-colors"
+                          >
+                            + {sugg}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2">
+                      {domainSkills.map(skill => (
+                        <span key={skill} className="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-50 text-emerald-800 border border-emerald-100 text-xs font-semibold rounded-lg">
+                          {skill}
+                          <button type="button" onClick={() => removeDomainSkill(skill)} className="text-emerald-500 hover:text-emerald-700 font-bold ml-0.5">×}</button>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Tools & Technology */}
+                  <div className="pt-2 border-t border-slate-100">
+                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Tools & Software (e.g. MS Excel, Word, Outlook, Attendance Tools)</label>
+                    <form onSubmit={addToolTech} className="flex gap-2 mb-2">
+                      <input 
+                        type="text" 
+                        placeholder="e.g. MS Excel, Word, Outlook, Attendance Management Tools"
+                        value={newToolTech} 
+                        onChange={(e) => setNewToolTech(e.target.value)}
+                        className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                      />
+                      <button type="submit" className="bg-slate-800 hover:bg-slate-700 text-white font-bold px-4 rounded-xl text-xs cursor-pointer">Add</button>
+                    </form>
+                    
+                    {/* Quick Suggestions */}
+                    <div className="mb-3">
+                      <span className="text-[10px] text-slate-400 font-medium block mb-1">Quick Add Common Tools:</span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {['MS Excel', 'Word', 'Outlook', 'Attendance Management Tools', 'Figma', 'VS Code', 'Canva'].map(sugg => (
+                          <button
+                            key={sugg}
+                            type="button"
+                            onClick={() => {
+                              if (!toolsTech.includes(sugg)) setToolsTech([...toolsTech, sugg]);
+                            }}
+                            className="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 px-2 py-0.5 rounded-md font-medium transition-colors"
+                          >
+                            + {sugg}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2">
+                      {toolsTech.map(skill => (
+                        <span key={skill} className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-lg">
+                          🛠️ {skill}
+                          <button type="button" onClick={() => removeToolTech(skill)} className="text-slate-400 hover:text-slate-600 font-bold ml-0.5">×}</button>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Technical Skills */}
+                  <div className="pt-2 border-t border-slate-100">
+                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Technical & Programming Skills</label>
                     <form onSubmit={addTechSkill} className="flex gap-2 mb-3">
                       <input 
                         type="text" 
-                        placeholder="e.g. React.js, Python, Verilog"
+                        placeholder="e.g. Python, React.js, SQL, JavaScript"
                         value={newTechSkill} 
                         onChange={(e) => setNewTechSkill(e.target.value)}
                         className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
@@ -1411,30 +1545,50 @@ export default function ResumeBuilder() {
                       {technicalSkills.map(skill => (
                         <span key={skill} className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-lg">
                           {skill}
-                          <button type="button" onClick={() => removeTechSkill(skill)} className="text-slate-400 hover:text-slate-600 font-bold ml-0.5">×</button>
+                          <button type="button" onClick={() => removeTechSkill(skill)} className="text-slate-400 hover:text-slate-600 font-bold ml-0.5">×}</button>
                         </span>
                       ))}
                     </div>
                   </div>
 
                   {/* Soft Skills */}
-                  <div>
+                  <div className="pt-2 border-t border-slate-100">
                     <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Soft Skills</label>
                     <form onSubmit={addSoftSkill} className="flex gap-2 mb-3">
                       <input 
                         type="text" 
-                        placeholder="e.g. Communication, Problem Solving"
+                        placeholder="e.g. Leadership, Communication, Empathy, Conflict Resolution"
                         value={newSoftSkill} 
                         onChange={(e) => setNewSoftSkill(e.target.value)}
                         className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                       />
                       <button type="submit" className="bg-slate-800 hover:bg-slate-700 text-white font-bold px-4 rounded-xl text-xs cursor-pointer">Add</button>
                     </form>
+                    
+                    {/* Quick Suggestions */}
+                    <div className="mb-3">
+                      <span className="text-[10px] text-slate-400 font-medium block mb-1">Quick Add Soft Skills:</span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {['Leadership', 'Communication', 'Empathy', 'Conflict Resolution', 'Time Management', 'Problem Solving'].map(sugg => (
+                          <button
+                            key={sugg}
+                            type="button"
+                            onClick={() => {
+                              if (!softSkills.includes(sugg)) setSoftSkills([...softSkills, sugg]);
+                            }}
+                            className="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 px-2 py-0.5 rounded-md font-medium transition-colors"
+                          >
+                            + {sugg}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
                     <div className="flex flex-wrap gap-2">
                       {softSkills.map(skill => (
                         <span key={skill} className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-lg">
                           {skill}
-                          <button type="button" onClick={() => removeSoftSkill(skill)} className="text-slate-400 hover:text-slate-600 font-bold ml-0.5">×</button>
+                          <button type="button" onClick={() => removeSoftSkill(skill)} className="text-slate-400 hover:text-slate-600 font-bold ml-0.5">×}</button>
                         </span>
                       ))}
                     </div>
@@ -1446,7 +1600,7 @@ export default function ResumeBuilder() {
                     <form onSubmit={addLanguage} className="flex gap-2 mb-3">
                       <input 
                         type="text" 
-                        placeholder="e.g. English (Fluent), Hindi (Native), French (Basic)"
+                        placeholder="e.g. English (Fluent), Hindi (Fluent), Kannada (Native)"
                         value={newLanguage} 
                         onChange={(e) => setNewLanguage(e.target.value)}
                         className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
@@ -1458,7 +1612,7 @@ export default function ResumeBuilder() {
                     <div className="mb-3">
                       <span className="text-[10px] text-slate-400 font-medium block mb-1">Quick Add Popular Languages:</span>
                       <div className="flex flex-wrap gap-1.5">
-                        {['English (Fluent)', 'Hindi (Native)', 'Telugu', 'Tamil', 'Kannada', 'Malayalam', 'German', 'French', 'Spanish'].map(langSuggestion => (
+                        {['English (Fluent)', 'Hindi (Fluent)', 'Kannada (Native)', 'Telugu (Proficient)', 'Marathi (Conversational)', 'Tamil'].map(langSuggestion => (
                           <button
                             key={langSuggestion}
                             type="button"
@@ -1479,7 +1633,50 @@ export default function ResumeBuilder() {
                       {languages.map(lang => (
                         <span key={lang} className="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-50 text-emerald-800 border border-emerald-100 text-xs font-semibold rounded-lg">
                           💬 {lang}
-                          <button type="button" onClick={() => removeLanguage(lang)} className="text-emerald-500 hover:text-emerald-700 font-bold ml-0.5">×</button>
+                          <button type="button" onClick={() => removeLanguage(lang)} className="text-emerald-500 hover:text-emerald-700 font-bold ml-0.5">×}</button>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Currently Learning (Optional) */}
+                  <div className="pt-2 border-t border-slate-100">
+                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Currently Learning (Optional)</label>
+                    <form onSubmit={addCurrentlyLearning} className="flex gap-2 mb-2">
+                      <input 
+                        type="text" 
+                        placeholder="e.g. Zoho Recruit, HRIS, ATS Platforms, AWS Cloud"
+                        value={newLearningItem} 
+                        onChange={(e) => setNewLearningItem(e.target.value)}
+                        className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                      />
+                      <button type="submit" className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 rounded-xl text-xs cursor-pointer">Add</button>
+                    </form>
+
+                    {/* Quick Suggestions */}
+                    <div className="mb-3">
+                      <span className="text-[10px] text-slate-400 font-medium block mb-1">Quick Add Currently Learning Suggestions:</span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {['Zoho Recruit', 'HRIS', 'ATS Platforms', 'Docker', 'AWS Cloud'].map(sugg => (
+                          <button
+                            key={sugg}
+                            type="button"
+                            onClick={() => {
+                              if (!currentlyLearning.includes(sugg)) setCurrentlyLearning([...currentlyLearning, sugg]);
+                            }}
+                            className="text-[10px] bg-slate-100 hover:bg-indigo-50 text-slate-600 hover:text-indigo-700 px-2 py-0.5 rounded-md font-medium transition-colors"
+                          >
+                            + {sugg}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2">
+                      {currentlyLearning.map(item => (
+                        <span key={item} className="inline-flex items-center gap-1 px-2.5 py-1 bg-indigo-50 text-indigo-800 border border-indigo-100 text-xs font-semibold rounded-lg">
+                          📖 {item}
+                          <button type="button" onClick={() => removeCurrentlyLearning(item)} className="text-indigo-500 hover:text-indigo-700 font-bold ml-0.5">×}</button>
                         </span>
                       ))}
                     </div>
@@ -1557,10 +1754,16 @@ export default function ResumeBuilder() {
                   )}
 
                   {/* Skills */}
-                  {(technicalSkills.length > 0 || softSkills.length > 0 || languages.length > 0) && (
+                  {(domainSkills.length > 0 || toolsTech.length > 0 || technicalSkills.length > 0 || softSkills.length > 0 || languages.length > 0) && (
                     <div className="space-y-1.5">
-                      <h3 className="text-sm font-bold text-emerald-700 uppercase tracking-wide border-b border-slate-100 pb-0.5">Skills & Languages</h3>
+                      <h3 className="text-sm font-bold text-emerald-700 uppercase tracking-wide border-b border-slate-100 pb-0.5">Skills & Competencies</h3>
                       <div className="space-y-1">
+                        {domainSkills.length > 0 && (
+                          <p className="text-slate-600"><strong className="text-slate-700">Domain Operations:</strong> {domainSkills.join(', ')}</p>
+                        )}
+                        {toolsTech.length > 0 && (
+                          <p className="text-slate-600"><strong className="text-slate-700">Tools Technology:</strong> {toolsTech.join(', ')}</p>
+                        )}
                         {technicalSkills.length > 0 && (
                           <p className="text-slate-600"><strong className="text-slate-700">Technical Skills:</strong> {technicalSkills.join(', ')}</p>
                         )}
@@ -1568,9 +1771,17 @@ export default function ResumeBuilder() {
                           <p className="text-slate-600"><strong className="text-slate-700">Soft Skills:</strong> {softSkills.join(', ')}</p>
                         )}
                         {languages.length > 0 && (
-                          <p className="text-slate-600"><strong className="text-slate-700">Languages Known:</strong> {languages.join(', ')}</p>
+                          <p className="text-slate-600"><strong className="text-slate-700">Languages:</strong> {languages.join(', ')}</p>
                         )}
                       </div>
+                    </div>
+                  )}
+
+                  {/* Currently Learning */}
+                  {currentlyLearning.length > 0 && (
+                    <div className="space-y-1">
+                      <h3 className="text-sm font-bold text-emerald-700 uppercase tracking-wide border-b border-slate-100 pb-0.5">Currently Learning</h3>
+                      <p className="text-slate-600 font-medium">{currentlyLearning.join(', ')}</p>
                     </div>
                   )}
 
@@ -1746,20 +1957,34 @@ export default function ResumeBuilder() {
                   )}
 
                   {/* Skills */}
-                  {(technicalSkills.length > 0 || softSkills.length > 0 || languages.length > 0) && (
+                  {(domainSkills.length > 0 || toolsTech.length > 0 || technicalSkills.length > 0 || softSkills.length > 0 || languages.length > 0) && (
                     <div className="space-y-1">
-                      <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-300 pb-0.5">Skills & Languages</h3>
+                      <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-300 pb-0.5">SKILLS</h3>
                       <div className="space-y-0.5">
+                        {domainSkills.length > 0 && (
+                          <p className="text-slate-700"><strong className="text-slate-900">HR Operations / Core:</strong> {domainSkills.join(', ')}</p>
+                        )}
+                        {toolsTech.length > 0 && (
+                          <p className="text-slate-700"><strong className="text-slate-900">Tools Technology:</strong> {toolsTech.join(', ')}</p>
+                        )}
                         {technicalSkills.length > 0 && (
-                          <p className="text-slate-700"><strong className="text-slate-800">Languages & Technologies:</strong> {technicalSkills.join(', ')}</p>
+                          <p className="text-slate-700"><strong className="text-slate-900">Technical Skills:</strong> {technicalSkills.join(', ')}</p>
                         )}
                         {softSkills.length > 0 && (
-                          <p className="text-slate-700"><strong className="text-slate-800">Methodologies & Interpersonal:</strong> {softSkills.join(', ')}</p>
+                          <p className="text-slate-700"><strong className="text-slate-900">Soft Skills:</strong> {softSkills.join(', ')}</p>
                         )}
                         {languages.length > 0 && (
-                          <p className="text-slate-700"><strong className="text-slate-800">Languages Known:</strong> {languages.join(', ')}</p>
+                          <p className="text-slate-700"><strong className="text-slate-900">Languages:</strong> {languages.join(', ')}</p>
                         )}
                       </div>
+                    </div>
+                  )}
+
+                  {/* Currently Learning */}
+                  {currentlyLearning.length > 0 && (
+                    <div className="space-y-1">
+                      <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-300 pb-0.5">CURRENTLY LEARNING</h3>
+                      <p className="text-slate-700 font-medium">{currentlyLearning.join(', ')}</p>
                     </div>
                   )}
 
