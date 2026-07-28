@@ -36,7 +36,9 @@ export default function ResumeBuilder() {
     location: '',
     github: '',
     linkedin: '',
-    portfolio: ''
+    portfolio: '',
+    photoUrl: '',
+    showPhoto: true
   });
   
   const [summary, setSummary] = useState('');
@@ -97,7 +99,9 @@ export default function ResumeBuilder() {
             location: profile.location || '',
             github: profile.github || '',
             linkedin: profile.linkedin || '',
-            portfolio: profile.portfolio || ''
+            portfolio: profile.portfolio || '',
+            photoUrl: profile.photo_url || '',
+            showPhoto: profile.show_photo !== false
           });
           setSummary(profile.summary || '');
           setSelectedTemplate(profile.template || 'modern');
@@ -197,6 +201,8 @@ export default function ResumeBuilder() {
         github: personalInfo.github,
         linkedin: personalInfo.linkedin,
         portfolio: personalInfo.portfolio,
+        photo_url: personalInfo.photoUrl,
+        show_photo: personalInfo.showPhoto !== false,
         summary: summary,
         template: selectedTemplate,
         updated_at: new Date().toISOString()
@@ -461,6 +467,35 @@ export default function ResumeBuilder() {
   };
   const removeSoftSkill = (skill) => {
     setSoftSkills(softSkills.filter(s => s !== skill));
+  };
+
+  // ======== PASSPORT PHOTO HANDLERS ========
+  const handlePhotoUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      showToast('Photo file size should be less than 5MB.', 'error');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPersonalInfo(prev => ({
+        ...prev,
+        photoUrl: reader.result,
+        showPhoto: true
+      }));
+      showToast('Passport photo added!');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemovePhoto = () => {
+    setPersonalInfo(prev => ({
+      ...prev,
+      photoUrl: '',
+      showPhoto: false
+    }));
+    showToast('Passport photo removed.');
   };
 
   // Trigger Print dialogue
@@ -793,6 +828,72 @@ export default function ResumeBuilder() {
                         onChange={(e) => setPersonalInfo({ ...personalInfo, portfolio: e.target.value })}
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                       />
+                    </div>
+
+                    {/* Passport Size Photo (Optional) */}
+                    <div className="col-span-2 bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-3 mt-2">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider">Passport Size Photo (Optional)</label>
+                          <p className="text-[11px] text-slate-500">Upload a professional headshot to display on your resume template</p>
+                        </div>
+                        {personalInfo.photoUrl && (
+                          <div className="flex items-center gap-2">
+                            <input 
+                              type="checkbox"
+                              id="showPhoto"
+                              checked={personalInfo.showPhoto}
+                              onChange={(e) => setPersonalInfo({ ...personalInfo, showPhoto: e.target.checked })}
+                              className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                            />
+                            <label htmlFor="showPhoto" className="text-xs font-medium text-slate-600 cursor-pointer">
+                              Show Photo
+                            </label>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex items-center gap-4">
+                        {personalInfo.photoUrl ? (
+                          <div className="relative group shrink-0">
+                            <img 
+                              src={personalInfo.photoUrl} 
+                              alt="Passport Preview" 
+                              className="w-16 h-20 object-cover rounded-xl border-2 border-emerald-500 shadow-sm"
+                            />
+                            <button
+                              type="button"
+                              onClick={handleRemovePhoto}
+                              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-md hover:bg-red-600 transition-colors"
+                              title="Remove Photo"
+                            >
+                              <Trash className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="w-16 h-20 bg-slate-200/70 rounded-xl border-2 border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 shrink-0">
+                            <User className="w-6 h-6" />
+                            <span className="text-[9px] font-bold mt-1">Photo</span>
+                          </div>
+                        )}
+
+                        <div className="space-y-1.5 flex-1">
+                          <label 
+                            htmlFor="passport-photo-input" 
+                            className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-2 rounded-xl cursor-pointer shadow-sm transition-all"
+                          >
+                            <User className="w-3.5 h-3.5" /> {personalInfo.photoUrl ? 'Change Photo' : 'Upload Passport Photo'}
+                          </label>
+                          <input 
+                            id="passport-photo-input"
+                            type="file"
+                            accept="image/*"
+                            onChange={handlePhotoUpload}
+                            className="hidden"
+                          />
+                          <p className="text-[10px] text-slate-400">Recommended: Passport aspect ratio (3:4 or 1:1, max 5MB)</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1150,19 +1251,28 @@ export default function ResumeBuilder() {
               {selectedTemplate === 'modern' && (
                 <div className="space-y-6 text-slate-800 text-xs">
                   {/* Header */}
-                  <div className="border-b-2 border-emerald-600 pb-4 text-center">
-                    <h2 className="text-2xl font-extrabold tracking-tight text-slate-900 uppercase">{personalInfo.fullName || 'YOUR NAME'}</h2>
-                    <div className="text-xs font-semibold text-emerald-600 uppercase tracking-wider mt-1">{personalInfo.professionalTitle || 'Professional Title'}</div>
-                    <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-slate-500 font-medium mt-2">
-                      {personalInfo.email && <span className="flex items-center gap-1"><Mail className="h-3.5 w-3.5" />{personalInfo.email}</span>}
-                      {personalInfo.phone && <span className="flex items-center gap-1"><Phone className="h-3.5 w-3.5" />{personalInfo.phone}</span>}
-                      {personalInfo.location && <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{personalInfo.location}</span>}
+                  <div className="border-b-2 border-emerald-600 pb-4 flex items-center justify-between gap-4">
+                    <div className="flex-1 text-left">
+                      <h2 className="text-2xl font-extrabold tracking-tight text-slate-900 uppercase">{personalInfo.fullName || 'YOUR NAME'}</h2>
+                      <div className="text-xs font-semibold text-emerald-600 uppercase tracking-wider mt-1">{personalInfo.professionalTitle || 'Professional Title'}</div>
+                      <div className="flex flex-wrap gap-x-4 gap-y-1 text-slate-500 font-medium mt-2">
+                        {personalInfo.email && <span className="flex items-center gap-1"><Mail className="h-3.5 w-3.5" />{personalInfo.email}</span>}
+                        {personalInfo.phone && <span className="flex items-center gap-1"><Phone className="h-3.5 w-3.5" />{personalInfo.phone}</span>}
+                        {personalInfo.location && <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{personalInfo.location}</span>}
+                      </div>
+                      <div className="flex flex-wrap gap-x-4 gap-y-1 text-slate-400 font-medium mt-1">
+                        {personalInfo.github && <span className="flex items-center gap-1"><Code className="h-3.5 w-3.5" />{personalInfo.github}</span>}
+                        {personalInfo.linkedin && <span className="flex items-center gap-1"><Link2 className="h-3.5 w-3.5" />{personalInfo.linkedin}</span>}
+                        {personalInfo.portfolio && <span className="flex items-center gap-1"><Globe className="h-3.5 w-3.5" />{personalInfo.portfolio}</span>}
+                      </div>
                     </div>
-                    <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-slate-400 font-medium mt-1">
-                      {personalInfo.github && <span className="flex items-center gap-1"><Code className="h-3.5 w-3.5" />{personalInfo.github}</span>}
-                      {personalInfo.linkedin && <span className="flex items-center gap-1"><Link2 className="h-3.5 w-3.5" />{personalInfo.linkedin}</span>}
-                      {personalInfo.portfolio && <span className="flex items-center gap-1"><Globe className="h-3.5 w-3.5" />{personalInfo.portfolio}</span>}
-                    </div>
+                    {personalInfo.photoUrl && personalInfo.showPhoto && (
+                      <img 
+                        src={personalInfo.photoUrl} 
+                        alt="Passport Photo" 
+                        className="w-20 h-24 object-cover rounded-lg border-2 border-emerald-600 shadow-md shrink-0" 
+                      />
+                    )}
                   </div>
 
                   {/* Summary */}
@@ -1252,19 +1362,28 @@ export default function ResumeBuilder() {
               {selectedTemplate === 'ats' && (
                 <div className="space-y-5 text-slate-900 text-xs font-serif leading-relaxed">
                   {/* Centered clean contact info */}
-                  <div className="text-center space-y-1 border-b border-slate-200 pb-3">
-                    <h2 className="text-xl font-bold tracking-normal text-slate-900 uppercase">{personalInfo.fullName || 'YOUR NAME'}</h2>
-                    <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider -mt-0.5 mb-1">{personalInfo.professionalTitle || 'Professional Title'}</div>
-                    <div className="text-slate-600 flex flex-wrap justify-center gap-x-3 text-[11px]">
-                      {personalInfo.location && <span>{personalInfo.location}</span>}
-                      {personalInfo.phone && <span>· {personalInfo.phone}</span>}
-                      {personalInfo.email && <span>· {personalInfo.email}</span>}
+                  <div className="flex items-start justify-between border-b border-slate-200 pb-3 gap-4">
+                    <div className="flex-1 text-left space-y-1">
+                      <h2 className="text-xl font-bold tracking-normal text-slate-900 uppercase">{personalInfo.fullName || 'YOUR NAME'}</h2>
+                      <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider -mt-0.5 mb-1">{personalInfo.professionalTitle || 'Professional Title'}</div>
+                      <div className="text-slate-600 flex flex-wrap gap-x-3 text-[11px]">
+                        {personalInfo.location && <span>{personalInfo.location}</span>}
+                        {personalInfo.phone && <span>· {personalInfo.phone}</span>}
+                        {personalInfo.email && <span>· {personalInfo.email}</span>}
+                      </div>
+                      <div className="text-slate-500 flex flex-wrap gap-x-3 text-[11px]">
+                        {personalInfo.github && <span>GitHub: {personalInfo.github}</span>}
+                        {personalInfo.linkedin && <span>LinkedIn: {personalInfo.linkedin}</span>}
+                        {personalInfo.portfolio && <span>Portfolio: {personalInfo.portfolio}</span>}
+                      </div>
                     </div>
-                    <div className="text-slate-500 flex flex-wrap justify-center gap-x-3 text-[11px]">
-                      {personalInfo.github && <span>GitHub: {personalInfo.github}</span>}
-                      {personalInfo.linkedin && <span>LinkedIn: {personalInfo.linkedin}</span>}
-                      {personalInfo.portfolio && <span>Portfolio: {personalInfo.portfolio}</span>}
-                    </div>
+                    {personalInfo.photoUrl && personalInfo.showPhoto && (
+                      <img 
+                        src={personalInfo.photoUrl} 
+                        alt="Passport Photo" 
+                        className="w-20 h-24 object-cover rounded-md border border-slate-300 shadow-sm shrink-0" 
+                      />
+                    )}
                   </div>
 
                   {/* Summary */}
@@ -1354,17 +1473,26 @@ export default function ResumeBuilder() {
               {selectedTemplate === 'software' && (
                 <div className="space-y-5 text-slate-800 text-xs font-mono">
                   {/* Minimal tech block header */}
-                  <div className="border-l-4 border-indigo-600 pl-4 py-1">
-                    <h2 className="text-2xl font-bold tracking-tight text-slate-900 uppercase">{personalInfo.fullName || 'DEV_NAME'}</h2>
-                    <div className="text-xs font-bold text-indigo-600 uppercase tracking-wider mt-0.5">{personalInfo.professionalTitle || 'Professional Title'}</div>
-                    <div className="text-[11px] text-indigo-600 font-bold mt-1">
-                      {personalInfo.github && <span className="mr-3">git://{personalInfo.github}</span>}
-                      {personalInfo.linkedin && <span className="mr-3">in/{personalInfo.linkedin}</span>}
-                      {personalInfo.portfolio && <span>web/{personalInfo.portfolio}</span>}
+                  <div className="flex items-start justify-between border-l-4 border-indigo-600 pl-4 py-1 gap-4">
+                    <div className="flex-1">
+                      <h2 className="text-2xl font-bold tracking-tight text-slate-900 uppercase">{personalInfo.fullName || 'DEV_NAME'}</h2>
+                      <div className="text-xs font-bold text-indigo-600 uppercase tracking-wider mt-0.5">{personalInfo.professionalTitle || 'Professional Title'}</div>
+                      <div className="text-[11px] text-indigo-600 font-bold mt-1">
+                        {personalInfo.github && <span className="mr-3">git://{personalInfo.github}</span>}
+                        {personalInfo.linkedin && <span className="mr-3">in/{personalInfo.linkedin}</span>}
+                        {personalInfo.portfolio && <span>web/{personalInfo.portfolio}</span>}
+                      </div>
+                      <div className="text-slate-500 text-[10px] mt-1">
+                        {personalInfo.email} · {personalInfo.phone} · {personalInfo.location}
+                      </div>
                     </div>
-                    <div className="text-slate-500 text-[10px] mt-1">
-                      {personalInfo.email} · {personalInfo.phone} · {personalInfo.location}
-                    </div>
+                    {personalInfo.photoUrl && personalInfo.showPhoto && (
+                      <img 
+                        src={personalInfo.photoUrl} 
+                        alt="Passport Photo" 
+                        className="w-20 h-24 object-cover rounded-md border-2 border-indigo-600 shadow-sm shrink-0" 
+                      />
+                    )}
                   </div>
 
                   {/* Summary */}
@@ -1448,18 +1576,25 @@ export default function ResumeBuilder() {
               {selectedTemplate === 'datascientist' && (
                 <div className="space-y-5 text-slate-800 text-xs">
                   {/* Top aligned header with deep teal details */}
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-teal-700 pb-3 gap-2">
-                    <div>
+                  <div className="flex justify-between items-start border-b border-teal-700 pb-3 gap-4">
+                    <div className="flex-1">
                       <h2 className="text-2xl font-bold text-teal-800 uppercase">{personalInfo.fullName || 'YOUR NAME'}</h2>
                       <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mt-0.5">{personalInfo.professionalTitle || 'Professional Title'}</div>
-                    </div>
-                    <div className="text-[10px] text-slate-500 text-left sm:text-right space-y-0.5">
-                      <div>{personalInfo.email} | {personalInfo.phone}</div>
-                      <div>{personalInfo.location}</div>
-                      <div className="font-semibold text-teal-700">
-                        {personalInfo.github && `gh/${personalInfo.github}`} · {personalInfo.linkedin && `in/${personalInfo.linkedin}`}
+                      <div className="text-[10px] text-slate-500 space-y-0.5 mt-1">
+                        <div>{personalInfo.email} | {personalInfo.phone}</div>
+                        <div>{personalInfo.location}</div>
+                        <div className="font-semibold text-teal-700">
+                          {personalInfo.github && `gh/${personalInfo.github}`} · {personalInfo.linkedin && `in/${personalInfo.linkedin}`}
+                        </div>
                       </div>
                     </div>
+                    {personalInfo.photoUrl && personalInfo.showPhoto && (
+                      <img 
+                        src={personalInfo.photoUrl} 
+                        alt="Passport Photo" 
+                        className="w-20 h-24 object-cover rounded-lg border-2 border-teal-700 shadow-sm shrink-0" 
+                      />
+                    )}
                   </div>
 
                   {/* Summary */}
@@ -1551,19 +1686,28 @@ export default function ResumeBuilder() {
               {selectedTemplate === 'fresher' && (
                 <div className="space-y-5 text-slate-800 text-xs">
                   {/* Clean classical block header */}
-                  <div className="text-center pb-2 border-b border-slate-100">
-                    <h2 className="text-2xl font-bold text-slate-900">{personalInfo.fullName || 'YOUR NAME'}</h2>
-                    <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mt-0.5">{personalInfo.professionalTitle || 'Professional Title'}</div>
-                    <p className="text-slate-500 mt-1 flex justify-center gap-2 flex-wrap">
-                      {personalInfo.email && <span>{personalInfo.email}</span>}
-                      {personalInfo.phone && <span>| {personalInfo.phone}</span>}
-                      {personalInfo.location && <span>| {personalInfo.location}</span>}
-                    </p>
-                    <p className="text-slate-400 text-[10px] mt-0.5 flex justify-center gap-2 flex-wrap">
-                      {personalInfo.github && <span>GitHub: {personalInfo.github}</span>}
-                      {personalInfo.linkedin && <span>LinkedIn: {personalInfo.linkedin}</span>}
-                      {personalInfo.portfolio && <span>Web: {personalInfo.portfolio}</span>}
-                    </p>
+                  <div className="flex items-center justify-between pb-2 border-b border-slate-100 gap-4">
+                    <div className="flex-1 text-left">
+                      <h2 className="text-2xl font-bold text-slate-900">{personalInfo.fullName || 'YOUR NAME'}</h2>
+                      <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mt-0.5">{personalInfo.professionalTitle || 'Professional Title'}</div>
+                      <p className="text-slate-500 mt-1 flex gap-2 flex-wrap text-[11px]">
+                        {personalInfo.email && <span>{personalInfo.email}</span>}
+                        {personalInfo.phone && <span>| {personalInfo.phone}</span>}
+                        {personalInfo.location && <span>| {personalInfo.location}</span>}
+                      </p>
+                      <p className="text-slate-400 text-[10px] mt-0.5 flex gap-2 flex-wrap">
+                        {personalInfo.github && <span>GitHub: {personalInfo.github}</span>}
+                        {personalInfo.linkedin && <span>LinkedIn: {personalInfo.linkedin}</span>}
+                        {personalInfo.portfolio && <span>Web: {personalInfo.portfolio}</span>}
+                      </p>
+                    </div>
+                    {personalInfo.photoUrl && personalInfo.showPhoto && (
+                      <img 
+                        src={personalInfo.photoUrl} 
+                        alt="Passport Photo" 
+                        className="w-20 h-24 object-cover rounded-md border border-slate-300 shadow-sm shrink-0" 
+                      />
+                    )}
                   </div>
 
                   {/* Summary */}
