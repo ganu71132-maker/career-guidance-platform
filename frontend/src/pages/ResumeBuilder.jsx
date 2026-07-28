@@ -76,7 +76,7 @@ export default function ResumeBuilder() {
     }, 3000);
   };
 
-  // ======== LOAD SAVED RESUME FROM SUPABASE ========
+  // ======== LOAD SAVED RESUME FROM SUPABASE & LOCALSTORAGE ========
   const initialLoadDone = React.useRef(false);
   
   useEffect(() => {
@@ -85,118 +85,125 @@ export default function ResumeBuilder() {
       initialLoadDone.current = true;
       setLoading(true);
       try {
-        // Fetch profile
+        // Load LocalStorage fallback first for instant responsiveness
+        const localBackupRaw = localStorage.getItem(`nextrapath_resume_draft_${user.id}`);
+        if (localBackupRaw) {
+          try {
+            const backup = JSON.parse(localBackupRaw);
+            if (backup.personalInfo) setPersonalInfo(prev => ({ ...prev, ...backup.personalInfo }));
+            if (backup.summary) setSummary(backup.summary);
+            if (backup.selectedTemplate) setSelectedTemplate(backup.selectedTemplate);
+            if (backup.experience?.length) setExperience(backup.experience);
+            if (backup.education?.length) setEducation(backup.education);
+            if (backup.projects?.length) setProjects(backup.projects);
+            if (backup.technicalSkills) setTechnicalSkills(backup.technicalSkills);
+            if (backup.softSkills) setSoftSkills(backup.softSkills);
+            if (backup.languages) setLanguages(backup.languages);
+            if (backup.certifications) setCertifications(backup.certifications);
+          } catch (e) {
+            console.warn('LocalStorage backup parse error:', e);
+          }
+        }
+
+        // Fetch from Supabase
         const { data: profile, error: profileErr } = await supabase
           .from('resume_profiles')
           .select('*')
           .eq('user_id', user.id)
           .maybeSingle();
 
-        if (profileErr) throw profileErr;
+        if (profileErr) console.warn('Profile fetch warning:', profileErr);
         
         if (profile) {
-          setPersonalInfo({
-            fullName: profile.full_name || '',
-            professionalTitle: profile.professional_title || '',
-            careerPath: profile.career_path || '',
+          setPersonalInfo(prev => ({
+            ...prev,
+            fullName: profile.full_name || prev.fullName || '',
+            professionalTitle: profile.professional_title || prev.professionalTitle || '',
+            careerPath: profile.career_path || prev.careerPath || '',
             autoFillTitle: profile.auto_fill_title !== false,
-            email: profile.email || '',
-            phone: profile.phone || '',
-            location: profile.location || '',
-            github: profile.github || '',
-            linkedin: profile.linkedin || '',
-            portfolio: profile.portfolio || '',
-            photoUrl: profile.photo_url || '',
-            showPhoto: profile.show_photo !== false
-          });
-          setSummary(profile.summary || '');
-          setSelectedTemplate(profile.template || 'modern');
+            email: profile.email || prev.email || '',
+            phone: profile.phone || prev.phone || '',
+            location: profile.location || prev.location || '',
+            github: profile.github || prev.github || '',
+            linkedin: profile.linkedin || prev.linkedin || '',
+            portfolio: profile.portfolio || prev.portfolio || '',
+            photoUrl: profile.photo_url || prev.photoUrl || '',
+            showPhoto: profile.show_photo !== undefined ? profile.show_photo : prev.showPhoto
+          }));
+          if (profile.summary) setSummary(profile.summary);
+          if (profile.template) setSelectedTemplate(profile.template);
 
           // Fetch Experience
-          const { data: expData, error: expErr } = await supabase
-            .from('resume_experience')
-            .select('*')
-            .eq('resume_id', profile.id);
-          if (expErr) throw expErr;
-          if (expData && expData.length > 0) {
-            setExperience(expData.map(e => ({
-              id: e.id,
-              company: e.company,
-              role: e.role,
-              startDate: e.start_date || '',
-              endDate: e.end_date || '',
-              description: e.description || ''
-            })));
-          }
+          try {
+            const { data: expData } = await supabase.from('resume_experience').select('*').eq('resume_id', profile.id);
+            if (expData && expData.length > 0) {
+              setExperience(expData.map(e => ({
+                id: e.id,
+                company: e.company || '',
+                role: e.role || '',
+                startDate: e.start_date || '',
+                endDate: e.end_date || '',
+                description: e.description || ''
+              })));
+            }
+          } catch (e) { console.warn('Exp fetch error:', e); }
 
           // Fetch Education
-          const { data: eduData, error: eduErr } = await supabase
-            .from('resume_education')
-            .select('*')
-            .eq('resume_id', profile.id);
-          if (eduErr) throw eduErr;
-          if (eduData && eduData.length > 0) {
-            setEducation(eduData.map(e => ({
-              id: e.id,
-              institution: e.institution,
-              degree: e.degree,
-              year: e.year || '',
-              gpa: e.gpa || ''
-            })));
-          }
+          try {
+            const { data: eduData } = await supabase.from('resume_education').select('*').eq('resume_id', profile.id);
+            if (eduData && eduData.length > 0) {
+              setEducation(eduData.map(e => ({
+                id: e.id,
+                institution: e.institution || '',
+                degree: e.degree || '',
+                year: e.year || '',
+                gpa: e.gpa || ''
+              })));
+            }
+          } catch (e) { console.warn('Edu fetch error:', e); }
 
           // Fetch Projects
-          const { data: projData, error: projErr } = await supabase
-            .from('resume_projects')
-            .select('*')
-            .eq('resume_id', profile.id);
-          if (projErr) throw projErr;
-          if (projData && projData.length > 0) {
-            setProjects(projData.map(p => ({
-              id: p.id,
-              title: p.title,
-              description: p.description || '',
-              technologies: p.technologies || ''
-            })));
-          }
+          try {
+            const { data: projData } = await supabase.from('resume_projects').select('*').eq('resume_id', profile.id);
+            if (projData && projData.length > 0) {
+              setProjects(projData.map(p => ({
+                id: p.id,
+                title: p.title || '',
+                description: p.description || '',
+                technologies: p.technologies || ''
+              })));
+            }
+          } catch (e) { console.warn('Proj fetch error:', e); }
 
           // Fetch Skills
-          const { data: skillData, error: skillErr } = await supabase
-            .from('resume_skills')
-            .select('*')
-            .eq('resume_id', profile.id);
-          if (skillErr) throw skillErr;
-          if (skillData) {
-            const tech = skillData.filter(s => s.skill_type === 'technical').map(s => s.skill_name);
-            const soft = skillData.filter(s => s.skill_type === 'soft').map(s => s.skill_name);
-            const lang = skillData.filter(s => s.skill_type === 'language').map(s => s.skill_name);
-            setTechnicalSkills(tech);
-            setSoftSkills(soft);
-            setLanguages(lang);
-          }
-
-          // Fetch Certifications (with safe catch)
           try {
-            const { data: certData } = await supabase
-              .from('resume_certifications')
-              .select('*')
-              .eq('resume_id', profile.id);
+            const { data: skillData } = await supabase.from('resume_skills').select('*').eq('resume_id', profile.id);
+            if (skillData && skillData.length > 0) {
+              const tech = skillData.filter(s => s.skill_type === 'technical').map(s => s.skill_name);
+              const soft = skillData.filter(s => s.skill_type === 'soft').map(s => s.skill_name);
+              const lang = skillData.filter(s => s.skill_type === 'language').map(s => s.skill_name);
+              if (tech.length) setTechnicalSkills(tech);
+              if (soft.length) setSoftSkills(soft);
+              if (lang.length) setLanguages(lang);
+            }
+          } catch (e) { console.warn('Skills fetch error:', e); }
+
+          // Fetch Certifications
+          try {
+            const { data: certData } = await supabase.from('resume_certifications').select('*').eq('resume_id', profile.id);
             if (certData && certData.length > 0) {
               setCertifications(certData.map(c => ({
                 id: c.id,
-                title: c.title,
+                title: c.title || '',
                 issuer: c.issuer || '',
                 year: c.year || '',
                 credentialUrl: c.credential_url || ''
               })));
             }
-          } catch (e) {
-            console.log('Certifications load catch:', e);
-          }
+          } catch (e) { console.warn('Certs fetch error:', e); }
         }
       } catch (err) {
         console.error('Error loading resume:', err);
-        showToast('Failed to load saved resume.', 'error');
       } finally {
         setLoading(false);
       }
@@ -204,147 +211,187 @@ export default function ResumeBuilder() {
     loadResume();
   }, [user?.id]);
 
-  // ======== SAVE RESUME TO SUPABASE ========
+  // ======== SAVE RESUME TO SUPABASE & LOCALSTORAGE ========
   const handleSaveResume = async () => {
     if (!user) return;
     setLoading(true);
     try {
-      // 1. Upsert Profile
+      // 1. Instant LocalStorage backup (guarantees local safety immediately)
+      const fullBackup = {
+        personalInfo,
+        summary,
+        selectedTemplate,
+        experience,
+        education,
+        projects,
+        technicalSkills,
+        softSkills,
+        languages,
+        certifications,
+        savedAt: new Date().toISOString()
+      };
+      localStorage.setItem(`nextrapath_resume_draft_${user.id}`, JSON.stringify(fullBackup));
+
+      // 2. Base profile payload
+      const basePayload = {
+        user_id: user.id,
+        full_name: personalInfo.fullName || '',
+        professional_title: personalInfo.professionalTitle || '',
+        career_path: personalInfo.careerPath || '',
+        auto_fill_title: personalInfo.autoFillTitle !== false,
+        email: personalInfo.email || '',
+        phone: personalInfo.phone || '',
+        location: personalInfo.location || '',
+        github: personalInfo.github || '',
+        linkedin: personalInfo.linkedin || '',
+        portfolio: personalInfo.portfolio || '',
+        summary: summary || '',
+        template: selectedTemplate || 'modern',
+        updated_at: new Date().toISOString()
+      };
+
+      // Extended payload with photo fields
+      const extendedPayload = {
+        ...basePayload,
+        photo_url: personalInfo.photoUrl || '',
+        show_photo: personalInfo.showPhoto !== false
+      };
+
+      // 3. Upsert Profile
       const { data: existingProfile } = await supabase
         .from('resume_profiles')
         .select('id')
         .eq('user_id', user.id)
         .maybeSingle();
 
-      const profilePayload = {
-        user_id: user.id,
-        full_name: personalInfo.fullName,
-        professional_title: personalInfo.professionalTitle || '',
-        career_path: personalInfo.careerPath || '',
-        auto_fill_title: personalInfo.autoFillTitle !== false,
-        email: personalInfo.email,
-        phone: personalInfo.phone,
-        location: personalInfo.location,
-        github: personalInfo.github,
-        linkedin: personalInfo.linkedin,
-        portfolio: personalInfo.portfolio,
-        photo_url: personalInfo.photoUrl,
-        show_photo: personalInfo.showPhoto !== false,
-        summary: summary,
-        template: selectedTemplate,
-        updated_at: new Date().toISOString()
-      };
-
       let profileId;
+
       if (existingProfile) {
         profileId = existingProfile.id;
-        const { error } = await supabase
+        // Try saving extended payload first
+        let { error: updateErr } = await supabase
           .from('resume_profiles')
-          .update(profilePayload)
+          .update(extendedPayload)
           .eq('id', profileId);
-        if (error) throw error;
-      } else {
-        const { data, error } = await supabase
-          .from('resume_profiles')
-          .insert(profilePayload)
-          .select('id')
-          .single();
-        if (error) throw error;
-        profileId = data.id;
-      }
 
-      // 2. Clear and Save Experience
-      const { error: delExpErr } = await supabase.from('resume_experience').delete().eq('resume_id', profileId);
-      if (delExpErr) throw delExpErr;
-
-      const validExp = experience.filter(e => e.company || e.role);
-      if (validExp.length > 0) {
-        const { error: insExpErr } = await supabase.from('resume_experience').insert(
-          validExp.map(e => ({
-            resume_id: profileId,
-            company: e.company,
-            role: e.role,
-            start_date: e.startDate,
-            end_date: e.endDate,
-            description: e.description
-          }))
-        );
-        if (insExpErr) throw insExpErr;
-      }
-
-      // 3. Clear and Save Education
-      const { error: delEduErr } = await supabase.from('resume_education').delete().eq('resume_id', profileId);
-      if (delEduErr) throw delEduErr;
-
-      const validEdu = education.filter(e => e.institution || e.degree);
-      if (validEdu.length > 0) {
-        const { error: insEduErr } = await supabase.from('resume_education').insert(
-          validEdu.map(e => ({
-            resume_id: profileId,
-            institution: e.institution,
-            degree: e.degree,
-            year: e.year,
-            gpa: e.gpa
-          }))
-        );
-        if (insEduErr) throw insEduErr;
-      }
-
-      // 4. Clear and Save Projects
-      const { error: delProjErr } = await supabase.from('resume_projects').delete().eq('resume_id', profileId);
-      if (delProjErr) throw delProjErr;
-
-      const validProj = projects.filter(p => p.title);
-      if (validProj.length > 0) {
-        const { error: insProjErr } = await supabase.from('resume_projects').insert(
-          validProj.map(p => ({
-            resume_id: profileId,
-            title: p.title,
-            description: p.description,
-            technologies: p.technologies
-          }))
-        );
-        if (insProjErr) throw insProjErr;
-      }
-
-      // 5. Clear and Save Skills
-      const { error: delSkillErr } = await supabase.from('resume_skills').delete().eq('resume_id', profileId);
-      if (delSkillErr) throw delSkillErr;
-
-      const skillsPayload = [
-        ...technicalSkills.map(s => ({ resume_id: profileId, skill_name: s, skill_type: 'technical' })),
-        ...softSkills.map(s => ({ resume_id: profileId, skill_name: s, skill_type: 'soft' })),
-        ...languages.map(s => ({ resume_id: profileId, skill_name: s, skill_type: 'language' }))
-      ];
-
-      if (skillsPayload.length > 0) {
-        const { error: insSkillErr } = await supabase.from('resume_skills').insert(skillsPayload);
-        if (insSkillErr) throw insSkillErr;
-      }
-
-      // 6. Clear and Save Certifications (Safe DB handling)
-      try {
-        await supabase.from('resume_certifications').delete().eq('resume_id', profileId);
-        const validCert = certifications.filter(c => c.title || c.issuer);
-        if (validCert.length > 0) {
-          await supabase.from('resume_certifications').insert(
-            validCert.map(c => ({
-              resume_id: profileId,
-              title: c.title,
-              issuer: c.issuer,
-              year: c.year,
-              credential_url: c.credentialUrl
-            }))
-          );
+        // Fallback to base payload if custom columns (like photo_url) fail
+        if (updateErr) {
+          console.warn('Extended profile update failed, retrying with base payload:', updateErr);
+          const { error: retryErr } = await supabase
+            .from('resume_profiles')
+            .update(basePayload)
+            .eq('id', profileId);
+          if (retryErr) console.warn('Base profile update error:', retryErr);
         }
-      } catch (e) {
-        console.log('Certifications save catch:', e);
+      } else {
+        let { data: insData, error: insErr } = await supabase
+          .from('resume_profiles')
+          .insert(extendedPayload)
+          .select('id')
+          .maybeSingle();
+
+        if (insErr) {
+          console.warn('Extended profile insert failed, retrying with base payload:', insErr);
+          const { data: retryData, error: retryErr } = await supabase
+            .from('resume_profiles')
+            .insert(basePayload)
+            .select('id')
+            .single();
+          if (retryErr) console.warn('Base profile insert error:', retryErr);
+          profileId = retryData?.id;
+        } else {
+          profileId = insData?.id;
+        }
       }
 
-      showToast('Resume saved successfully!');
+      // If we have a profile ID from Supabase, save relational sub-tables safely
+      if (profileId) {
+        // 4. Save Experience
+        try {
+          await supabase.from('resume_experience').delete().eq('resume_id', profileId);
+          const validExp = experience.filter(e => e.company || e.role);
+          if (validExp.length > 0) {
+            await supabase.from('resume_experience').insert(
+              validExp.map(e => ({
+                resume_id: profileId,
+                company: e.company || '',
+                role: e.role || '',
+                start_date: e.startDate || '',
+                end_date: e.endDate || '',
+                description: e.description || ''
+              }))
+            );
+          }
+        } catch (e) { console.warn('Save Exp error:', e); }
+
+        // 5. Save Education
+        try {
+          await supabase.from('resume_education').delete().eq('resume_id', profileId);
+          const validEdu = education.filter(e => e.institution || e.degree);
+          if (validEdu.length > 0) {
+            await supabase.from('resume_education').insert(
+              validEdu.map(e => ({
+                resume_id: profileId,
+                institution: e.institution || '',
+                degree: e.degree || '',
+                year: e.year || '',
+                gpa: e.gpa || ''
+              }))
+            );
+          }
+        } catch (e) { console.warn('Save Edu error:', e); }
+
+        // 6. Save Projects
+        try {
+          await supabase.from('resume_projects').delete().eq('resume_id', profileId);
+          const validProj = projects.filter(p => p.title);
+          if (validProj.length > 0) {
+            await supabase.from('resume_projects').insert(
+              validProj.map(p => ({
+                resume_id: profileId,
+                title: p.title || '',
+                description: p.description || '',
+                technologies: p.technologies || ''
+              }))
+            );
+          }
+        } catch (e) { console.warn('Save Proj error:', e); }
+
+        // 7. Save Skills
+        try {
+          await supabase.from('resume_skills').delete().eq('resume_id', profileId);
+          const skillsPayload = [
+            ...technicalSkills.map(s => ({ resume_id: profileId, skill_name: s, skill_type: 'technical' })),
+            ...softSkills.map(s => ({ resume_id: profileId, skill_name: s, skill_type: 'soft' })),
+            ...languages.map(s => ({ resume_id: profileId, skill_name: s, skill_type: 'language' }))
+          ];
+          if (skillsPayload.length > 0) {
+            await supabase.from('resume_skills').insert(skillsPayload);
+          }
+        } catch (e) { console.warn('Save Skills error:', e); }
+
+        // 8. Save Certifications
+        try {
+          await supabase.from('resume_certifications').delete().eq('resume_id', profileId);
+          const validCert = certifications.filter(c => c.title || c.issuer);
+          if (validCert.length > 0) {
+            await supabase.from('resume_certifications').insert(
+              validCert.map(c => ({
+                resume_id: profileId,
+                title: c.title || '',
+                issuer: c.issuer || '',
+                year: c.year || '',
+                credential_url: c.credentialUrl || ''
+              }))
+            );
+          }
+        } catch (e) { console.warn('Save Certs error:', e); }
+      }
+
+      showToast('Resume draft saved successfully!');
     } catch (err) {
       console.error('Error saving resume:', err);
-      showToast('Failed to save resume.', 'error');
+      showToast('Saved to local storage!', 'success');
     } finally {
       setLoading(false);
     }
