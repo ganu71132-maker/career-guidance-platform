@@ -856,7 +856,7 @@ export default function ResumeBuilder() {
         <div className="flex-1 flex flex-col lg:flex-row min-h-0 lg:overflow-hidden print-full-width">
           {/* LEFT INPUT PANEL - print-hidden */}
           <div className="w-full lg:w-[48%] bg-white border-r border-slate-100 flex flex-col min-h-0 lg:overflow-y-auto print-hidden">
-            {/* Tabs Selector */}
+                {/* Tabs Selector */}
             <div className="border-b border-slate-100 bg-slate-50/50 p-2 overflow-x-auto flex gap-1 scrollbar-hide">
               {[
                 { id: 'personal', label: 'Contact', icon: <User className="h-3.5 w-3.5" /> },
@@ -865,7 +865,7 @@ export default function ResumeBuilder() {
                 { id: 'education', label: 'Education', icon: <GraduationCap className="h-3.5 w-3.5" /> },
                 { id: 'projects', label: 'Projects', icon: <Lightbulb className="h-3.5 w-3.5" /> },
                 { id: 'certifications', label: 'Certificates', icon: <Award className="h-3.5 w-3.5" /> },
-                { id: 'skills', label: 'Skills', icon: <Code className="h-3.5 w-3.5" /> }
+                { id: 'skills', label: 'Skills & Domain', icon: <Code className="h-3.5 w-3.5" /> }
               ].map(t => (
                 <button
                   key={t.id}
