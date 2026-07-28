@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { 
   ArrowLeft, User, Briefcase, GraduationCap, Code, Lightbulb, 
   FileText, Sparkles, Download, Save, Plus, Trash, Globe, 
-  Phone, Mail, MapPin, ChevronRight, Eye, Check, Link2
+  Phone, Mail, MapPin, ChevronRight, Eye, Check, Link2, Award
 } from 'lucide-react';
 
 export default function ResumeBuilder() {
@@ -53,6 +53,10 @@ export default function ResumeBuilder() {
   
   const [projects, setProjects] = useState([
     { id: '1', title: '', description: '', technologies: '' }
+  ]);
+
+  const [certifications, setCertifications] = useState([
+    { id: '1', title: '', issuer: '', year: '', credentialUrl: '' }
   ]);
   
   const [technicalSkills, setTechnicalSkills] = useState([]);
@@ -169,6 +173,25 @@ export default function ResumeBuilder() {
             setTechnicalSkills(tech);
             setSoftSkills(soft);
             setLanguages(lang);
+          }
+
+          // Fetch Certifications (with safe catch)
+          try {
+            const { data: certData } = await supabase
+              .from('resume_certifications')
+              .select('*')
+              .eq('resume_id', profile.id);
+            if (certData && certData.length > 0) {
+              setCertifications(certData.map(c => ({
+                id: c.id,
+                title: c.title,
+                issuer: c.issuer || '',
+                year: c.year || '',
+                credentialUrl: c.credential_url || ''
+              })));
+            }
+          } catch (e) {
+            console.log('Certifications load catch:', e);
           }
         }
       } catch (err) {
@@ -297,6 +320,25 @@ export default function ResumeBuilder() {
       if (skillsPayload.length > 0) {
         const { error: insSkillErr } = await supabase.from('resume_skills').insert(skillsPayload);
         if (insSkillErr) throw insSkillErr;
+      }
+
+      // 6. Clear and Save Certifications (Safe DB handling)
+      try {
+        await supabase.from('resume_certifications').delete().eq('resume_id', profileId);
+        const validCert = certifications.filter(c => c.title || c.issuer);
+        if (validCert.length > 0) {
+          await supabase.from('resume_certifications').insert(
+            validCert.map(c => ({
+              resume_id: profileId,
+              title: c.title,
+              issuer: c.issuer,
+              year: c.year,
+              credential_url: c.credentialUrl
+            }))
+          );
+        }
+      } catch (e) {
+        console.log('Certifications save catch:', e);
       }
 
       showToast('Resume saved successfully!');
@@ -449,6 +491,47 @@ export default function ResumeBuilder() {
   };
   const updateProjectField = (id, field, value) => {
     setProjects(prev => prev.map(p => p.id === id ? { ...p, [field]: value } : p));
+  };
+
+  // ======== CERTIFICATIONS ARRAY HANDLERS ========
+  const addCertification = () => {
+    setCertifications(prev => [...prev, { id: String(Date.now()), title: '', issuer: '', year: '', credentialUrl: '' }]);
+  };
+  const removeCertification = (id) => {
+    setCertifications(prev => prev.length > 1 ? prev.filter(c => c.id !== id) : prev);
+  };
+  const updateCertificationField = (id, field, value) => {
+    setCertifications(prev => prev.map(c => c.id === id ? { ...c, [field]: value } : c));
+  };
+
+  const handleImportCertifications = () => {
+    const importedCerts = [];
+    careersData.forEach(career => {
+      if (savedCareers.includes(career.id)) {
+        const completedCount = career.roadmap.filter(s => completedSteps.includes(s.id)).length;
+        if (completedCount > 0) {
+          importedCerts.push({
+            title: `${career.title} Mastery Roadmap`,
+            issuer: 'NextraPath Career Platform',
+            year: new Date().getFullYear().toString(),
+            credentialUrl: 'nextrapath.in'
+          });
+        }
+      }
+    });
+
+    if (importedCerts.length === 0) {
+      showToast('No completed roadmap credentials found to import.', 'error');
+      return;
+    }
+
+    setCertifications(prev => {
+      if (prev.length === 1 && !prev[0].title) {
+        return importedCerts.map((c, idx) => ({ id: String(idx + 1), ...c }));
+      }
+      return [...prev, ...importedCerts.map((c, idx) => ({ id: String(prev.length + idx + 1), ...c }))];
+    });
+    showToast(`Imported ${importedCerts.length} platform certifications!`);
   };
 
   // ======== SKILLS ADD/REMOVE HANDLERS ========
@@ -686,6 +769,7 @@ export default function ResumeBuilder() {
                 { id: 'experience', label: 'Experience', icon: <Briefcase className="h-3.5 w-3.5" /> },
                 { id: 'education', label: 'Education', icon: <GraduationCap className="h-3.5 w-3.5" /> },
                 { id: 'projects', label: 'Projects', icon: <Lightbulb className="h-3.5 w-3.5" /> },
+                { id: 'certifications', label: 'Certificates', icon: <Award className="h-3.5 w-3.5" /> },
                 { id: 'skills', label: 'Skills', icon: <Code className="h-3.5 w-3.5" /> }
               ].map(t => (
                 <button
@@ -1169,6 +1253,87 @@ export default function ResumeBuilder() {
                 </div>
               )}
 
+              {/* certifications section */}
+              {activeTab === 'certifications' && (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                    <h3 className="font-bold text-slate-800 text-sm flex items-center gap-2"><Award className="h-4 w-4 text-emerald-500" /> Licenses & Certifications</h3>
+                    <div className="flex items-center gap-1.5">
+                      <button 
+                        onClick={handleImportCertifications}
+                        className="flex items-center gap-1 text-[11px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2.5 py-1.5 rounded-lg hover:bg-emerald-100/50 transition-colors cursor-pointer"
+                      >
+                        <Sparkles className="h-3 w-3" /> Auto-Import
+                      </button>
+                      <button 
+                        onClick={addCertification}
+                        className="flex items-center gap-1 text-[11px] font-bold text-slate-600 hover:text-slate-800 bg-slate-50 hover:bg-slate-100 border border-slate-200 px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer"
+                      >
+                        <Plus className="h-3.5 w-3.5" /> Add Certificate
+                      </button>
+                    </div>
+                  </div>
+
+                  {certifications.map((cert, index) => (
+                    <div key={cert.id} className="p-4 bg-slate-50 rounded-2xl border border-slate-100 relative space-y-4">
+                      {certifications.length > 1 && (
+                        <button 
+                          onClick={() => removeCertification(cert.id)}
+                          className="absolute top-4 right-4 text-slate-400 hover:text-red-500 transition-colors p-1"
+                        >
+                          <Trash className="h-4 w-4" />
+                        </button>
+                      )}
+                      
+                      <div className="text-xs font-bold text-emerald-600 mb-1">Certification #{index + 1}</div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="col-span-2">
+                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Certification Title / License Name</label>
+                          <input 
+                            type="text" 
+                            placeholder="e.g. AWS Certified Solutions Architect / Python Data Science Specialization"
+                            value={cert.title} 
+                            onChange={(e) => updateCertificationField(cert.id, 'title', e.target.value)}
+                            className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Issuing Body / Platform</label>
+                          <input 
+                            type="text" 
+                            placeholder="e.g. Amazon Web Services, Coursera, NPTEL, Udemy"
+                            value={cert.issuer} 
+                            onChange={(e) => updateCertificationField(cert.id, 'issuer', e.target.value)}
+                            className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Year / Date Issued</label>
+                          <input 
+                            type="text" 
+                            placeholder="e.g. 2024"
+                            value={cert.year} 
+                            onChange={(e) => updateCertificationField(cert.id, 'year', e.target.value)}
+                            className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                          />
+                        </div>
+                        <div className="col-span-2">
+                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Credential URL / Verification ID (Optional)</label>
+                          <input 
+                            type="text" 
+                            placeholder="e.g. aws.amazon.com/verify/ABC123XYZ"
+                            value={cert.credentialUrl} 
+                            onChange={(e) => updateCertificationField(cert.id, 'credentialUrl', e.target.value)}
+                            className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
               {/* skills selection */}
               {activeTab === 'skills' && (
                 <div className="space-y-6">
@@ -1418,6 +1583,24 @@ export default function ResumeBuilder() {
                       </div>
                     </div>
                   )}
+
+                  {/* Certifications */}
+                  {certifications.some(c => c.title) && (
+                    <div className="space-y-2">
+                      <h3 className="text-sm font-bold text-emerald-700 uppercase tracking-wide border-b border-slate-100 pb-0.5">Licenses & Certifications</h3>
+                      <div className="space-y-2">
+                        {certifications.filter(c => c.title).map((cert, idx) => (
+                          <div key={idx} className="flex justify-between items-start">
+                            <div>
+                              <div className="font-bold text-slate-800">{cert.title}</div>
+                              <div className="text-slate-500 font-medium">{cert.issuer} {cert.credentialUrl && <span className="text-emerald-600 text-[10px]">({cert.credentialUrl})</span>}</div>
+                            </div>
+                            <div className="text-right text-slate-400 font-medium">{cert.year}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -1532,6 +1715,24 @@ export default function ResumeBuilder() {
                       </div>
                     </div>
                   )}
+
+                  {/* Certifications */}
+                  {certifications.some(c => c.title) && (
+                    <div className="space-y-2">
+                      <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-300 pb-0.5">Certifications & Licenses</h3>
+                      <div className="space-y-1.5">
+                        {certifications.filter(c => c.title).map((cert, idx) => (
+                          <div key={idx} className="flex justify-between items-start">
+                            <div>
+                              <span className="font-bold">{cert.title}</span>
+                              <span className="text-slate-600 font-medium"> — {cert.issuer}</span>
+                            </div>
+                            <div className="text-right text-slate-600 font-medium">{cert.year}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -1633,6 +1834,21 @@ export default function ResumeBuilder() {
                           <div key={idx} className="flex justify-between text-slate-700">
                             <span>{edu.degree} from {edu.institution}</span>
                             <span className="text-slate-400">{edu.year} {edu.gpa ? `(GPA: ${edu.gpa})` : ''}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Certifications */}
+                  {certifications.some(c => c.title) && (
+                    <div className="space-y-1">
+                      <div className="text-slate-400 font-bold text-[10px] uppercase">// CERTIFICATIONS</div>
+                      <div className="space-y-1.5">
+                        {certifications.filter(c => c.title).map((cert, idx) => (
+                          <div key={idx} className="flex justify-between text-slate-700">
+                            <span>&gt; {cert.title} <span className="text-indigo-600 font-medium">({cert.issuer})</span></span>
+                            <span className="text-slate-400">{cert.year}</span>
                           </div>
                         ))}
                       </div>
@@ -1754,6 +1970,24 @@ export default function ResumeBuilder() {
                       </div>
                     </div>
                   )}
+
+                  {/* Certifications */}
+                  {certifications.some(c => c.title) && (
+                    <div className="space-y-2">
+                      <h3 className="text-[11px] font-extrabold text-teal-800 uppercase tracking-wider">// Verified Credentials & Certifications</h3>
+                      <div className="space-y-2">
+                        {certifications.filter(c => c.title).map((cert, idx) => (
+                          <div key={idx} className="flex justify-between items-start text-slate-700">
+                            <div>
+                              <div className="font-bold text-slate-800">{cert.title}</div>
+                              <div className="text-slate-500">{cert.issuer}</div>
+                            </div>
+                            <div className="text-right text-slate-400">{cert.year}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -1829,6 +2063,24 @@ export default function ResumeBuilder() {
                         {languages.length > 0 && (
                           <p><strong className="text-slate-700">Languages Known:</strong> {languages.join(', ')}</p>
                         )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Certifications */}
+                  {certifications.some(c => c.title) && (
+                    <div className="space-y-2">
+                      <h3 className="text-xs font-bold text-slate-900 border-l-2 border-slate-800 pl-2 uppercase tracking-wider">Certifications & Courses</h3>
+                      <div className="space-y-2">
+                        {certifications.filter(c => c.title).map((cert, idx) => (
+                          <div key={idx} className="flex justify-between items-start">
+                            <div>
+                              <div className="font-bold text-slate-800">{cert.title}</div>
+                              <div className="text-slate-500 font-medium">{cert.issuer}</div>
+                            </div>
+                            <div className="text-right text-slate-400 font-bold">{cert.year}</div>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   )}
