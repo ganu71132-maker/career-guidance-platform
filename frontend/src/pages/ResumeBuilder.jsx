@@ -57,10 +57,12 @@ export default function ResumeBuilder() {
   
   const [technicalSkills, setTechnicalSkills] = useState([]);
   const [softSkills, setSoftSkills] = useState([]);
+  const [languages, setLanguages] = useState([]);
   
-  // Custom Skill Input States
+  // Custom Input States
   const [newTechSkill, setNewTechSkill] = useState('');
   const [newSoftSkill, setNewSoftSkill] = useState('');
+  const [newLanguage, setNewLanguage] = useState('');
 
   // Toast Trigger Helper
   const showToast = (message, type = 'success') => {
@@ -163,8 +165,10 @@ export default function ResumeBuilder() {
           if (skillData) {
             const tech = skillData.filter(s => s.skill_type === 'technical').map(s => s.skill_name);
             const soft = skillData.filter(s => s.skill_type === 'soft').map(s => s.skill_name);
+            const lang = skillData.filter(s => s.skill_type === 'language').map(s => s.skill_name);
             setTechnicalSkills(tech);
             setSoftSkills(soft);
+            setLanguages(lang);
           }
         }
       } catch (err) {
@@ -286,7 +290,8 @@ export default function ResumeBuilder() {
 
       const skillsPayload = [
         ...technicalSkills.map(s => ({ resume_id: profileId, skill_name: s, skill_type: 'technical' })),
-        ...softSkills.map(s => ({ resume_id: profileId, skill_name: s, skill_type: 'soft' }))
+        ...softSkills.map(s => ({ resume_id: profileId, skill_name: s, skill_type: 'soft' })),
+        ...languages.map(s => ({ resume_id: profileId, skill_name: s, skill_type: 'language' }))
       ];
 
       if (skillsPayload.length > 0) {
@@ -467,6 +472,17 @@ export default function ResumeBuilder() {
   };
   const removeSoftSkill = (skill) => {
     setSoftSkills(softSkills.filter(s => s !== skill));
+  };
+
+  const addLanguage = (e) => {
+    if (e) e.preventDefault();
+    if (newLanguage.trim() && !languages.includes(newLanguage.trim())) {
+      setLanguages([...languages, newLanguage.trim()]);
+      setNewLanguage('');
+    }
+  };
+  const removeLanguage = (lang) => {
+    setLanguages(languages.filter(l => l !== lang));
   };
 
   // ======== PASSPORT PHOTO HANDLERS ========
@@ -1211,6 +1227,51 @@ export default function ResumeBuilder() {
                       ))}
                     </div>
                   </div>
+
+                  {/* Languages Spoken / Known */}
+                  <div className="pt-2 border-t border-slate-100">
+                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Languages Spoken / Known</label>
+                    <form onSubmit={addLanguage} className="flex gap-2 mb-3">
+                      <input 
+                        type="text" 
+                        placeholder="e.g. English (Fluent), Hindi (Native), French (Basic)"
+                        value={newLanguage} 
+                        onChange={(e) => setNewLanguage(e.target.value)}
+                        className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                      />
+                      <button type="submit" className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 rounded-xl text-xs cursor-pointer">Add</button>
+                    </form>
+                    
+                    {/* Quick suggestion pills */}
+                    <div className="mb-3">
+                      <span className="text-[10px] text-slate-400 font-medium block mb-1">Quick Add Popular Languages:</span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {['English (Fluent)', 'Hindi (Native)', 'Telugu', 'Tamil', 'Kannada', 'Malayalam', 'German', 'French', 'Spanish'].map(langSuggestion => (
+                          <button
+                            key={langSuggestion}
+                            type="button"
+                            onClick={() => {
+                              if (!languages.includes(langSuggestion)) {
+                                setLanguages([...languages, langSuggestion]);
+                              }
+                            }}
+                            className="text-[10px] bg-slate-100 hover:bg-emerald-50 text-slate-600 hover:text-emerald-700 px-2 py-0.5 rounded-md font-medium transition-colors"
+                          >
+                            + {langSuggestion}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2">
+                      {languages.map(lang => (
+                        <span key={lang} className="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-50 text-emerald-800 border border-emerald-100 text-xs font-semibold rounded-lg">
+                          💬 {lang}
+                          <button type="button" onClick={() => removeLanguage(lang)} className="text-emerald-500 hover:text-emerald-700 font-bold ml-0.5">×</button>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
@@ -1284,15 +1345,18 @@ export default function ResumeBuilder() {
                   )}
 
                   {/* Skills */}
-                  {(technicalSkills.length > 0 || softSkills.length > 0) && (
+                  {(technicalSkills.length > 0 || softSkills.length > 0 || languages.length > 0) && (
                     <div className="space-y-1.5">
-                      <h3 className="text-sm font-bold text-emerald-700 uppercase tracking-wide border-b border-slate-100 pb-0.5">Skills Inventory</h3>
+                      <h3 className="text-sm font-bold text-emerald-700 uppercase tracking-wide border-b border-slate-100 pb-0.5">Skills & Languages</h3>
                       <div className="space-y-1">
                         {technicalSkills.length > 0 && (
                           <p className="text-slate-600"><strong className="text-slate-700">Technical Skills:</strong> {technicalSkills.join(', ')}</p>
                         )}
                         {softSkills.length > 0 && (
                           <p className="text-slate-600"><strong className="text-slate-700">Soft Skills:</strong> {softSkills.join(', ')}</p>
+                        )}
+                        {languages.length > 0 && (
+                          <p className="text-slate-600"><strong className="text-slate-700">Languages Known:</strong> {languages.join(', ')}</p>
                         )}
                       </div>
                     </div>
@@ -1452,15 +1516,18 @@ export default function ResumeBuilder() {
                   )}
 
                   {/* Skills */}
-                  {(technicalSkills.length > 0 || softSkills.length > 0) && (
+                  {(technicalSkills.length > 0 || softSkills.length > 0 || languages.length > 0) && (
                     <div className="space-y-1">
-                      <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-300 pb-0.5">Skills</h3>
+                      <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-300 pb-0.5">Skills & Languages</h3>
                       <div className="space-y-0.5">
                         {technicalSkills.length > 0 && (
                           <p className="text-slate-700"><strong className="text-slate-800">Languages & Technologies:</strong> {technicalSkills.join(', ')}</p>
                         )}
                         {softSkills.length > 0 && (
                           <p className="text-slate-700"><strong className="text-slate-800">Methodologies & Interpersonal:</strong> {softSkills.join(', ')}</p>
+                        )}
+                        {languages.length > 0 && (
+                          <p className="text-slate-700"><strong className="text-slate-800">Languages Known:</strong> {languages.join(', ')}</p>
                         )}
                       </div>
                     </div>
@@ -1504,7 +1571,7 @@ export default function ResumeBuilder() {
                   )}
 
                   {/* Skills Grid */}
-                  {(technicalSkills.length > 0 || softSkills.length > 0) && (
+                  {(technicalSkills.length > 0 || softSkills.length > 0 || languages.length > 0) && (
                     <div className="space-y-1">
                       <div className="text-slate-400 font-bold text-[10px] uppercase">// SKILL_STACK</div>
                       <div className="bg-slate-50 p-3 rounded-xl border border-slate-100 space-y-1">
@@ -1513,6 +1580,9 @@ export default function ResumeBuilder() {
                         )}
                         {softSkills.length > 0 && (
                           <p><span className="text-indigo-600 font-bold">[soft]</span> {softSkills.join(', ')}</p>
+                        )}
+                        {languages.length > 0 && (
+                          <p><span className="text-indigo-600 font-bold">[lang]</span> {languages.join(', ')}</p>
                         )}
                       </div>
                     </div>
@@ -1606,7 +1676,7 @@ export default function ResumeBuilder() {
                   )}
 
                   {/* Skills Grid */}
-                  {(technicalSkills.length > 0 || softSkills.length > 0) && (
+                  {(technicalSkills.length > 0 || softSkills.length > 0 || languages.length > 0) && (
                     <div className="space-y-1">
                       <h3 className="text-[11px] font-extrabold text-teal-800 uppercase tracking-wider">// Core Toolkits & Proficiencies</h3>
                       <div className="grid grid-cols-2 gap-4 bg-teal-50/30 p-3 rounded-xl border border-teal-100/50">
@@ -1618,6 +1688,12 @@ export default function ResumeBuilder() {
                           <div className="font-bold text-[10px] text-teal-850 uppercase mb-1">Methodologies & Soft</div>
                           <p className="text-slate-600 leading-relaxed">{softSkills.join(', ') || 'N/A'}</p>
                         </div>
+                        {languages.length > 0 && (
+                          <div className="col-span-2 pt-1 border-t border-teal-100/40">
+                            <div className="font-bold text-[10px] text-teal-850 uppercase mb-0.5">Languages Spoken</div>
+                            <p className="text-slate-600">{languages.join(', ')}</p>
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}
@@ -1740,15 +1816,18 @@ export default function ResumeBuilder() {
                   )}
 
                   {/* Skills */}
-                  {(technicalSkills.length > 0 || softSkills.length > 0) && (
+                  {(technicalSkills.length > 0 || softSkills.length > 0 || languages.length > 0) && (
                     <div className="space-y-2">
-                      <h3 className="text-xs font-bold text-slate-900 border-l-2 border-slate-800 pl-2 uppercase tracking-wider">Skills & Abilities</h3>
+                      <h3 className="text-xs font-bold text-slate-900 border-l-2 border-slate-800 pl-2 uppercase tracking-wider">Skills & Languages</h3>
                       <div className="space-y-1 bg-slate-50 p-3 rounded-xl border border-slate-100">
                         {technicalSkills.length > 0 && (
                           <p><strong className="text-slate-700">Tech Stack:</strong> {technicalSkills.join(', ')}</p>
                         )}
                         {softSkills.length > 0 && (
                           <p><strong className="text-slate-700">Soft Skills:</strong> {softSkills.join(', ')}</p>
+                        )}
+                        {languages.length > 0 && (
+                          <p><strong className="text-slate-700">Languages Known:</strong> {languages.join(', ')}</p>
                         )}
                       </div>
                     </div>
