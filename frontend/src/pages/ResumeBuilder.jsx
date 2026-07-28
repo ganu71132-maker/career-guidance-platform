@@ -21,6 +21,7 @@ export default function ResumeBuilder() {
   // Loading & Toast States
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   // Template State
   const [selectedTemplate, setSelectedTemplate] = useState('modern');
@@ -413,6 +414,72 @@ export default function ResumeBuilder() {
     } catch (err) {
       console.error('Error saving resume:', err);
       showToast('Saved to local storage!', 'success');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ======== DELETE RESUME DRAFT ========
+  const handleDeleteDraft = async () => {
+    if (!user) return;
+    setLoading(true);
+    try {
+      // 1. Clear LocalStorage draft
+      localStorage.removeItem(`nextrapath_resume_draft_${user.id}`);
+
+      // 2. Clear Supabase database records
+      try {
+        const { data: profile } = await supabase
+          .from('resume_profiles')
+          .select('id')
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        if (profile) {
+          await supabase.from('resume_experience').delete().eq('resume_id', profile.id);
+          await supabase.from('resume_education').delete().eq('resume_id', profile.id);
+          await supabase.from('resume_projects').delete().eq('resume_id', profile.id);
+          await supabase.from('resume_skills').delete().eq('resume_id', profile.id);
+          await supabase.from('resume_certifications').delete().eq('resume_id', profile.id);
+          await supabase.from('resume_profiles').delete().eq('id', profile.id);
+        }
+      } catch (dbErr) {
+        console.warn('DB draft delete warning:', dbErr);
+      }
+
+      // 3. Reset form states to defaults
+      setPersonalInfo({
+        fullName: user?.user_metadata?.full_name || '',
+        professionalTitle: '',
+        careerPath: '',
+        autoFillTitle: true,
+        email: user?.email || '',
+        phone: '',
+        location: '',
+        github: '',
+        linkedin: '',
+        portfolio: '',
+        photoUrl: '',
+        showPhoto: false
+      });
+      setSummary('');
+      setSelectedTemplate('modern');
+      setExperience([{ id: '1', company: '', role: '', startDate: '', endDate: '', description: '' }]);
+      setEducation([{ id: '1', institution: '', degree: '', year: '', gpa: '' }]);
+      setProjects([{ id: '1', title: '', description: '', technologies: '' }]);
+      setCertifications([{ id: '1', title: '', issuer: '', year: '', credentialUrl: '' }]);
+      setTechnicalSkills([]);
+      setSoftSkills([]);
+      setLanguages([]);
+      setDomainSkills([]);
+      setToolsTech([]);
+      setCurrentlyLearning([]);
+
+      setShowDeleteModal(false);
+      showToast('Resume draft deleted successfully!');
+    } catch (err) {
+      console.error('Error deleting draft:', err);
+      showToast('Failed to delete draft.', 'error');
     } finally {
       setLoading(false);
     }
@@ -840,6 +907,15 @@ export default function ResumeBuilder() {
               <Save className="h-4 w-4 text-emerald-600" />
               <span className="hidden sm:inline">{loading ? 'Saving...' : 'Save Draft'}</span>
               {loading && <span className="sm:hidden text-[10px]">...</span>}
+            </button>
+            <button 
+              onClick={() => setShowDeleteModal(true)}
+              disabled={loading}
+              className="flex items-center gap-1.5 bg-white text-red-600 hover:bg-red-50 border border-red-200 px-2.5 sm:px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-sm cursor-pointer transition-all duration-300"
+              title="Delete Draft"
+            >
+              <Trash className="h-4 w-4 text-red-500" />
+              <span className="hidden sm:inline">Delete Draft</span>
             </button>
             <button 
               onClick={handlePrint}
@@ -2399,6 +2475,38 @@ export default function ResumeBuilder() {
           </div>
         </div>
       </main>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-slate-100 space-y-5 text-center">
+            <div className="w-14 h-14 bg-red-100 rounded-2xl flex items-center justify-center mx-auto text-red-600">
+              <Trash className="w-7 h-7" />
+            </div>
+            <div>
+              <h3 className="text-xl font-extrabold text-slate-800">Delete Resume Draft?</h3>
+              <p className="text-sm text-slate-500 mt-2 leading-relaxed">
+                Are you sure you want to permanently delete your saved resume draft? This will clear all contact details, experience, skills, and certifications from both database and local storage.
+              </p>
+            </div>
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-2xl text-xs transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteDraft}
+                disabled={loading}
+                className="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-2xl text-xs shadow-md shadow-red-500/20 transition-all cursor-pointer"
+              >
+                {loading ? 'Deleting...' : 'Yes, Delete Draft'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
