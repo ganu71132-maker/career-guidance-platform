@@ -1479,7 +1479,7 @@ export default function ResumeBuilder() {
                       {domainSkills.map(skill => (
                         <span key={skill} className="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-50 text-emerald-800 border border-emerald-100 text-xs font-semibold rounded-lg">
                           {skill}
-                          <button type="button" onClick={() => removeDomainSkill(skill)} className="text-emerald-500 hover:text-emerald-700 font-bold ml-0.5">×}</button>
+                          <button type="button" onClick={() => removeDomainSkill(skill)} className="text-emerald-500 hover:text-emerald-700 font-bold ml-0.5">×</button>
                         </span>
                       ))}
                     </div>
@@ -1522,7 +1522,7 @@ export default function ResumeBuilder() {
                       {toolsTech.map(skill => (
                         <span key={skill} className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-lg">
                           🛠️ {skill}
-                          <button type="button" onClick={() => removeToolTech(skill)} className="text-slate-400 hover:text-slate-600 font-bold ml-0.5">×}</button>
+                          <button type="button" onClick={() => removeToolTech(skill)} className="text-slate-400 hover:text-slate-600 font-bold ml-0.5">×</button>
                         </span>
                       ))}
                     </div>
@@ -1545,7 +1545,7 @@ export default function ResumeBuilder() {
                       {technicalSkills.map(skill => (
                         <span key={skill} className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-lg">
                           {skill}
-                          <button type="button" onClick={() => removeTechSkill(skill)} className="text-slate-400 hover:text-slate-600 font-bold ml-0.5">×}</button>
+                          <button type="button" onClick={() => removeTechSkill(skill)} className="text-slate-400 hover:text-slate-600 font-bold ml-0.5">×</button>
                         </span>
                       ))}
                     </div>
@@ -1588,7 +1588,7 @@ export default function ResumeBuilder() {
                       {softSkills.map(skill => (
                         <span key={skill} className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-lg">
                           {skill}
-                          <button type="button" onClick={() => removeSoftSkill(skill)} className="text-slate-400 hover:text-slate-600 font-bold ml-0.5">×}</button>
+                          <button type="button" onClick={() => removeSoftSkill(skill)} className="text-slate-400 hover:text-slate-600 font-bold ml-0.5">×</button>
                         </span>
                       ))}
                     </div>
@@ -1633,7 +1633,7 @@ export default function ResumeBuilder() {
                       {languages.map(lang => (
                         <span key={lang} className="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-50 text-emerald-800 border border-emerald-100 text-xs font-semibold rounded-lg">
                           💬 {lang}
-                          <button type="button" onClick={() => removeLanguage(lang)} className="text-emerald-500 hover:text-emerald-700 font-bold ml-0.5">×}</button>
+                          <button type="button" onClick={() => removeLanguage(lang)} className="text-emerald-500 hover:text-emerald-700 font-bold ml-0.5">×</button>
                         </span>
                       ))}
                     </div>
@@ -1676,7 +1676,7 @@ export default function ResumeBuilder() {
                       {currentlyLearning.map(item => (
                         <span key={item} className="inline-flex items-center gap-1 px-2.5 py-1 bg-indigo-50 text-indigo-800 border border-indigo-100 text-xs font-semibold rounded-lg">
                           📖 {item}
-                          <button type="button" onClick={() => removeCurrentlyLearning(item)} className="text-indigo-500 hover:text-indigo-700 font-bold ml-0.5">×}</button>
+                          <button type="button" onClick={() => removeCurrentlyLearning(item)} className="text-indigo-500 hover:text-indigo-700 font-bold ml-0.5">×</button>
                         </span>
                       ))}
                     </div>
