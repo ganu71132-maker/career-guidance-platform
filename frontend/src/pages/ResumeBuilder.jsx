@@ -808,7 +808,7 @@ export default function ResumeBuilder() {
   };
 
   return (
-    <div className="min-h-screen lg:h-screen flex flex-col md:flex-row relative bg-slate-50 lg:overflow-hidden print:overflow-visible print:h-auto print:bg-white">
+    <div className="min-h-screen lg:h-screen flex flex-col md:flex-row relative bg-slate-50 lg:overflow-hidden print:overflow-visible print:h-auto print:bg-white min-w-0 overflow-x-hidden">
       {/* Dynamic CSS styles loaded dynamically for custom printing overrides */}
       <style>{`
         @media print {
@@ -878,60 +878,63 @@ export default function ResumeBuilder() {
       </aside>
 
       {/* Main Container */}
-      <main className="flex-1 flex flex-col min-h-0 print-full-width">
+      <main className="flex-1 flex flex-col min-h-0 min-w-0 overflow-x-hidden print-full-width">
         {/* Nav Header - print-hidden */}
-        <header className="h-20 bg-white border-b border-slate-100 flex items-center justify-between px-4 sm:px-8 shrink-0 print-hidden">
-          <div className="flex items-center gap-3">
-            <Link to="/dashboard" className="md:hidden p-2 bg-slate-100 hover:bg-slate-200 rounded-xl text-slate-600"><ArrowLeft className="h-5 w-5" /></Link>
-            <div>
-              <h1 className="font-extrabold text-slate-800 text-sm sm:text-lg md:text-xl flex items-center gap-1.5 sm:gap-2">
-                <FileText className="text-emerald-500 h-4 w-4 sm:h-5 sm:w-5" /> ATS Resume Builder
+        <header className="h-20 bg-white border-b border-slate-100 flex items-center justify-between px-3 sm:px-6 shrink-0 print-hidden min-w-0 gap-2">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0 shrink">
+            <Link to="/dashboard" className="md:hidden p-2 bg-slate-100 hover:bg-slate-200 rounded-xl text-slate-600 shrink-0"><ArrowLeft className="h-5 w-5" /></Link>
+            <div className="min-w-0">
+              <h1 className="font-extrabold text-slate-800 text-sm sm:text-lg md:text-xl flex items-center gap-1.5 sm:gap-2 truncate">
+                <FileText className="text-emerald-500 h-4 w-4 sm:h-5 sm:w-5 shrink-0" /> <span className="truncate">ATS Resume Builder</span>
               </h1>
-              <p className="text-xs text-slate-400 hidden sm:block">Pre-populate details from your roadmap progress</p>
+              <p className="text-xs text-slate-400 hidden lg:block truncate">Pre-populate details from your roadmap progress</p>
             </div>
           </div>
           
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <button 
               onClick={() => openChatWithContext({ type: 'resume', data: { personalInfo, summary, experience, education, projects, technicalSkills, softSkills } })}
-              className="flex items-center gap-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 px-2.5 sm:px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-sm cursor-pointer transition-all duration-300"
+              className="flex items-center gap-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 px-2.5 sm:px-3 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-sm cursor-pointer transition-all duration-300 shrink-0"
+              title="Review with AI"
             >
-              <Sparkles className="h-4 w-4" /> <span className="hidden sm:inline">Review with AI</span>
+              <Sparkles className="h-4 w-4 shrink-0 text-indigo-600" /> 
+              <span className="hidden md:inline">Review with AI</span>
+              <span className="md:hidden hidden sm:inline">AI Review</span>
             </button>
             <button 
               onClick={handleSaveResume}
               disabled={loading}
-              className="flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 px-2.5 sm:px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-sm cursor-pointer transition-all duration-300"
+              className="flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 px-2.5 sm:px-3 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-sm cursor-pointer transition-all duration-300 shrink-0"
               title="Save Draft"
             >
-              <Save className="h-4 w-4 text-emerald-600" />
+              <Save className="h-4 w-4 shrink-0 text-emerald-600" />
               <span className="hidden sm:inline">{loading ? 'Saving...' : 'Save Draft'}</span>
-              {loading && <span className="sm:hidden text-[10px]">...</span>}
             </button>
             <button 
               onClick={() => setShowDeleteModal(true)}
               disabled={loading}
-              className="flex items-center gap-1.5 bg-white text-red-600 hover:bg-red-50 border border-red-200 px-2.5 sm:px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-sm cursor-pointer transition-all duration-300"
+              className="flex items-center gap-1.5 bg-white text-red-600 hover:bg-red-50 border border-red-200 px-2.5 sm:px-3 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-sm cursor-pointer transition-all duration-300 shrink-0"
               title="Delete Draft"
             >
-              <Trash className="h-4 w-4 text-red-500" />
-              <span className="hidden sm:inline">Delete Draft</span>
+              <Trash className="h-4 w-4 shrink-0 text-red-500" />
+              <span className="hidden lg:inline">Delete Draft</span>
+              <span className="hidden sm:inline lg:hidden">Delete</span>
             </button>
             <button 
               onClick={handlePrint}
-              className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 sm:px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-emerald-500/20 cursor-pointer transition-all duration-300"
+              className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 sm:px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold shadow-md shadow-emerald-500/20 cursor-pointer transition-all duration-300 shrink-0"
               title="Download PDF"
             >
-              <Download className="h-4 w-4" />
-              <span className="hidden sm:inline">Download PDF</span>
+              <Download className="h-4 w-4 shrink-0" />
+              <span className="inline">Download PDF</span>
             </button>
           </div>
         </header>
 
         {/* Two Panel Layout */}
-        <div className="flex-1 flex flex-col lg:flex-row min-h-0 lg:overflow-hidden print-full-width">
+        <div className="flex-1 flex flex-col lg:flex-row min-h-0 min-w-0 lg:overflow-hidden print-full-width">
           {/* LEFT INPUT PANEL - print-hidden */}
-          <div className="w-full lg:w-[48%] bg-white border-r border-slate-100 flex flex-col min-h-0 lg:overflow-y-auto print-hidden">
+          <div className="w-full lg:w-[46%] xl:w-[42%] bg-white border-r border-slate-100 flex flex-col min-h-0 min-w-0 lg:overflow-y-auto shrink-0 print-hidden">
                 {/* Tabs Selector */}
             <div className="border-b border-slate-100 bg-slate-50/50 p-2 overflow-x-auto flex gap-1 scrollbar-hide">
               {[
@@ -1763,11 +1766,11 @@ export default function ResumeBuilder() {
           </div>
 
           {/* RIGHT PREVIEW PANEL */}
-          <div className="flex-1 bg-slate-100 flex flex-col p-4 sm:p-6 min-h-0 lg:overflow-y-auto print:p-0 print:bg-white print-full-width">
+          <div className="flex-1 bg-slate-100 flex flex-col p-3 sm:p-6 min-h-0 min-w-0 lg:overflow-y-auto overflow-x-auto print:p-0 print:bg-white print-full-width">
             {/* Template Selector - print-hidden */}
-            <div className="flex items-center justify-between mb-4 print-hidden bg-white p-3 rounded-2xl border border-slate-200/50 shadow-sm shrink-0">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Template Theme</span>
-              <div className="flex gap-1.5 overflow-x-auto">
+            <div className="flex items-center justify-between mb-4 print-hidden bg-white p-3 rounded-2xl border border-slate-200/50 shadow-sm shrink-0 flex-wrap gap-2">
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider shrink-0">Template Theme</span>
+              <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
                 {[
                   { id: 'modern', label: 'Modern Professional' },
                   { id: 'ats', label: 'ATS Minimalist' },
@@ -1791,25 +1794,25 @@ export default function ResumeBuilder() {
             </div>
 
             {/* Resume Sheet - Live ATS A4 Preview */}
-            <div className="w-full max-w-[800px] mx-auto bg-white shadow-2xl rounded-sm border border-slate-200 p-8 sm:p-12 min-h-[1000px] resume-sheet font-sans print-full-width print:shadow-none print:border-none print:min-h-0">
+            <div className="w-full max-w-full lg:max-w-[800px] mx-auto bg-white shadow-2xl rounded-sm border border-slate-200 p-5 sm:p-8 md:p-12 min-h-[1000px] resume-sheet font-sans print-full-width print:shadow-none print:border-none print:min-h-0 break-words overflow-hidden">
               
               {/* ================= MODERN TEMPLATE ================= */}
               {selectedTemplate === 'modern' && (
-                <div className="space-y-6 text-slate-800 text-xs">
+                <div className="space-y-6 text-slate-800 text-xs break-words">
                   {/* Header */}
-                  <div className="border-b-2 border-emerald-600 pb-4 flex items-center justify-between gap-4">
-                    <div className="flex-1 text-left">
-                      <h2 className="text-2xl font-extrabold tracking-tight text-slate-900 uppercase">{personalInfo.fullName || 'YOUR NAME'}</h2>
-                      <div className="text-xs font-semibold text-emerald-600 uppercase tracking-wider mt-1">{personalInfo.professionalTitle || 'Professional Title'}</div>
-                      <div className="flex flex-wrap gap-x-4 gap-y-1 text-slate-500 font-medium mt-2">
-                        {personalInfo.email && <span className="flex items-center gap-1"><Mail className="h-3.5 w-3.5" />{personalInfo.email}</span>}
-                        {personalInfo.phone && <span className="flex items-center gap-1"><Phone className="h-3.5 w-3.5" />{personalInfo.phone}</span>}
-                        {personalInfo.location && <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{personalInfo.location}</span>}
+                  <div className="border-b-2 border-emerald-600 pb-4 flex flex-col sm:flex-row items-start justify-between gap-4">
+                    <div className="flex-1 text-left min-w-0">
+                      <h2 className="text-2xl font-extrabold tracking-tight text-slate-900 uppercase break-words">{personalInfo.fullName || 'YOUR NAME'}</h2>
+                      <div className="text-xs font-semibold text-emerald-600 uppercase tracking-wider mt-1 break-words">{personalInfo.professionalTitle || 'Professional Title'}</div>
+                      <div className="flex flex-wrap gap-x-4 gap-y-1 text-slate-500 font-medium mt-2 break-all">
+                        {personalInfo.email && <span className="flex items-center gap-1"><Mail className="h-3.5 w-3.5 shrink-0" />{personalInfo.email}</span>}
+                        {personalInfo.phone && <span className="flex items-center gap-1"><Phone className="h-3.5 w-3.5 shrink-0" />{personalInfo.phone}</span>}
+                        {personalInfo.location && <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5 shrink-0" />{personalInfo.location}</span>}
                       </div>
-                      <div className="flex flex-wrap gap-x-4 gap-y-1 text-slate-400 font-medium mt-1">
-                        {personalInfo.github && <span className="flex items-center gap-1"><Code className="h-3.5 w-3.5" />{personalInfo.github}</span>}
-                        {personalInfo.linkedin && <span className="flex items-center gap-1"><Link2 className="h-3.5 w-3.5" />{personalInfo.linkedin}</span>}
-                        {personalInfo.portfolio && <span className="flex items-center gap-1"><Globe className="h-3.5 w-3.5" />{personalInfo.portfolio}</span>}
+                      <div className="flex flex-wrap gap-x-4 gap-y-1 text-slate-400 font-medium mt-1 break-all">
+                        {personalInfo.github && <span className="flex items-center gap-1"><Code className="h-3.5 w-3.5 shrink-0" />{personalInfo.github}</span>}
+                        {personalInfo.linkedin && <span className="flex items-center gap-1"><Link2 className="h-3.5 w-3.5 shrink-0" />{personalInfo.linkedin}</span>}
+                        {personalInfo.portfolio && <span className="flex items-center gap-1"><Globe className="h-3.5 w-3.5 shrink-0" />{personalInfo.portfolio}</span>}
                       </div>
                     </div>
                     {personalInfo.photoUrl && personalInfo.showPhoto && (
@@ -2087,19 +2090,21 @@ export default function ResumeBuilder() {
 
               {/* ================= TECH / SOFTWARE DEVELOPER TEMPLATE ================= */}
               {selectedTemplate === 'software' && (
-                <div className="space-y-5 text-slate-800 text-xs font-mono">
+                <div className="space-y-5 text-slate-800 text-xs font-mono break-words">
                   {/* Minimal tech block header */}
-                  <div className="flex items-start justify-between border-l-4 border-indigo-600 pl-4 py-1 gap-4">
-                    <div className="flex-1">
-                      <h2 className="text-2xl font-bold tracking-tight text-slate-900 uppercase">{personalInfo.fullName || 'DEV_NAME'}</h2>
-                      <div className="text-xs font-bold text-indigo-600 uppercase tracking-wider mt-0.5">{personalInfo.professionalTitle || 'Professional Title'}</div>
-                      <div className="text-[11px] text-indigo-600 font-bold mt-1">
-                        {personalInfo.github && <span className="mr-3">git://{personalInfo.github}</span>}
-                        {personalInfo.linkedin && <span className="mr-3">in/{personalInfo.linkedin}</span>}
+                  <div className="flex flex-col sm:flex-row items-start justify-between border-l-4 border-indigo-600 pl-4 py-1 gap-4">
+                    <div className="flex-1 min-w-0">
+                      <h2 className="text-2xl font-bold tracking-tight text-slate-900 uppercase break-words">{personalInfo.fullName || 'DEV_NAME'}</h2>
+                      <div className="text-xs font-bold text-indigo-600 uppercase tracking-wider mt-0.5 break-words">{personalInfo.professionalTitle || 'Professional Title'}</div>
+                      <div className="text-[11px] text-indigo-600 font-bold mt-1 flex flex-wrap gap-x-3 break-all">
+                        {personalInfo.github && <span>git://{personalInfo.github}</span>}
+                        {personalInfo.linkedin && <span>in/{personalInfo.linkedin}</span>}
                         {personalInfo.portfolio && <span>web/{personalInfo.portfolio}</span>}
                       </div>
-                      <div className="text-slate-500 text-[10px] mt-1">
-                        {personalInfo.email} · {personalInfo.phone} · {personalInfo.location}
+                      <div className="text-slate-500 text-[10px] mt-1 flex flex-wrap gap-x-2 break-all">
+                        {personalInfo.email && <span>{personalInfo.email}</span>}
+                        {personalInfo.phone && <span>· {personalInfo.phone}</span>}
+                        {personalInfo.location && <span>· {personalInfo.location}</span>}
                       </div>
                     </div>
                     {personalInfo.photoUrl && personalInfo.showPhoto && (
@@ -2115,7 +2120,7 @@ export default function ResumeBuilder() {
                   {summary && (
                     <div className="space-y-1">
                       <div className="text-slate-400 font-bold text-[10px] uppercase">// SUMMARY</div>
-                      <p className="text-slate-600 leading-relaxed text-justify">{summary}</p>
+                      <p className="text-slate-600 leading-relaxed text-justify break-words">{summary}</p>
                     </div>
                   )}
 
@@ -2125,13 +2130,13 @@ export default function ResumeBuilder() {
                       <div className="text-slate-400 font-bold text-[10px] uppercase">// SKILL_STACK</div>
                       <div className="bg-slate-50 p-3 rounded-xl border border-slate-100 space-y-1">
                         {technicalSkills.length > 0 && (
-                          <p><span className="text-indigo-600 font-bold">[tech]</span> {technicalSkills.join(', ')}</p>
+                          <p className="break-words"><span className="text-indigo-600 font-bold">[tech]</span> {technicalSkills.join(', ')}</p>
                         )}
                         {softSkills.length > 0 && (
-                          <p><span className="text-indigo-600 font-bold">[soft]</span> {softSkills.join(', ')}</p>
+                          <p className="break-words"><span className="text-indigo-600 font-bold">[soft]</span> {softSkills.join(', ')}</p>
                         )}
                         {languages.length > 0 && (
-                          <p><span className="text-indigo-600 font-bold">[lang]</span> {languages.join(', ')}</p>
+                          <p className="break-words"><span className="text-indigo-600 font-bold">[lang]</span> {languages.join(', ')}</p>
                         )}
                       </div>
                     </div>
@@ -2144,11 +2149,11 @@ export default function ResumeBuilder() {
                       <div className="space-y-3">
                         {projects.filter(p => p.title).map((proj, idx) => (
                           <div key={idx} className="space-y-0.5">
-                            <div className="flex justify-between font-bold text-slate-800">
-                              <span>&gt; {proj.title}</span>
-                              <span className="text-indigo-600 text-[11px] font-semibold font-sans">#{proj.technologies || 'Code'}</span>
+                            <div className="flex justify-between font-bold text-slate-800 flex-wrap gap-1">
+                              <span className="break-words min-w-0">&gt; {proj.title}</span>
+                              <span className="text-indigo-600 text-[11px] font-semibold font-sans shrink-0">#{proj.technologies || 'Code'}</span>
                             </div>
-                            {proj.description && renderFormattedText(proj.description, "text-slate-600 leading-relaxed")}
+                            {proj.description && renderFormattedText(proj.description, "text-slate-600 leading-relaxed break-words")}
                           </div>
                         ))}
                       </div>
@@ -2162,11 +2167,11 @@ export default function ResumeBuilder() {
                       <div className="space-y-3">
                         {experience.filter(e => e.company || e.role).map((exp, idx) => (
                           <div key={idx} className="space-y-1">
-                            <div className="flex justify-between font-bold text-slate-800">
-                              <span>{exp.role} @ {exp.company}</span>
-                              <span className="text-slate-400 font-normal">{exp.startDate} - {exp.endDate}</span>
+                            <div className="flex justify-between font-bold text-slate-800 flex-wrap gap-1">
+                              <span className="break-words min-w-0">{exp.role} @ {exp.company}</span>
+                              <span className="text-slate-400 font-normal shrink-0">{exp.startDate} - {exp.endDate}</span>
                             </div>
-                            {exp.description && renderFormattedText(exp.description, "text-slate-600 leading-relaxed")}
+                            {exp.description && renderFormattedText(exp.description, "text-slate-600 leading-relaxed break-words")}
                           </div>
                         ))}
                       </div>
@@ -2179,9 +2184,9 @@ export default function ResumeBuilder() {
                       <div className="text-slate-400 font-bold text-[10px] uppercase">// ACADEMICS</div>
                       <div className="space-y-2">
                         {education.filter(e => e.institution || e.degree).map((edu, idx) => (
-                          <div key={idx} className="flex justify-between text-slate-700">
-                            <span>{edu.degree} from {edu.institution}</span>
-                            <span className="text-slate-400">{edu.year} {edu.gpa ? `(GPA: ${edu.gpa})` : ''}</span>
+                          <div key={idx} className="flex justify-between text-slate-700 flex-wrap gap-1">
+                            <span className="break-words min-w-0">{edu.degree} from {edu.institution}</span>
+                            <span className="text-slate-400 shrink-0">{edu.year} {edu.gpa ? `(GPA: ${edu.gpa})` : ''}</span>
                           </div>
                         ))}
                       </div>
@@ -2194,9 +2199,9 @@ export default function ResumeBuilder() {
                       <div className="text-slate-400 font-bold text-[10px] uppercase">// CERTIFICATIONS</div>
                       <div className="space-y-1.5">
                         {certifications.filter(c => c.title).map((cert, idx) => (
-                          <div key={idx} className="flex justify-between text-slate-700">
-                            <span>&gt; {cert.title} <span className="text-indigo-600 font-medium">({cert.issuer})</span></span>
-                            <span className="text-slate-400">{cert.year}</span>
+                          <div key={idx} className="flex justify-between text-slate-700 flex-wrap gap-1">
+                            <span className="break-words min-w-0">&gt; {cert.title} <span className="text-indigo-600 font-medium">({cert.issuer})</span></span>
+                            <span className="text-slate-400 shrink-0">{cert.year}</span>
                           </div>
                         ))}
                       </div>
@@ -2208,13 +2213,13 @@ export default function ResumeBuilder() {
 
               {/* ================= DATA SCIENTIST TEMPLATE ================= */}
               {selectedTemplate === 'datascientist' && (
-                <div className="space-y-5 text-slate-800 text-xs">
+                <div className="space-y-5 text-slate-800 text-xs break-words">
                   {/* Top aligned header with deep teal details */}
-                  <div className="flex justify-between items-start border-b border-teal-700 pb-3 gap-4">
-                    <div className="flex-1">
-                      <h2 className="text-2xl font-bold text-teal-800 uppercase">{personalInfo.fullName || 'YOUR NAME'}</h2>
-                      <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mt-0.5">{personalInfo.professionalTitle || 'Professional Title'}</div>
-                      <div className="text-[10px] text-slate-500 space-y-0.5 mt-1">
+                  <div className="flex flex-col sm:flex-row items-start justify-between border-b border-teal-700 pb-3 gap-4">
+                    <div className="flex-1 min-w-0">
+                      <h2 className="text-2xl font-bold text-teal-800 uppercase break-words">{personalInfo.fullName || 'YOUR NAME'}</h2>
+                      <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mt-0.5 break-words">{personalInfo.professionalTitle || 'Professional Title'}</div>
+                      <div className="text-[10px] text-slate-500 space-y-0.5 mt-1 break-all">
                         <div>{personalInfo.email} | {personalInfo.phone}</div>
                         <div>{personalInfo.location}</div>
                         <div className="font-semibold text-teal-700">
@@ -2342,18 +2347,18 @@ export default function ResumeBuilder() {
 
               {/* ================= FRESHER / BASIC TEMPLATE ================= */}
               {selectedTemplate === 'fresher' && (
-                <div className="space-y-5 text-slate-800 text-xs">
+                <div className="space-y-5 text-slate-800 text-xs break-words">
                   {/* Clean classical block header */}
-                  <div className="flex items-center justify-between pb-2 border-b border-slate-100 gap-4">
-                    <div className="flex-1 text-left">
-                      <h2 className="text-2xl font-bold text-slate-900">{personalInfo.fullName || 'YOUR NAME'}</h2>
-                      <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mt-0.5">{personalInfo.professionalTitle || 'Professional Title'}</div>
-                      <p className="text-slate-500 mt-1 flex gap-2 flex-wrap text-[11px]">
+                  <div className="flex flex-col sm:flex-row items-start justify-between pb-2 border-b border-slate-100 gap-4">
+                    <div className="flex-1 text-left min-w-0">
+                      <h2 className="text-2xl font-bold text-slate-900 break-words">{personalInfo.fullName || 'YOUR NAME'}</h2>
+                      <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mt-0.5 break-words">{personalInfo.professionalTitle || 'Professional Title'}</div>
+                      <p className="text-slate-500 mt-1 flex gap-2 flex-wrap text-[11px] break-all">
                         {personalInfo.email && <span>{personalInfo.email}</span>}
                         {personalInfo.phone && <span>| {personalInfo.phone}</span>}
                         {personalInfo.location && <span>| {personalInfo.location}</span>}
                       </p>
-                      <p className="text-slate-400 text-[10px] mt-0.5 flex gap-2 flex-wrap">
+                      <p className="text-slate-400 text-[10px] mt-0.5 flex gap-2 flex-wrap break-all">
                         {personalInfo.github && <span>GitHub: {personalInfo.github}</span>}
                         {personalInfo.linkedin && <span>LinkedIn: {personalInfo.linkedin}</span>}
                         {personalInfo.portfolio && <span>Web: {personalInfo.portfolio}</span>}
